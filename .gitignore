@@ -1,0 +1,2 @@
+# Ignore local Google OAuth config
+config/google.php

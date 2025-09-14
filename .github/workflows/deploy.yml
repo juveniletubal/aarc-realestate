@@ -26,3 +26,4 @@ jobs:
             **/node_modules/**
             **/vendor/**
             .env
+            config/google.com
