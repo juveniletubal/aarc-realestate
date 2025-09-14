@@ -1,0 +1,95 @@
+body.bg {
+  background: url("../assets/img/bg.webp") no-repeat center center fixed;
+  background-size: cover;
+}
+
+body.bg::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: -1;
+}
+
+.login-header {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+}
+
+.login-menu ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: clamp(14px, 2vw, 18px);
+}
+
+.login-menu ul li a:hover {
+  color: #17a2b8;
+}
+
+.login-menu ul li a.active {
+  color: #17a2b8;
+}
+
+.brand-title {
+  font-size: clamp(18px, 2vw, 22px);
+}
+
+.outlined-text {
+  -webkit-text-stroke: 0.5px #fff;
+  font-weight: 900;
+}
+
+.login-footer {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  padding: 10px 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.login-footer #datetime {
+  font-size: clamp(12px, 2vw, 16px);
+}
+
+.card-box {
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.modalDescription ul {
+  list-style-type: disc;
+  margin-left: 20px;
+  padding-left: 10px;
+}
+
+.modalDescription li {
+  margin-bottom: 6px;
+}
+
+/* Make the browser scrollbar thinner */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #585858ff;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #17a2b8;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #0f7585ff;
+}
