@@ -25,17 +25,30 @@
     ExpiresByType image/webp "access plus 1 year"
 </IfModule>
 
-# Add version to CSS and JS files for cache busting
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    
-    # Hide .php extension
+
+    # Hide .php extension (works in subfolders like /admin/)
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME}\.php -f
-    RewriteRule ^([^/]+)/?$ $1.php [L]
+    RewriteRule ^(.+?)/?$ $1.php [L]
 
     # Cache busting for assets
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.+)\.(\d+)\.(css|js)$ $1.$3 [L]
 </IfModule>
+
+# Custom error handling
+# ErrorDocument 400 /aarc-realestate/error/400.php
+# ErrorDocument 403 /aarc-realestate/error/403.php
+# ErrorDocument 404 /aarc-realestate/error/404.php
+# ErrorDocument 500 /aarc-realestate/error/500.php
+# ErrorDocument 503 /aarc-realestate/error/503.php
+
+# Use this when uploaded online
+ErrorDocument 400 /error/400.php
+ErrorDocument 403 /error/403.php
+ErrorDocument 404 /error/404.php
+ErrorDocument 500 /error/500.php
+ErrorDocument 503 /error/503.php
