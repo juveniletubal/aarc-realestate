@@ -147,7 +147,7 @@ class PropertyHandler
         if (!$property) throw new Exception('Property not found');
 
         // Soft delete
-        $stmt = $this->pdo->prepare("UPDATE properties SET is_deleted = 1 WHERE id = ?");
+        $stmt = $this->pdo->prepare("UPDATE properties SET is_deleted = 1, images = '' WHERE id = ?");
         $stmt->execute([$id]);
 
         // Delete images from server

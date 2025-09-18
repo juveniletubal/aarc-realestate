@@ -1,7 +1,5 @@
 <?php
-require_once 'classes/AssetManager.php';
-require_once 'classes/PageManager.php';
-require_once 'config/config.php';
+require_once 'includes/init.php';
 
 $page->setTitle('AARC - Properties');
 $page->setCurrentPage('properties');
