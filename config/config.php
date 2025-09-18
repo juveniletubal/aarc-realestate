@@ -12,7 +12,7 @@ function loadCoreAssets($assets, $page_type = 'basic')
         // === GLOBAL CSS ===
         $assets->addCSS('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap', 1, ['preload' => true]);
         $assets->addCSS('css/app.min.css', 2);
-        $assets->addCSS('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css', 3, ['defer' => true]);
+        $assets->addCSS('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css', 3);
 
         // === GLOBAL JS ===
         $assets->addJS('js/app.min.js', 1, ['defer' => true]);
