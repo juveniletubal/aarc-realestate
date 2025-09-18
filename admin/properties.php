@@ -18,21 +18,6 @@ include __DIR__ . '/../includes/sidebar.php';
     .dropzone {
         border: 2px dashed #007bff;
         border-radius: 8px;
-        min-height: 150px;
-        padding: 20px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .dropzone:hover {
-        border-color: #0056b3;
-        background: #e3f2fd;
-    }
-
-    .dropzone .dz-preview {
-        display: inline-block;
-        margin: 10px;
     }
 </style>
 
@@ -51,14 +36,14 @@ include __DIR__ . '/../includes/sidebar.php';
                                 <li class="breadcrumb-item">
                                     <a href="index">Dashboard</a>
                                 </li>
-                                <li class="breadcrumb-item active" aria-current="page">
+                                <li class="breadcrumb-item active text-info" aria-current="page">
                                     Properties
                                 </li>
                             </ol>
                         </nav>
                     </div>
                     <div class="col-md-6 col-sm-12 text-right">
-                        <button class="btn btn-primary" id="addNewBtn">Add New</button>
+                        <button class="btn btn-info" id="addNewBtn">Add New</button>
                     </div>
                 </div>
             </div>
@@ -137,7 +122,7 @@ include __DIR__ . '/../includes/sidebar.php';
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="savePropertyBtn">Save changes</button>
+                    <button type="button" class="btn btn-success" id="savePropertyBtn">Save changes</button>
                 </div>
             </div>
         </div>
@@ -221,10 +206,10 @@ include __DIR__ . '/../includes/sidebar.php';
                             render: function(data) {
                                 return `<div class="table-actions">
                             <a href="#" class="edit-btn" data-id="${data}">
-                                <i class="dw dw-edit2" style="color:#17A2B8;"></i>
+                                <i class="fa fa-pencil" style="color:#17A2B8;"></i>
                             </a>
                             <a href="#" class="delete-btn" data-id="${data}">
-                                <i class="dw dw-delete-3" style="color:red;"></i>
+                                <i class="fa fa-trash-o" style="color:red;"></i>
                             </a>
                         </div>`;
                             }
@@ -232,10 +217,10 @@ include __DIR__ . '/../includes/sidebar.php';
                     ],
                     language: {
                         info: "_START_-_END_ of _TOTAL_ entries",
-                        searchPlaceholder: "Search",
+                        searchPlaceholder: "Search here",
                         paginate: {
-                            next: '<i class="ion-chevron-right"></i>',
-                            previous: '<i class="ion-chevron-left"></i>'
+                            next: '<i class="fa fa-angle-right"></i>',
+                            previous: '<i class="fa fa-angle-left"></i>'
                         }
                     }
                 });
@@ -509,8 +494,8 @@ include __DIR__ . '/../includes/sidebar.php';
                     text: "You won't be able to revert this!",
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
                     confirmButtonText: 'Yes, delete it!'
                 }).then((result) => {
                     if (result.isConfirmed) {

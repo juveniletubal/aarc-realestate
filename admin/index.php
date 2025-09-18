@@ -34,7 +34,7 @@ include __DIR__ . '/../includes/sidebar.php';
                         </div>
                         <div class="widget-icon">
                             <div class="icon" data-color="#00eccf">
-                                <i class="icon-copy dw dw-calendar1"></i>
+                                <i class="fa fa-calendar"></i>
                             </div>
                         </div>
                     </div>
@@ -51,7 +51,7 @@ include __DIR__ . '/../includes/sidebar.php';
                         </div>
                         <div class="widget-icon">
                             <div class="icon" data-color="#ff5b5b">
-                                <span class="dw dw-heart"></span>
+                                <span class="fa fa-heartbeat"></span>
                             </div>
                         </div>
                     </div>
@@ -162,3 +162,18 @@ include __DIR__ . '/../includes/sidebar.php';
 </div>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Configure toastr
+        toastr.options = {
+            closeButton: true,
+            progressBar: true,
+            positionClass: "toast-bottom-right",
+            timeOut: "3000"
+        };
+
+        // Show toast on page load
+        toastr.success('Dashboard loaded successfully!', 'Success');
+    });
+</script>

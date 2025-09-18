@@ -1,6 +1,6 @@
 <div class="header">
     <div class="header-left">
-        <div class="menu-icon bi bi-list"></div>
+        <div class="menu-icon fa fa-bars" style="font-size: 21px;"></div>
     </div>
     <div class="header-right">
         <div class="user-notification">
@@ -10,7 +10,7 @@
                     href="#"
                     role="button"
                     data-toggle="dropdown">
-                    <i class="icon-copy dw dw-notification"></i>
+                    <i class="icon-copy fa fa-bell-o"></i>
                     <span class="badge notification-active"></span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
@@ -55,10 +55,10 @@
                 </a>
                 <div
                     class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
-                    <a class="dropdown-item" href="profile.html"><i class="dw dw-user1"></i> Profile</a>
-                    <a class="dropdown-item" href="profile.html"><i class="dw dw-settings2"></i> Setting</a>
-                    <a class="dropdown-item" href="faq.html"><i class="dw dw-help"></i> Help</a>
-                    <a class="dropdown-item" href="login.html"><i class="dw dw-logout"></i> Log Out</a>
+                    <a class="dropdown-item" href="profile.html"><i class="fa fa-user-o"></i> Profile</a>
+                    <a class="dropdown-item" href="profile.html"><i class="fa fa-gear"></i> Setting</a>
+                    <a class="dropdown-item" href="faq.html"><i class="fa fa-question-circle-o"></i> Help</a>
+                    <a class="dropdown-item" href="login.html"><i class="fa fa-sign-out"></i> Log Out</a>
                 </div>
             </div>
         </div>

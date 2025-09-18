@@ -13,8 +13,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" type="text/css" href="../assets/css/core.min.css" />
-  <link rel="stylesheet" type="text/css" href="../assets/css/style.min.css" />
+  <link rel="stylesheet" type="text/css" href="../assets/css/app.min.css" />
 </head>
 
 <body>
@@ -32,7 +31,7 @@
     </div>
   </div>
 
-  <script src="../assets/js/core.min.js"></script>
+  <script src="../assets/js/app.min.js"></script>
 </body>
 
 </html>
