@@ -58,6 +58,7 @@ include __DIR__ . '/../includes/sidebar.php';
                                 <th>Price</th>
                                 <th>Location</th>
                                 <th>Type</th>
+                                <th>Status</th>
                                 <th>Created</th>
                                 <th class="datatable-nosort" style="width: 7%;">Action</th>
                             </tr>
@@ -196,10 +197,10 @@ include __DIR__ . '/../includes/sidebar.php';
                             data: "property_type"
                         },
                         {
-                            data: "created",
-                            render: function(data) {
-                                return new Date(data).toLocaleDateString();
-                            }
+                            data: "status"
+                        },
+                        {
+                            data: "created"
                         },
                         {
                             data: "id",
@@ -247,6 +248,7 @@ include __DIR__ . '/../includes/sidebar.php';
             $('#addNewBtn').on('click', function() {
                 resetForm();
                 $('#propertyModalLabel').text('Add New Property');
+                $('#savePropertyBtn').text('Save changes');
                 $('#propertyModal').modal('show');
             });
 
@@ -445,6 +447,7 @@ include __DIR__ . '/../includes/sidebar.php';
                             const property = response.data;
                             populateForm(property);
                             $('#propertyModalLabel').text('Edit Property');
+                            $('#savePropertyBtn').text('Save update');
                             $('#propertyModal').modal('show');
                         } else {
                             toastr.error(response.message, "Error");

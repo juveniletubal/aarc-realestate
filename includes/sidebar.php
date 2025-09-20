@@ -35,10 +35,15 @@
                     </a>
                 </li>
 
+                <li>
+                    <a href="agents" class="<?= $page->isActive('agents') ?> dropdown-toggle no-arrow">
+                        <span class="micon fa fa-user-secret"></span><span class="mtext">Agents</span>
+                    </a>
+                </li>
 
 
 
-                <li class="dropdown">
+                <!-- <li class="dropdown">
                     <a href="javascript:;" class="dropdown-toggle">
                         <span class="micon bi bi-house"></span><span class="mtext">Home</span>
                     </a>
@@ -47,7 +52,7 @@
                         <li><a href="index2.html">Dashboard style 2</a></li>
                         <li><a href="index3.html">Dashboard style 3</a></li>
                     </ul>
-                </li>
+                </li> -->
 
             </ul>
         </div>

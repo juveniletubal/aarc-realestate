@@ -41,7 +41,7 @@ try {
     $totalRecordwithFilter = $records['allcount'];
 
     // Fetch records
-    $sql = "SELECT id, title, description, lot_area, price, location, property_type, created, images 
+    $sql = "SELECT id, title, description, lot_area, price, location, status, property_type, created, images 
             FROM properties 
             WHERE is_deleted = 0 $searchQuery
             ORDER BY $columnName $columnSortOrder 
@@ -67,7 +67,7 @@ try {
         $record['price'] = number_format($record['price'], 2);
 
         // Format date
-        $record['created'] = date('Y-m-d H:i:s', strtotime($record['created']));
+        $record['created'] = date('Y-m-d h:i A', strtotime($record['created']));
 
         // Format lot area
         if (empty($record['lot_area'])) {
@@ -83,6 +83,22 @@ try {
 
         // Convert images from comma-separated to array
         $record['images'] = !empty($record['images']) ? explode(',', $record['images']) : [];
+
+        // Format status with badge
+        switch ($record['status']) {
+            case 'available':
+                $record['status'] = '<span class="badge badge-pill badge-success">Available</span>';
+                break;
+            case 'reserved':
+                $record['status'] = '<span class="badge badge-pill badge-warning">Reserved</span>';
+                break;
+            case 'sold':
+                $record['status'] = '<span class="badge badge-pill badge-danger">Sold</span>';
+                break;
+            default:
+                $record['status'] = '<span class="badge badge-pill badge-secondary">Unknown</span>';
+                break;
+        }
     }
 
     // Response
