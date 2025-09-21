@@ -4,7 +4,7 @@ require_once __DIR__ . '/../includes/init.php';
 $page->setTitle('AARC - Properties');
 $page->setCurrentPage('properties');
 
-loadCoreAssets($assets, 'table');
+loadCoreAssets($assets, 'table_form_dropzone');
 
 include __DIR__ . '/../includes/header.php';
 ?>
@@ -85,19 +85,19 @@ include __DIR__ . '/../includes/sidebar.php';
                         <input type="hidden" name="id" id="id" value="">
 
                         <div class="form-group">
-                            <label>Property Title</label>
+                            <label>Property Title<span class="text-danger">*</span></label>
                             <input class="form-control" type="text" name="title" required>
                         </div>
                         <div class="form-group">
-                            <label>Description</label>
-                            <textarea class="form-control" style="height:100px;" name="description" required></textarea>
+                            <label>Description<span class="text-danger">*</span></label>
+                            <textarea class="form-control" style="height:100px;" name="description"></textarea>
                         </div>
                         <div class="form-group">
-                            <label>Lot Area (sqm)</label>
-                            <input class="form-control" type="text" name="lot_area">
+                            <label>Lot Area (sqm)<span class="text-danger">*</span></label>
+                            <input class="form-control" type="text" name="lot_area" required>
                         </div>
                         <div class="form-group">
-                            <label>Price</label>
+                            <label>Price<span class="text-danger">*</span></label>
                             <input class="form-control" type="text" name="price" required>
                         </div>
                         <div class="form-group">
@@ -105,7 +105,7 @@ include __DIR__ . '/../includes/sidebar.php';
                             <input class="form-control" type="text" name="location">
                         </div>
                         <div class="form-group">
-                            <label>Property Type</label>
+                            <label>Property Type<span class="text-danger">*</span></label>
                             <select class="custom-select" name="property_type" required>
                                 <option value="">Choose...</option>
                                 <option value="Residential">Residential</option>
@@ -466,10 +466,8 @@ include __DIR__ . '/../includes/sidebar.php';
 
                 $('#id').val(property.id);
                 $('input[name="title"]').val(property.title);
-                $('textarea[name="description"]').val(property.description);
                 $('input[name="lot_area"]').val(property.lot_area);
                 $('input[name="price"]').val(property.price);
-                $('input[name="location"]').val(property.location);
                 $('select[name="property_type"]').val(property.property_type);
 
                 // Clear dropzone and add existing images

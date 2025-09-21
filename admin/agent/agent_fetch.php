@@ -41,7 +41,7 @@ try {
     $totalRecordwithFilter = $records['allcount'];
 
     // Fetch records
-    $sql = "SELECT id, firstname, lastname, email, phone, is_active, updated_at
+    $sql = "SELECT id, firstname, lastname, email, phone, is_active, updated_at, percent
             FROM agents 
             WHERE is_deleted = 0 $searchQuery
             ORDER BY $columnName $columnSortOrder 
@@ -69,6 +69,8 @@ try {
         $record['email'];
 
         $record['phone'];
+
+        $record['percent'];
 
         $record['updated_at'] = date('Y-m-d h:i A', strtotime($record['updated_at']));
 

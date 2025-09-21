@@ -4,7 +4,7 @@ require_once __DIR__ . '/../includes/init.php';
 $page->setTitle('AARC - Agents');
 $page->setCurrentPage('agents');
 
-loadCoreAssets($assets, 'table');
+loadCoreAssets($assets, 'table_form');
 
 include __DIR__ . '/../includes/header.php';
 ?>
@@ -49,6 +49,7 @@ include __DIR__ . '/../includes/sidebar.php';
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Phone</th>
+                                <th>Percent</th>
                                 <th>Status</th>
                                 <th>Updated</th>
                                 <th class="datatable-nosort" style="width: 7%;">Action</th>
@@ -78,13 +79,13 @@ include __DIR__ . '/../includes/sidebar.php';
                         <div class="row">
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
-                                    <label>Firstname</label>
+                                    <label>Firstname<span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" name="firstname" required>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
-                                    <label>Lastname</label>
+                                    <label>Lastname<span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" name="lastname" required>
                                 </div>
                             </div>
@@ -92,13 +93,13 @@ include __DIR__ . '/../includes/sidebar.php';
                         <div class="row">
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
-                                    <label>Email Address</label>
+                                    <label>Email Address<span class="text-danger">*</span></label>
                                     <input class="form-control" type="email" name="email" required>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
-                                    <label>Contact Number</label>
+                                    <label>Contact Number<span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" name="phone" required>
                                 </div>
                             </div>
@@ -117,10 +118,72 @@ include __DIR__ . '/../includes/sidebar.php';
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Position<span class="text-danger">*</span></label>
+                                    <select class="custom-select" id="positionSelect" name="position" required>
+                                        <option value="">Choose...</option>
+                                        <option value="director">Director</option>
+                                        <option value="manager">Manager</option>
+                                        <option value="downline">Downline</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- This will show only when Manager or Downline is selected -->
+                            <div class="col-md-4 col-sm-12" id="uplineWrapper" style="display: none;">
+                                <div class="form-group">
+                                    <label>Upline<span class="text-danger">*</span></label>
+                                    <select class="custom-select" id="uplineSelect" name="upline">
+                                        <option value="">Choose...</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 col-sm-12" id="percent">
+                                <div class="form-group">
+                                    <label>Percent %<span class="text-danger">*</span></label>
+                                    <select class="custom-select" id="percent" name="percent">
+                                        <option value="">Choose...</option>
+                                        <?php for ($i = 1; $i <= 100; $i++): ?>
+                                            <option value="<?= $i ?>"><?= $i ?>%</option>
+                                        <?php endfor; ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 30px;">
                             <label>Profile Image</label>
                             <input type="file" name="image" class="form-control-file form-control height-auto">
-                            <img id="currentImage" src="" alt="Current Image" style="max-height:100px; display:none; margin-top:10px;">
+                        </div>
+
+                        <div style="text-align:center; border-bottom:1px solid #ccc; line-height:0.1em; margin:10px 0 20px;">
+                            <span style="background:#fff; padding:0 10px; color: #DC3545;">Use for login credentials</span>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <label>Username<span class="text-danger">*</span></label>
+                                <div class="input-group custom">
+                                    <input class="form-control" type="text" name="username" required>
+                                    <div class="input-group-append custom">
+                                        <span class="input-group-text"><i class="fa fa-user-o"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <label>Password<span class="text-danger">*</span></label>
+                                <div class="input-group custom">
+                                    <input class="form-control" type="password" name="password" placeholder="">
+                                    <div class="input-group-append custom">
+                                        <span class="input-group-text"><i class="fa fa-key"></i></span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                     </form>
@@ -184,6 +247,12 @@ include __DIR__ . '/../includes/sidebar.php';
                             data: "phone"
                         },
                         {
+                            data: "percent",
+                            render: function(data, type, row) {
+                                return data ? data + "%" : "0%";
+                            }
+                        },
+                        {
                             data: "status"
                         },
                         {
@@ -233,6 +302,7 @@ include __DIR__ . '/../includes/sidebar.php';
                 resetForm();
                 $('#modalLabel').text('Add New Agent');
                 $('#saveBtn').text('Save changes');
+                $('input[name="password"]').attr("placeholder", "•••••••••");
                 $('#dataModal').modal('show');
             });
 
@@ -261,6 +331,11 @@ include __DIR__ . '/../includes/sidebar.php';
                 formData.append('phone', $('input[name="phone"]').val());
                 formData.append('facebook_link', $('input[name="facebook_link"]').val());
                 formData.append('license_number', $('input[name="license_number"]').val());
+                formData.append('username', $('input[name="username"]').val());
+                formData.append('password', $('input[name="password"]').val());
+                formData.append('position', $('select[name="position"]').val());
+                formData.append('upline', $('select[name="upline"]').val());
+                formData.append('percent', $('select[name="percent"]').val());
 
                 if (isUpdate) {
                     formData.append('id', currentId);
@@ -302,6 +377,9 @@ include __DIR__ . '/../includes/sidebar.php';
                 const lastname = $('input[name="lastname"]').val().trim();
                 const email = $('input[name="email"]').val().trim();
                 const phone = $('input[name="phone"]').val().trim();
+                const username = $('input[name="username"]').val().trim();
+                const position = $('select[name="position"]').val();
+                const percent = $('select[name="percent"]').val();
 
                 if (!firstname) {
                     toastr.error("Agent firstname is required", "Validation Error");
@@ -322,6 +400,18 @@ include __DIR__ . '/../includes/sidebar.php';
                 }
                 if (!phone) {
                     toastr.error("Agent contact number is required", "Validation Error");
+                    return false;
+                }
+                if (!username) {
+                    toastr.error("Agent username is required", "Validation Error");
+                    return false;
+                }
+                if (!position) {
+                    toastr.error("Agent position is required", "Validation Error");
+                    return false;
+                }
+                if (!percent) {
+                    toastr.error("Percentage is required", "Validation Error");
                     return false;
                 }
 
@@ -364,10 +454,43 @@ include __DIR__ . '/../includes/sidebar.php';
                 $('input[name="phone"]').val(record.phone);
                 $('input[name="facebook_link"]').val(record.facebook_link);
                 $('input[name="license_number"]').val(record.license_number);
+                $('select[name="upline"]').val(record.upline_id);
+                $('select[name="percent"]').val(record.percent);
+                $('input[name="username"]').val(record.username || "");
+                $('input[name="password"]').val("").attr("placeholder", "Leave blank to keep the current password");
 
-                // image preview (optional)
-                if (record.image) {
-                    $('#currentImage').attr('src', '../uploads/agents' + record.image).show();
+                $('select[name="position"]').val(record.position).trigger("change");
+
+                if (record.position === "manager" || record.position === "downline") {
+                    $.ajax({
+                        url: "agent/fetch_directors.php",
+                        method: "GET",
+                        dataType: "json",
+                        success: function(response) {
+                            if (response.success) {
+                                const $uplineSelect = $('select[name="upline"]');
+                                $uplineSelect.empty().append('<option value="">Choose...</option>');
+
+                                response.data.forEach(director => {
+                                    $uplineSelect.append(
+                                        `<option value="${director.id}">${director.name}</option>`
+                                    );
+                                });
+
+                                if (record.upline_id) {
+                                    $uplineSelect.val(record.upline_id);
+                                }
+                            } else {
+                                toastr.error("Failed to load directors");
+                            }
+                        },
+                        error: function() {
+                            toastr.error("Error fetching directors");
+                        }
+                    });
+                } else {
+                    $("#uplineWrapper").hide();
+                    $('select[name="upline"]').val("");
                 }
             }
 
@@ -415,6 +538,47 @@ include __DIR__ . '/../includes/sidebar.php';
 
         $('#dataModal').on('hide.bs.modal', function() {
             document.activeElement.blur();
+        });
+    });
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        $(document).ready(function() {
+            $("#positionSelect").on("change", function() {
+                const selected = $(this).val();
+
+                if (selected === "manager" || selected === "downline") {
+                    $("#uplineWrapper").show();
+
+                    $.ajax({
+                        url: "agent/fetch_directors.php",
+                        method: "GET",
+                        dataType: "json",
+                        success: function(response) {
+                            if (response.success) {
+                                $("#uplineSelect").empty().append('<option value="">Choose...</option>');
+
+                                response.data.forEach(director => {
+                                    $("#uplineSelect").append(
+                                        `<option value="${director.id}">${director.name}</option>`
+                                    );
+                                });
+                            } else {
+                                toastr.error("Failed to load directors");
+                            }
+                        },
+                        error: function() {
+                            toastr.error("Error fetching directors");
+                        }
+                    });
+
+                } else {
+                    $("#uplineWrapper").hide();
+                    $("#uplineSelect").val("");
+                }
+            });
         });
     });
 </script>
