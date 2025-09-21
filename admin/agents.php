@@ -582,3 +582,6 @@ include __DIR__ . '/../includes/sidebar.php';
         });
     });
 </script>
+
+
+<!-- done properties and agents proceed to next step Payments and Sales -->
