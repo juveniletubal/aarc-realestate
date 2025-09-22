@@ -41,6 +41,18 @@
                     </a>
                 </li>
 
+                <li>
+                    <a href="Payments" class="<?= $page->isActive('payments') ?> dropdown-toggle no-arrow">
+                        <span class="micon fa fa-money"></span><span class="mtext">Payments</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="Sales" class="<?= $page->isActive('sales') ?> dropdown-toggle no-arrow">
+                        <span class="micon fa fa-shopping-cart"></span><span class="mtext">Sales</span>
+                    </a>
+                </li>
+
 
 
                 <!-- <li class="dropdown">

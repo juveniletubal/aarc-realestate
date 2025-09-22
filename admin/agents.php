@@ -73,7 +73,7 @@ include __DIR__ . '/../includes/sidebar.php';
                     <button type="button" class="close" data-dismiss="modal"> × </button>
                 </div>
                 <div class="modal-body">
-                    <form id="dataForm">
+                    <form id="dataForm" enctype="multipart/form-data">
                         <input type="hidden" name="id" id="id" value="">
 
                         <div class="row">

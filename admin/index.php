@@ -170,10 +170,10 @@ include __DIR__ . '/../includes/sidebar.php';
             closeButton: true,
             progressBar: true,
             positionClass: "toast-bottom-right",
-            timeOut: "3000"
+            timeOut: "5000"
         };
 
         // Show toast on page load
-        toastr.success('Dashboard loaded successfully!', 'Success');
+        toastr.success('Administrator!', 'Welcome');
     });
 </script>

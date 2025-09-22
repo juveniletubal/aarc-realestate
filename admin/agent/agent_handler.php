@@ -45,7 +45,7 @@ class AgentHandler
         }
     }
 
-    private function validateInput($data)
+    private function validateInput($data, $id = null)
     {
         $required = ['firstname', 'lastname', 'email', 'phone'];
         foreach ($required as $field) {
@@ -58,8 +58,11 @@ class AgentHandler
             throw new Exception('Invalid email format');
         }
 
-        $stmt = $this->pdo->prepare("SELECT id FROM agents WHERE email = ? AND is_deleted = 0");
-        $stmt->execute([$data['email']]);
+        $stmt = $this->pdo->prepare("SELECT id FROM agents WHERE email = ? AND is_deleted = 0" . ($id ? " AND id != ?" : ""));
+        $params = [$data['email']];
+        if ($id) $params[] = $id;
+        $stmt->execute($params);
+
         if ($stmt->fetch()) {
             throw new Exception('Email already exists. Please use another email.');
         }
@@ -67,106 +70,118 @@ class AgentHandler
 
     private function insertAgent()
     {
-        $this->validateInput($_POST);
+        try {
+            $this->validateInput($_POST, $id);
 
-        $userId = $this->createUserAccount($_POST);
+            $userId = $this->createUserAccount($_POST);
 
-        $stmt = $this->pdo->prepare("
-            INSERT INTO agents (firstname, lastname, email, phone, facebook_link, license_number, percent, position, upline_id, profile_image, user_id) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ");
+            $stmt = $this->pdo->prepare("
+                INSERT INTO agents (firstname, lastname, email, phone, facebook_link, license_number, percent, position, upline_id, profile_image, user_id) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ");
 
-        $image = $this->handleImageUpload();
-        $stmt->execute([
-            $_POST['firstname'],
-            $_POST['lastname'],
-            $_POST['email'],
-            $_POST['phone'],
-            $_POST['facebook_link'] ?? '',
-            $_POST['license_number'] ?? '',
-            $_POST['percent'],
-            $_POST['position'],
-            $_POST['upline'] ?? '',
-            $image,
-            $userId
-        ]);
+            $image = $this->handleImageUpload();
+            $stmt->execute([
+                $_POST['firstname'],
+                $_POST['lastname'],
+                $_POST['email'],
+                $_POST['phone'],
+                $_POST['facebook_link'] ?? '',
+                $_POST['license_number'] ?? '',
+                $_POST['percent'],
+                $_POST['position'],
+                $_POST['upline'] ?? '',
+                $image,
+                $userId
+            ]);
 
-        echo json_encode(['success' => true, 'id' => $this->pdo->lastInsertId(), 'user_id' => $userId]);
+            echo json_encode(['success' => true, 'id' => $this->pdo->lastInsertId(), 'user_id' => $userId]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
     }
 
     private function updateAgent()
     {
-        $id = (int) $_POST['id'];
-        if (!$id) throw new Exception('Invalid agent ID');
+        try {
+            $id = (int) $_POST['id'];
+            if (!$id) throw new Exception('Invalid agent ID');
 
-        $this->validateInput($_POST);
+            $this->validateInput($_POST, $id);
 
-        // Get existing record
-        $stmt = $this->pdo->prepare("SELECT profile_image, user_id FROM agents WHERE id = ? AND is_deleted = 0");
-        $stmt->execute([$id]);
-        $existing = $stmt->fetch();
+            // Get existing record
+            $stmt = $this->pdo->prepare("SELECT profile_image, user_id FROM agents WHERE id = ? AND is_deleted = 0");
+            $stmt->execute([$id]);
+            $existing = $stmt->fetch();
 
-        if (!$existing) throw new Exception('Agent not found');
+            if (!$existing) throw new Exception('Agent not found');
 
-        // Update or create user account
-        if (!empty($existing['user_id'])) {
-            $this->updateUserAccount($existing['user_id'], $_POST);
-            $userId = $existing['user_id'];
-        } else {
-            $userId = $this->createUserAccount($_POST);
+            // Update or create user account
+            if (!empty($existing['user_id'])) {
+                $this->updateUserAccount($existing['user_id'], $_POST);
+                $userId = $existing['user_id'];
+            } else {
+                $userId = $this->createUserAccount($_POST);
+            }
+
+            $newImage = $this->handleImageUpload($existing['profile_image']);
+
+            $stmt = $this->pdo->prepare("
+                UPDATE agents 
+                SET firstname = ?, lastname = ?, email = ?, phone = ?, facebook_link = ?, license_number = ?, percent = ?, position = ?, upline_id = ?, profile_image = ?, user_id = ?
+                WHERE id = ? AND is_deleted = 0
+            ");
+
+            $stmt->execute([
+                $_POST['firstname'],
+                $_POST['lastname'],
+                $_POST['email'],
+                $_POST['phone'],
+                $_POST['facebook_link'] ?? '',
+                $_POST['license_number'] ?? '',
+                $_POST['percent'],
+                $_POST['position'],
+                $_POST['upline'] ?? '',
+                $newImage,
+                $userId,
+                $id
+            ]);
+
+            echo json_encode(['success' => true]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
         }
-
-        $newImage = $this->handleImageUpload($existing['profile_image']);
-
-        $stmt = $this->pdo->prepare("
-            UPDATE agents 
-            SET firstname = ?, lastname = ?, email = ?, phone = ?, facebook_link = ?, license_number = ?, percent = ?, position = ?, upline_id = ?, profile_image = ?, user_id = ?
-            WHERE id = ? AND is_deleted = 0
-        ");
-
-        $stmt->execute([
-            $_POST['firstname'],
-            $_POST['lastname'],
-            $_POST['email'],
-            $_POST['phone'],
-            $_POST['facebook_link'] ?? '',
-            $_POST['license_number'] ?? '',
-            $_POST['percent'],
-            $_POST['position'],
-            $_POST['upline'] ?? '',
-            $newImage,
-            $userId,
-            $id
-        ]);
-
-        echo json_encode(['success' => true]);
     }
 
     private function deleteAgent()
     {
-        $id = (int) ($_POST['id'] ?? $_GET['id'] ?? 0);
-        if (!$id) throw new Exception('Invalid agent ID');
+        try {
+            $id = (int) ($_POST['id'] ?? $_GET['id'] ?? 0);
+            if (!$id) throw new Exception('Invalid agent ID');
 
-        // Get image before soft delete
-        $stmt = $this->pdo->prepare("SELECT profile_image FROM agents WHERE id = ? AND is_deleted = 0");
-        $stmt->execute([$id]);
-        $agent = $stmt->fetch();
+            // Get image before soft delete
+            $stmt = $this->pdo->prepare("SELECT profile_image FROM agents WHERE id = ? AND is_deleted = 0");
+            $stmt->execute([$id]);
+            $agent = $stmt->fetch();
 
-        if (!$agent) throw new Exception('Agent not found');
+            if (!$agent) throw new Exception('Agent not found');
 
-        // Soft delete
-        $stmt = $this->pdo->prepare("UPDATE agents SET is_deleted = 1, profile_image = '' WHERE id = ?");
-        $stmt->execute([$id]);
+            // Soft delete
+            $stmt = $this->pdo->prepare("UPDATE agents SET is_deleted = 1, profile_image = '' WHERE id = ?");
+            $stmt->execute([$id]);
 
-        // Delete image from server
-        if (!empty($agent['profile_image'])) {
-            $imagePath = $this->uploadDir . $agent['profile_image'];
-            if (file_exists($imagePath)) {
-                unlink($imagePath);
+            // Delete image from server
+            if (!empty($agent['profile_image'])) {
+                $imagePath = $this->uploadDir . $agent['profile_image'];
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
             }
-        }
 
-        echo json_encode(['success' => true]);
+            echo json_encode(['success' => true]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
     }
 
     private function getAgent()

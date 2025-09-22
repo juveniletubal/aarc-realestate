@@ -17,6 +17,7 @@
                 <li><a href="properties" class="<?= $page->isActive('properties') ?>">Properties</a></li>
                 <li><a href="agents" class="<?= $page->isActive('agents') ?>">Agents</a></li>
                 <li><a href="contact" class="<?= $page->isActive('contact') ?>">Contact</a></li>
+                <li><a href="login" class="text-white">Sign In</a></li>
             </ul>
             <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         </nav>

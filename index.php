@@ -1,5 +1,5 @@
 <?php
-require_once 'includes/init.php';
+require_once 'includes_landing_page/init.php';
 
 $page->setTitle('AARC - Home');
 $page->setCurrentPage('home');
