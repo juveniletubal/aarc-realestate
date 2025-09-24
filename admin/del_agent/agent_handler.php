@@ -17,6 +17,7 @@ class AgentHandler
     public function handleRequest()
     {
         header('Content-Type: application/json');
+
         $action = $_POST['action'] ?? $_GET['action'] ?? '';
 
         try {
@@ -58,11 +59,14 @@ class AgentHandler
             throw new Exception('Invalid email format');
         }
 
-        $stmt = $this->pdo->prepare("SELECT id FROM agents WHERE email = ? AND is_deleted = 0" . ($id ? " AND id != ?" : ""));
+        $sql = "SELECT id FROM agents WHERE email = ? AND is_deleted = 0";
+        if ($id) $sql .= " AND id != ?";
+        $stmt = $this->pdo->prepare($sql);
+
         $params = [$data['email']];
         if ($id) $params[] = $id;
-        $stmt->execute($params);
 
+        $stmt->execute($params);
         if ($stmt->fetch()) {
             throw new Exception('Email already exists. Please use another email.');
         }
@@ -71,16 +75,16 @@ class AgentHandler
     private function insertAgent()
     {
         try {
-            $this->validateInput($_POST, $id);
+            $this->validateInput($_POST);
 
             $userId = $this->createUserAccount($_POST);
+            $image = $this->handleImageUpload();
 
             $stmt = $this->pdo->prepare("
                 INSERT INTO agents (firstname, lastname, email, phone, facebook_link, license_number, percent, position, upline_id, profile_image, user_id) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
 
-            $image = $this->handleImageUpload();
             $stmt->execute([
                 $_POST['firstname'],
                 $_POST['lastname'],
@@ -104,25 +108,20 @@ class AgentHandler
     private function updateAgent()
     {
         try {
-            $id = (int) $_POST['id'];
+            $id = (int) ($_POST['id'] ?? 0);
             if (!$id) throw new Exception('Invalid agent ID');
 
             $this->validateInput($_POST, $id);
 
-            // Get existing record
             $stmt = $this->pdo->prepare("SELECT profile_image, user_id FROM agents WHERE id = ? AND is_deleted = 0");
             $stmt->execute([$id]);
             $existing = $stmt->fetch();
-
             if (!$existing) throw new Exception('Agent not found');
 
             // Update or create user account
-            if (!empty($existing['user_id'])) {
-                $this->updateUserAccount($existing['user_id'], $_POST);
-                $userId = $existing['user_id'];
-            } else {
-                $userId = $this->createUserAccount($_POST);
-            }
+            $userId = !empty($existing['user_id'])
+                ? $this->updateUserAccount($existing['user_id'], $_POST)
+                : $this->createUserAccount($_POST);
 
             $newImage = $this->handleImageUpload($existing['profile_image']);
 
@@ -159,23 +158,17 @@ class AgentHandler
             $id = (int) ($_POST['id'] ?? $_GET['id'] ?? 0);
             if (!$id) throw new Exception('Invalid agent ID');
 
-            // Get image before soft delete
             $stmt = $this->pdo->prepare("SELECT profile_image FROM agents WHERE id = ? AND is_deleted = 0");
             $stmt->execute([$id]);
             $agent = $stmt->fetch();
-
             if (!$agent) throw new Exception('Agent not found');
 
-            // Soft delete
             $stmt = $this->pdo->prepare("UPDATE agents SET is_deleted = 1, profile_image = '' WHERE id = ?");
             $stmt->execute([$id]);
 
-            // Delete image from server
             if (!empty($agent['profile_image'])) {
                 $imagePath = $this->uploadDir . $agent['profile_image'];
-                if (file_exists($imagePath)) {
-                    unlink($imagePath);
-                }
+                if (file_exists($imagePath)) unlink($imagePath);
             }
 
             echo json_encode(['success' => true]);
@@ -186,23 +179,25 @@ class AgentHandler
 
     private function getAgent()
     {
-        $id = (int) ($_GET['id'] ?? 0);
-        if (!$id) throw new Exception('Invalid agent ID');
+        try {
+            $id = (int) ($_GET['id'] ?? 0);
+            if (!$id) throw new Exception('Invalid agent ID');
 
-        $stmt = $this->pdo->prepare("
-        SELECT a.*, u.username, u.role 
-        FROM agents a
-        LEFT JOIN users u ON a.user_id = u.id
-        WHERE a.id = ? AND a.is_deleted = 0
-    ");
-        $stmt->execute([$id]);
-        $agent = $stmt->fetch();
+            $stmt = $this->pdo->prepare("
+                SELECT a.*, u.username, u.role 
+                FROM agents a
+                LEFT JOIN users u ON a.user_id = u.id
+                WHERE a.id = ? AND a.is_deleted = 0
+            ");
+            $stmt->execute([$id]);
+            $agent = $stmt->fetch();
+            if (!$agent) throw new Exception('Agent not found');
 
-        if (!$agent) throw new Exception('Agent not found');
-
-        echo json_encode(['success' => true, 'data' => $agent]);
+            echo json_encode(['success' => true, 'data' => $agent]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
     }
-
 
     private function listAgents()
     {
@@ -215,32 +210,33 @@ class AgentHandler
 
     private function handleImageUpload($existingImage = '')
     {
-        if (!empty($_FILES['image']['name'])) {
-            if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
-                $newImage = $this->processImage($_FILES['image']['tmp_name'], $_FILES['image']['name']);
+        try {
+            if (!empty($_FILES['image']['name'])) {
+                if ($_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                    $newImage = $this->processImage($_FILES['image']['tmp_name'], $_FILES['image']['name']);
 
-                // Delete old image
-                if (!empty($existingImage)) {
-                    $oldPath = $this->uploadDir . $existingImage;
-                    if (file_exists($oldPath)) {
-                        unlink($oldPath);
+                    if (!empty($existingImage)) {
+                        $oldPath = $this->uploadDir . $existingImage;
+                        if (file_exists($oldPath)) unlink($oldPath);
                     }
+
+                    return $newImage;
+                } else {
+                    throw new Exception('Image upload error code: ' . $_FILES['image']['error']);
                 }
-
-                return $newImage;
             }
+            return $existingImage;
+        } catch (Exception $e) {
+            throw new Exception('Image upload failed: ' . $e->getMessage());
         }
-
-        return $existingImage;
     }
 
     private function processImage($tmpName, $originalName)
     {
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
         $fileType = mime_content_type($tmpName);
-
         if (!in_array($fileType, $allowedTypes)) {
-            throw new Exception('Invalid image type. Only JPEG, PNG, GIF, and WebP allowed.');
+            throw new Exception('Invalid image type. Only JPEG, PNG, GIF, WebP allowed.');
         }
 
         $lastname = preg_replace('/[^a-zA-Z0-9]/', '', strtolower($_POST['lastname']));
@@ -273,9 +269,7 @@ class AgentHandler
             $newWidth = 1200;
             $newHeight = ($height * $newWidth) / $width;
             $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
-
             imagecopyresampled($resizedImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-
             imagedestroy($image);
             $image = $resizedImage;
         }
@@ -289,34 +283,21 @@ class AgentHandler
         }
     }
 
-
     private function createUserAccount($data)
     {
-        if (empty($data['username'])) {
-            throw new Exception('Username is required to create a user account');
-        }
-
-        $username = $data['username'];
+        if (empty($data['username'])) throw new Exception('Username is required');
         $password = password_hash($data['password'] ?? '123456', PASSWORD_DEFAULT);
-        $role     = 'agent';
-
         $stmt = $this->pdo->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, ?)");
-        $stmt->execute([$username, $password, $role]);
-
-        return (int) $this->pdo->lastInsertId();
+        $stmt->execute([$data['username'], $password, 'agent']);
+        return (int)$this->pdo->lastInsertId();
     }
 
     private function updateUserAccount($userId, $data)
     {
-        $username = $data['username'];
-        $role     = 'agent';
-
         $sql = "UPDATE users SET username = ?, role = ?";
+        $params = [$data['username'], 'agent'];
 
-        $params = [$username, $role];
-
-        // If password is provided in form, update it too
-        if (isset($data['password']) && trim($data['password']) !== '') {
+        if (!empty($data['password'])) {
             $sql .= ", password = ?";
             $params[] = password_hash($data['password'], PASSWORD_DEFAULT);
         }
@@ -326,6 +307,8 @@ class AgentHandler
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
+
+        return $userId;
     }
 }
 

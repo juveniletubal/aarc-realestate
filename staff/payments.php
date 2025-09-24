@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__ . '/../includes/init.php';
 
-$page->setTitle('AARC - Agents');
-$page->setCurrentPage('agents');
+$page->setTitle('AARC - Payments');
+$page->setCurrentPage('payments');
 
 loadCoreAssets($assets, 'table_form');
 
@@ -22,21 +22,21 @@ include __DIR__ . '/../includes/sidebar.php';
                 <div class="row">
                     <div class="col-md-6 col-sm-12">
                         <div class="title">
-                            <h4>List of Agents</h4>
+                            <h4>List of Payments</h4>
                         </div>
                         <nav aria-label="breadcrumb" role="navigation">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
                                     <a href="index">Dashboard</a>
                                 </li>
-                                <li class="breadcrumb-item active text-info" aria-current="page">
-                                    Agents
+                                <li class="breadcrumb-item active text-success" aria-current="page">
+                                    Payments
                                 </li>
                             </ol>
                         </nav>
                     </div>
                     <div class="col-md-6 col-sm-12 text-right">
-                        <button class="btn btn-info" id="addNewBtn">Add New</button>
+                        <button class="btn btn-success" id="addNewBtn">Add New</button>
                     </div>
                 </div>
             </div>
@@ -46,11 +46,10 @@ include __DIR__ . '/../includes/sidebar.php';
                     <table class="data-table table stripe hover nowrap">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Percent</th>
-                                <th>Status</th>
+                                <th>Client Name</th>
+                                <th>Amount Paid</th>
+                                <th>Date</th>
+                                <th>Due Date</th>
                                 <th>Updated</th>
                                 <th class="datatable-nosort" style="width: 7%;">Action</th>
                             </tr>
@@ -66,124 +65,31 @@ include __DIR__ . '/../includes/sidebar.php';
 
     <!-- Add/Edit agent Modal -->
     <div class="modal fade" id="dataModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabel">Add New Agent</h5>
+                    <h5 class="modal-title" id="modalLabel">Add New Payment</h5>
                     <button type="button" class="close" data-dismiss="modal"> × </button>
                 </div>
                 <div class="modal-body">
-                    <form id="dataForm" enctype="multipart/form-data">
+                    <form id="dataForm">
                         <input type="hidden" name="id" id="id" value="">
 
-                        <div class="row">
-                            <div class="col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label>Firstname<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="firstname" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label>Lastname<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="lastname" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label>Email Address<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="email" name="email" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label>Contact Number<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="phone" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label>Facebook Link</label>
-                                    <input class="form-control" type="text" name="facebook_link">
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label>License Number</label>
-                                    <input class="form-control" type="text" name="license_number" placeholder="Optional">
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <label>Client Name<span class="text-danger">*</span></label>
+                            <select class="custom-select" id="clientSelect" name="client_id" required>
+                                <option value="">Choose...</option>
+                            </select>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label>Position<span class="text-danger">*</span></label>
-                                    <select class="custom-select" id="positionSelect" name="position" required>
-                                        <option value="">Choose...</option>
-                                        <option value="director">Director</option>
-                                        <option value="manager">Manager</option>
-                                        <option value="downline">Downline</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- This will show only when Manager or Downline is selected -->
-                            <div class="col-md-4 col-sm-12" id="uplineWrapper" style="display: none;">
-                                <div class="form-group">
-                                    <label>Upline<span class="text-danger">*</span></label>
-                                    <select class="custom-select" id="uplineSelect" name="upline">
-                                        <option value="">Choose...</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2 col-sm-12" id="percent">
-                                <div class="form-group">
-                                    <label>Percent %<span class="text-danger">*</span></label>
-                                    <select class="custom-select" id="percent" name="percent">
-                                        <option value="">Choose...</option>
-                                        <?php for ($i = 1; $i <= 100; $i++): ?>
-                                            <option value="<?= $i ?>"><?= $i ?>%</option>
-                                        <?php endfor; ?>
-                                    </select>
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <label>Amount Paid<span class="text-danger">*</span></label>
+                            <input class="form-control" type="text" name="amount" required>
                         </div>
 
-                        <div class="form-group" style="margin-bottom: 30px;">
-                            <label>Profile Image</label>
-                            <input type="file" name="image" class="form-control-file form-control height-auto">
-                        </div>
-
-                        <div style="text-align:center; border-bottom:1px solid #ccc; line-height:0.1em; margin:10px 0 20px;">
-                            <span style="background:#fff; padding:0 10px; color: #DC3545;">Use for login credentials</span>
-                        </div>
-
-
-                        <div class="row">
-                            <div class="col-md-6 col-sm-12">
-                                <label>Username<span class="text-danger">*</span></label>
-                                <div class="input-group custom">
-                                    <input class="form-control" type="text" name="username" required>
-                                    <div class="input-group-append custom">
-                                        <span class="input-group-text"><i class="fa fa-user-o"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-12">
-                                <label>Password<span class="text-danger">*</span></label>
-                                <div class="input-group custom">
-                                    <input class="form-control" type="password" name="password" placeholder="">
-                                    <div class="input-group-append custom">
-                                        <span class="input-group-text"><i class="fa fa-key"></i></span>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <label>Date<span class="text-danger">*</span></label>
+                            <input class="form-control" placeholder="Select Date" type="date">
                         </div>
 
                     </form>
@@ -202,6 +108,11 @@ include __DIR__ . '/../includes/sidebar.php';
 <?php include __DIR__ . '/../includes/footer.php'; ?>
 
 <script>
+    const loggedInStaffId = "<?php echo $_SESSION['user_id'] ?? ''; ?>";
+    console.log("Login ID:", loggedInStaffId);
+</script>
+
+<script>
     document.addEventListener("DOMContentLoaded", function() {
         $(document).ready(function() {
             let currentId = null;
@@ -215,7 +126,7 @@ include __DIR__ . '/../includes/sidebar.php';
                     processing: true,
                     serverSide: true,
                     ajax: {
-                        url: "agent/agent_fetch.php",
+                        url: "payment/payment_fetch.php",
                         type: "POST",
                         error: function(xhr, error, code) {
                             console.log('DataTable Ajax Error:');
@@ -235,25 +146,28 @@ include __DIR__ . '/../includes/sidebar.php';
                         orderable: false
                     }],
                     order: [
-                        [4, "desc"]
+                        [6, "desc"]
                     ],
                     columns: [{
                             data: "fullname"
                         },
                         {
-                            data: "email"
+                            data: "contact"
                         },
                         {
-                            data: "phone"
+                            data: "property_title"
                         },
                         {
-                            data: "percent",
-                            render: function(data, type, row) {
-                                return data ? data + "%" : "0%";
-                            }
+                            data: "total_price"
                         },
                         {
-                            data: "status"
+                            data: "balance"
+                        },
+                        {
+                            data: "payment_terms"
+                        },
+                        {
+                            data: "agent_name"
                         },
                         {
                             data: "updated_at"
@@ -300,7 +214,7 @@ include __DIR__ . '/../includes/sidebar.php';
             // Add New Agent Button
             $('#addNewBtn').on('click', function() {
                 resetForm();
-                $('#modalLabel').text('Add New Agent');
+                $('#modalLabel').text('Add New Payment');
                 $('#saveBtn').text('Save changes');
                 $('input[name="password"]').attr("placeholder", "•••••••••");
                 $('#dataModal').modal('show');
@@ -327,28 +241,25 @@ include __DIR__ . '/../includes/sidebar.php';
                 formData.append('action', isUpdate ? 'update' : 'insert');
                 formData.append('firstname', $('input[name="firstname"]').val());
                 formData.append('lastname', $('input[name="lastname"]').val());
-                formData.append('email', $('input[name="email"]').val());
-                formData.append('phone', $('input[name="phone"]').val());
-                formData.append('facebook_link', $('input[name="facebook_link"]').val());
-                formData.append('license_number', $('input[name="license_number"]').val());
+                formData.append('contact', $('input[name="contact"]').val());
+                formData.append('address', $('input[name="address"]').val());
+                formData.append('assigned_agent', $('select[name="assigned_agent"]').val());
+                formData.append('property_id', $('select[name="property_id"]').val());
+                formData.append('payment_terms', $('select[name="payment_terms"]').val());
+                formData.append('total_price', $('input[name="total_price"]').val());
+                formData.append('balance', $('input[name="balance"]').val());
+                formData.append('penalty', $('input[name="penalty"]').val());
                 formData.append('username', $('input[name="username"]').val());
                 formData.append('password', $('input[name="password"]').val());
-                formData.append('position', $('select[name="position"]').val());
-                formData.append('upline', $('select[name="upline"]').val());
-                formData.append('percent', $('select[name="percent"]').val());
+
+                formData.append('assigned_staff', loggedInStaffId);
 
                 if (isUpdate) {
                     formData.append('id', currentId);
                 }
 
-                // Add image file
-                const imageFile = $('input[name="image"]')[0].files[0];
-                if (imageFile) {
-                    formData.append('image', imageFile);
-                }
-
                 $.ajax({
-                    url: 'agent/agent_handler.php',
+                    url: 'client/client_handler.php',
                     type: 'POST',
                     data: formData,
                     contentType: false,
@@ -356,7 +267,7 @@ include __DIR__ . '/../includes/sidebar.php';
                     success: function(response) {
                         if (response.success) {
                             toastr.success(
-                                isUpdate ? "Agent updated successfully!" : "Agent added successfully!",
+                                isUpdate ? "Client updated successfully!" : "Client added successfully!",
                                 "Success"
                             );
                             $('#dataModal').modal('hide');
@@ -375,43 +286,38 @@ include __DIR__ . '/../includes/sidebar.php';
             function validateForm() {
                 const firstname = $('input[name="firstname"]').val().trim();
                 const lastname = $('input[name="lastname"]').val().trim();
-                const email = $('input[name="email"]').val().trim();
-                const phone = $('input[name="phone"]').val().trim();
+                const contact = $('input[name="contact"]').val().trim();
+                const assigned_agent = $('select[name="assigned_agent"]').val();
+                const property_id = $('select[name="property_id"]').val();
+                const payment_terms = $('select[name="payment_terms"]').val();
                 const username = $('input[name="username"]').val().trim();
-                const position = $('select[name="position"]').val();
-                const percent = $('select[name="percent"]').val();
 
                 if (!firstname) {
-                    toastr.error("Agent firstname is required", "Validation Error");
+                    toastr.error("Firstname is required", "Validation Error");
                     return false;
                 }
                 if (!lastname) {
-                    toastr.error("Agent lastname is required", "Validation Error");
+                    toastr.error("Lastname is required", "Validation Error");
                     return false;
                 }
-                if (!email) {
-                    toastr.error("Agent email is required", "Validation Error");
+                if (!contact) {
+                    toastr.error("Contact is required", "Validation Error");
                     return false;
                 }
-                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailPattern.test(email)) {
-                    toastr.error("Please enter a valid email address", "Validation Error");
+                if (!assigned_agent) {
+                    toastr.error("Assigned agent is required", "Validation Error");
                     return false;
                 }
-                if (!phone) {
-                    toastr.error("Agent contact number is required", "Validation Error");
+                if (!property_id) {
+                    toastr.error("Property is required", "Validation Error");
+                    return false;
+                }
+                if (!payment_terms) {
+                    toastr.error("Payment terms is required", "Validation Error");
                     return false;
                 }
                 if (!username) {
-                    toastr.error("Agent username is required", "Validation Error");
-                    return false;
-                }
-                if (!position) {
-                    toastr.error("Agent position is required", "Validation Error");
-                    return false;
-                }
-                if (!percent) {
-                    toastr.error("Percentage is required", "Validation Error");
+                    toastr.error("User username is required", "Validation Error");
                     return false;
                 }
 
@@ -420,7 +326,7 @@ include __DIR__ . '/../includes/sidebar.php';
 
             window.editData = function(id) {
                 $.ajax({
-                    url: 'agent/agent_handler.php',
+                    url: 'client/client_handler.php',
                     type: 'GET',
                     data: {
                         action: 'get',
@@ -430,7 +336,7 @@ include __DIR__ . '/../includes/sidebar.php';
                         if (response.success) {
                             const record = response.data;
                             populateForm(record);
-                            $('#modalLabel').text('Edit Agent');
+                            $('#modalLabel').text('Edit Client');
                             $('#saveBtn').text('Save update');
                             $('#dataModal').modal('show');
                         } else {
@@ -450,48 +356,19 @@ include __DIR__ . '/../includes/sidebar.php';
                 $('#id').val(record.id);
                 $('input[name="firstname"]').val(record.firstname);
                 $('input[name="lastname"]').val(record.lastname);
-                $('input[name="email"]').val(record.email);
-                $('input[name="phone"]').val(record.phone);
-                $('input[name="facebook_link"]').val(record.facebook_link);
-                $('input[name="license_number"]').val(record.license_number);
-                $('select[name="upline"]').val(record.upline_id);
-                $('select[name="percent"]').val(record.percent);
+                $('input[name="contact"]').val(record.contact);
+                $('input[name="address"]').val(record.address);
+
+                $('select[name="assigned_agent"]').val(record.assigned_agent);
+                $('select[name="property_id"]').val(record.property_id);
+                $('select[name="payment_terms"]').val(record.payment_terms);
+
+                $('input[name="total_price"]').val(record.total_price);
+                $('input[name="balance"]').val(record.balance);
+                $('input[name="penalty"]').val(record.penalty);
+
                 $('input[name="username"]').val(record.username || "");
                 $('input[name="password"]').val("").attr("placeholder", "Leave blank to keep the current password");
-
-                $('select[name="position"]').val(record.position).trigger("change");
-
-                if (record.position === "manager" || record.position === "downline") {
-                    $.ajax({
-                        url: "agent/fetch_directors.php",
-                        method: "GET",
-                        dataType: "json",
-                        success: function(response) {
-                            if (response.success) {
-                                const $uplineSelect = $('select[name="upline"]');
-                                $uplineSelect.empty().append('<option value="">Choose...</option>');
-
-                                response.data.forEach(director => {
-                                    $uplineSelect.append(
-                                        `<option value="${director.id}">${director.name}</option>`
-                                    );
-                                });
-
-                                if (record.upline_id) {
-                                    $uplineSelect.val(record.upline_id);
-                                }
-                            } else {
-                                toastr.error("Failed to load directors");
-                            }
-                        },
-                        error: function() {
-                            toastr.error("Error fetching directors");
-                        }
-                    });
-                } else {
-                    $("#uplineWrapper").hide();
-                    $('select[name="upline"]').val("");
-                }
             }
 
             window.deleteData = function(id) {
@@ -506,7 +383,7 @@ include __DIR__ . '/../includes/sidebar.php';
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: 'agent/agent_handler.php',
+                            url: 'user/user_handler.php',
                             type: 'POST',
                             data: {
                                 action: 'delete',
@@ -514,7 +391,7 @@ include __DIR__ . '/../includes/sidebar.php';
                             },
                             success: function(response) {
                                 if (response.success) {
-                                    toastr.success("Agent deleted successfully!", "Success");
+                                    toastr.success("User deleted successfully!", "Success");
                                     loadProperties();
                                 } else {
                                     toastr.error(response.message, "Error");
@@ -583,5 +460,77 @@ include __DIR__ . '/../includes/sidebar.php';
     });
 </script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let property = [];
 
-<!-- done properties and agents proceed to next step Payments and Sales -->
+        $.ajax({
+            url: "client/property_fetch.php",
+            method: "GET",
+            dataType: "json",
+            success: function(response) {
+                if (response.success) {
+                    property = response.data; // save for later use
+                    $("#propertySelect").empty().append('<option value="">Choose...</option>');
+
+                    response.data.forEach(item => {
+                        $("#propertySelect").append(
+                            `<option value="${item.id}">${item.title}</option>`
+                        );
+                    });
+                } else {
+                    toastr.error("Failed to load property");
+                }
+            },
+            error: function() {
+                toastr.error("Error fetching property");
+            }
+        });
+
+        // When user selects a property
+        $("#propertySelect").on("change", function() {
+            let selectedId = $(this).val();
+
+            let selected = property.find(p => p.id == selectedId);
+
+            if (selected) {
+                $("input[name='total_price']").val(selected.price);
+                $("input[name='balance']").val(selected.price);
+                $("input[name='penalty']").val("0");
+            } else {
+                $("input[name='total_price']").val("");
+                $("input[name='balance']").val("");
+                $("input[name='penalty']").val("");
+            }
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let agent = [];
+
+        $.ajax({
+            url: "client/agent_fetch.php",
+            method: "GET",
+            dataType: "json",
+            success: function(response) {
+                if (response.success) {
+                    agent = response.data; // save for later use
+                    $("#agentSelect").empty().append('<option value="">Choose...</option>');
+
+                    response.data.forEach(item => {
+                        $("#agentSelect").append(
+                            `<option value="${item.id}">${item.agent_name}</option>`
+                        );
+                    });
+                } else {
+                    toastr.error("Failed to load agent");
+                }
+            },
+            error: function() {
+                toastr.error("Error fetching agent");
+            }
+        });
+    });
+</script>

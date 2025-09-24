@@ -3818,8 +3818,8 @@ fieldset:disabled a.btn {
 }
 .custom-control-input:checked ~ .custom-control-label::before {
   color: #fff;
-  border-color: #1b00ff;
-  background-color: #1b00ff;
+  border-color: #28a745;
+  background-color: #28a745;
 }
 .custom-control-input:focus ~ .custom-control-label::before {
   -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
@@ -3873,8 +3873,8 @@ fieldset:disabled a.btn {
 .custom-checkbox
   .custom-control-input:indeterminate
   ~ .custom-control-label::before {
-  border-color: #1b00ff;
-  background-color: #1b00ff;
+  border-color: #28a745;
+  background-color: #28a745;
 }
 .custom-checkbox
   .custom-control-input:indeterminate
@@ -4991,7 +4991,7 @@ fieldset:disabled a.btn {
   text-decoration: none;
 }
 .breadcrumb-item.active {
-  color: #17a2b8;
+  color: #28a745;
 }
 .pagination {
   padding-left: 0;
@@ -5002,7 +5002,7 @@ fieldset:disabled a.btn {
   padding: 0.5rem 0.75rem;
   margin-left: -1px;
   line-height: 1;
-  color: #17a2b8;
+  color: #28a745;
   background-color: #fff;
   border: 1px solid #dee2e6;
 }
@@ -5031,8 +5031,8 @@ fieldset:disabled a.btn {
 .page-item.active .page-link {
   z-index: 3;
   color: #fff;
-  background-color: #17a2b8;
-  border-color: #17a2b8;
+  background-color: #28a745;
+  border-color: #28a745;
 }
 .page-item.disabled .page-link {
   color: #6c757d;
@@ -16592,7 +16592,7 @@ textarea.form-control {
 .custom-select:focus,
 .form-control:focus {
   color: #131e22;
-  border-color: #1b00ff;
+  border-color: #28a745;
   -webkit-box-shadow: 0 0 28px rgba(0, 0, 0, 0.1);
   box-shadow: 0 0 28px rgba(0, 0, 0, 0.1);
 }
@@ -17035,7 +17035,7 @@ table.dataTable thead .sorting_desc_disabled:after {
 .fontawesome-icon-list .fa-hover:hover a,
 table.dataTable thead .sorting_asc:before,
 table.dataTable thead .sorting_desc:after {
-  color: #17a2b8;
+  color: #28a745;
 }
 table.dataTable > tbody > tr.child ul.dtr-details {
   white-space: normal;
@@ -17087,7 +17087,7 @@ div.dataTables_wrapper div.dataTables_paginate {
 }
 .dt-checkbox input:checked ~ span {
   background: #1b00ff;
-  border-color: #1b00ff;
+  border-color: #28a745;
   color: #fff;
 }
 .dt-checkbox input:checked ~ span:before {
@@ -17862,9 +17862,9 @@ body.IE .register-page-wrap .container {
 .select-role .btn-group .btn.active,
 .select-role .btn-group .btn.active:focus,
 .select-role .btn-group .btn.focus.active {
-  background-color: rgba(27, 0, 255, 0.05);
-  border-color: rgba(27, 0, 255, 0.5);
-  color: #1b00ff;
+  background-color: rgba(40, 167, 69, 0.05);
+  border-color: rgba(40, 167, 69, 0.5);
+  color: #28a745;
 }
 .select-role .btn-group .btn .icon {
   position: absolute;
@@ -17966,7 +17966,7 @@ body.IE .register-page-wrap .container {
   background-color: transparent;
 }
 .register-page-wrap .wizard-content .wizard > .steps > ul > li.current .step {
-  border-color: #1b00ff;
+  border-color: #17a2b8;
   color: #181f48;
   background-color: #fff;
 }

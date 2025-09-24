@@ -98,20 +98,35 @@ include __DIR__ . '/../includes/sidebar.php';
                         </div>
                         <div class="form-group">
                             <label>Price<span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="price" required>
+                            <input class="form-control" type="text" name="price" id="price" required>
                         </div>
                         <div class="form-group">
                             <label>Location (Barangay, City, Province)</label>
                             <input class="form-control" type="text" name="location">
                         </div>
-                        <div class="form-group">
-                            <label>Property Type<span class="text-danger">*</span></label>
-                            <select class="custom-select" name="property_type" required>
-                                <option value="">Choose...</option>
-                                <option value="Residential">Residential</option>
-                                <option value="Commercial">Commercial</option>
-                                <option value="Agricultural">Agricultural</option>
-                            </select>
+
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Property Type<span class="text-danger">*</span></label>
+                                    <select class="custom-select" name="property_type" required>
+                                        <option value="">Choose...</option>
+                                        <option value="Residential">Residential</option>
+                                        <option value="Commercial">Commercial</option>
+                                        <option value="Agricultural">Agricultural</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Status</label>
+                                    <select class="custom-select" name="status">
+                                        <option value="available">Available</option>
+                                        <option value="reserved">Reserved</option>
+                                        <option value="sold">Sold</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -183,12 +198,7 @@ include __DIR__ . '/../includes/sidebar.php';
                             data: "lot_area"
                         },
                         {
-                            data: "price",
-                            render: function(data) {
-                                return '₱' + parseFloat(data).toLocaleString('en-US', {
-                                    minimumFractionDigits: 2
-                                });
-                            }
+                            data: "price"
                         },
                         {
                             data: "location"
@@ -365,6 +375,7 @@ include __DIR__ . '/../includes/sidebar.php';
                 formData.append('price', $('input[name="price"]').val());
                 formData.append('location', $('input[name="location"]').val());
                 formData.append('property_type', $('select[name="property_type"]').val());
+                formData.append('status', $('select[name="status"]').val());
 
                 if (isUpdate) {
                     formData.append('id', currentPropertyId);
@@ -466,9 +477,12 @@ include __DIR__ . '/../includes/sidebar.php';
 
                 $('#id').val(property.id);
                 $('input[name="title"]').val(property.title);
+                $('textarea[name="description"]').val(property.description);
                 $('input[name="lot_area"]').val(property.lot_area);
                 $('input[name="price"]').val(property.price);
+                $('input[name="location"]').val(property.location);
                 $('select[name="property_type"]').val(property.property_type);
+                $('select[name="status"]').val(property.status);
 
                 // Clear dropzone and add existing images
                 propertyDropzone.removeAllFiles(true);
@@ -510,7 +524,7 @@ include __DIR__ . '/../includes/sidebar.php';
                             success: function(response) {
                                 if (response.success) {
                                     toastr.success("Property deleted successfully!", "Success");
-                                    loadProperties(); // Refresh your property list
+                                    loadProperties();
                                 } else {
                                     toastr.error(response.message, "Error");
                                 }
@@ -527,7 +541,7 @@ include __DIR__ . '/../includes/sidebar.php';
             // Function to load properties list (implement according to your needs)
             function loadProperties() {
                 if (propertyTable) {
-                    propertyTable.ajax.reload(null, false); // Reload DataTable without resetting pagination
+                    propertyTable.ajax.reload(null, false);
                 }
             }
         });
@@ -536,5 +550,23 @@ include __DIR__ . '/../includes/sidebar.php';
             document.activeElement.blur();
         });
 
+    });
+</script>
+
+<script>
+    const priceInput = document.getElementById("price");
+
+    priceInput.addEventListener("input", function(e) {
+        let value = this.value.replace(/,/g, "");
+
+        if (!/^\d*$/.test(value)) {
+            value = value.replace(/\D/g, "");
+        }
+
+        this.value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    });
+
+    priceInput.form?.addEventListener("submit", function() {
+        priceInput.value = priceInput.value.replace(/,/g, "");
     });
 </script>

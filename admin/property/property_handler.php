@@ -54,10 +54,6 @@ class PropertyHandler
             }
         }
 
-        if (!in_array($data['property_type'], ['Residential', 'Commercial', 'Agricultural'])) {
-            throw new Exception('Invalid property type');
-        }
-
         if (!is_numeric(str_replace(',', '', $data['price']))) {
             throw new Exception('Invalid price format');
         }
@@ -68,8 +64,8 @@ class PropertyHandler
         $this->validateInput($_POST);
 
         $stmt = $this->pdo->prepare("
-            INSERT INTO properties (title, description, lot_area, price, location, property_type, images) 
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO properties (title, description, lot_area, price, location, property_type, status, images) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
         $images = $this->handleImageUpload();
@@ -85,6 +81,7 @@ class PropertyHandler
             $price,
             $_POST['location'] ?? '',
             $_POST['property_type'],
+            $_POST['status'],
             $imagesString
         ]);
 
@@ -111,7 +108,7 @@ class PropertyHandler
 
         $stmt = $this->pdo->prepare("
             UPDATE properties 
-            SET title = ?, description = ?, lot_area = ?, price = ?, location = ?, property_type = ?, images = ?
+            SET title = ?, description = ?, lot_area = ?, price = ?, location = ?, property_type = ?, status = ?, images = ?
             WHERE id = ? AND is_deleted = 0
         ");
 
@@ -127,6 +124,7 @@ class PropertyHandler
             $price,
             $_POST['location'] ?? '',
             $_POST['property_type'],
+            $_POST['status'],
             $imagesString,
             $id
         ]);

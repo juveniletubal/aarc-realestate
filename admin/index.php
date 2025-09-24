@@ -19,10 +19,10 @@ include __DIR__ . '/../includes/sidebar.php';
 <div class="main-container">
     <div class="xs-pd-20-10 pd-ltr-20">
         <div class="title pb-20">
-            <h2 class="h3 mb-0">Hospital Overview</h2>
+            <h2 class="h3 mb-0">Under Develop</h2>
         </div>
 
-        <div class="row pb-10">
+        <!-- <div class="row pb-10">
             <div class="col-xl-3 col-lg-3 col-md-6 mb-20">
                 <div class="card-box height-100-p widget-style3">
                     <div class="d-flex flex-wrap">
@@ -118,7 +118,6 @@ include __DIR__ . '/../includes/sidebar.php';
                     <div class="d-flex justify-content-between pb-20 text-white">
                         <div class="icon h1 text-white">
                             <i class="fa fa-calendar" aria-hidden="true"></i>
-                            <!-- <i class="icon-copy fa fa-stethoscope" aria-hidden="true"></i> -->
                         </div>
                         <div class="font-14 text-right">
                             <div><i class="icon-copy ion-arrow-up-c"></i> 2.69%</div>
@@ -156,7 +155,7 @@ include __DIR__ . '/../includes/sidebar.php';
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
     </div>
 </div>

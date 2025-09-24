@@ -49,9 +49,9 @@
                     role="button"
                     data-toggle="dropdown">
                     <span class="user-icon">
-                        <img src="../assets/img/person/person-m-10.webp" alt="" />
+                        <img src="<?php echo htmlspecialchars($_SESSION['image']); ?>" alt="User" />
                     </span>
-                    <span class="user-name">Ross C. Lopez</span>
+                    <span class="user-name"><?php echo htmlspecialchars($_SESSION['fullname']); ?></span>
                 </a>
                 <div
                     class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
