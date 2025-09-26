@@ -3480,7 +3480,7 @@ fieldset:disabled a.btn {
 .dropdown-item:active {
   color: #fff;
   text-decoration: none;
-  background-color: #1b00ff;
+  background-color: #28a745;
 }
 .dropdown-item.disabled,
 .dropdown-item:disabled {
@@ -4303,7 +4303,7 @@ fieldset:disabled a.btn {
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
   color: #fff;
-  background-color: #1b00ff;
+  background-color: #28a745;
 }
 .nav-fill .nav-item {
   -ms-flex: 1 1 auto;
@@ -16541,7 +16541,7 @@ p {
 .dropdown-item:focus,
 .dropdown-item:hover {
   background: #ecf0f4;
-  color: #1b00ff;
+  color: #28a745;
 }
 .form-group {
   margin-bottom: 20px;

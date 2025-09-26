@@ -36,14 +36,14 @@ include __DIR__ . '/../includes/sidebar.php';
                                 <li class="breadcrumb-item">
                                     <a href="index">Dashboard</a>
                                 </li>
-                                <li class="breadcrumb-item active text-info" aria-current="page">
+                                <li class="breadcrumb-item active text-success" aria-current="page">
                                     Properties
                                 </li>
                             </ol>
                         </nav>
                     </div>
                     <div class="col-md-6 col-sm-12 text-right">
-                        <button class="btn btn-info" id="addNewBtn">Add New</button>
+                        <button class="btn btn-success" id="addNewBtn">Add New</button>
                     </div>
                 </div>
             </div>
@@ -259,6 +259,7 @@ include __DIR__ . '/../includes/sidebar.php';
                 resetForm();
                 $('#propertyModalLabel').text('Add New Property');
                 $('#savePropertyBtn').text('Save changes');
+                $('#savePropertyBtn').attr('class', 'btn btn-success');
                 $('#propertyModal').modal('show');
             });
 
@@ -459,6 +460,7 @@ include __DIR__ . '/../includes/sidebar.php';
                             populateForm(property);
                             $('#propertyModalLabel').text('Edit Property');
                             $('#savePropertyBtn').text('Save update');
+                            $('#savePropertyBtn').attr('class', 'btn btn-info');
                             $('#propertyModal').modal('show');
                         } else {
                             toastr.error(response.message, "Error");

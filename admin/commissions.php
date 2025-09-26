@@ -66,7 +66,7 @@ include __DIR__ . '/../includes/sidebar.php';
 
     <!-- Add/Edit agent Modal -->
     <div class="modal fade" id="dataModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalLabel">Add New User</h5>
@@ -77,7 +77,7 @@ include __DIR__ . '/../includes/sidebar.php';
                         <input type="hidden" name="id" id="id" value="">
 
                         <div class="row">
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-8 col-sm-12">
                                 <div class="form-group">
                                     <label>Director<span class="text-danger">*</span></label>
                                     <select class="custom-select" name="director" required>
@@ -85,11 +85,11 @@ include __DIR__ . '/../includes/sidebar.php';
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
                                     <label>Percentage %<span class="text-danger">*</span></label>
                                     <select class="custom-select" id="percent" name="percent">
-                                        <?php for ($i = 1; $i <= 100; $i++): ?>
+                                        <?php for ($i = 0; $i <= 100; $i++): ?>
                                             <option value="<?= $i ?>"><?= $i ?>%</option>
                                         <?php endfor; ?>
                                     </select>
@@ -98,7 +98,7 @@ include __DIR__ . '/../includes/sidebar.php';
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-8 col-sm-12">
                                 <div class="form-group">
                                     <label>Manager<span class="text-danger">*</span></label>
                                     <select class="custom-select" name="manager" required>
@@ -106,11 +106,11 @@ include __DIR__ . '/../includes/sidebar.php';
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
                                     <label>Percentage %<span class="text-danger">*</span></label>
                                     <select class="custom-select" id="percent" name="percent">
-                                        <?php for ($i = 1; $i <= 100; $i++): ?>
+                                        <?php for ($i = 0; $i <= 100; $i++): ?>
                                             <option value="<?= $i ?>"><?= $i ?>%</option>
                                         <?php endfor; ?>
                                     </select>
@@ -119,7 +119,7 @@ include __DIR__ . '/../includes/sidebar.php';
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-8 col-sm-12">
                                 <div class="form-group">
                                     <label>Downline<span class="text-danger">*</span></label>
                                     <select class="custom-select" name="director" required>
@@ -127,17 +127,29 @@ include __DIR__ . '/../includes/sidebar.php';
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
                                     <label>Percentage %<span class="text-danger">*</span></label>
                                     <select class="custom-select" id="percent" name="percent">
-                                        <?php for ($i = 1; $i <= 100; $i++): ?>
+                                        <?php for ($i = 0; $i <= 100; $i++): ?>
                                             <option value="<?= $i ?>"><?= $i ?>%</option>
                                         <?php endfor; ?>
                                     </select>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label>Term<span class="text-danger">*</span></label>
+                            <select class="custom-select" name="term" required>
+                                <option value="">Choose...</option>
+                                <option value="">3 Month</option>
+                                <option value="">6 Month</option>
+                                <option value="">12 Month</option>
+                                <option value="">48 Month</option>
+                            </select>
+                        </div>
+
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -249,8 +261,9 @@ include __DIR__ . '/../includes/sidebar.php';
             // Add New Agent Button
             $('#addNewBtn').on('click', function() {
                 resetForm();
-                $('#modalLabel').text('Add New User');
+                $('#modalLabel').text('Add New Commission');
                 $('#saveBtn').text('Save changes');
+                $('#saveBtn').attr('class', 'btn btn-success')
                 $('input[name="password"]').attr("placeholder", "•••••••••");
                 $('#dataModal').modal('show');
             });
@@ -364,6 +377,7 @@ include __DIR__ . '/../includes/sidebar.php';
                             populateForm(record);
                             $('#modalLabel').text('Edit User');
                             $('#saveBtn').text('Save update');
+                            $('#saveBtn').attr('class', 'btn btn-update')
                             $('#dataModal').modal('show');
                         } else {
                             toastr.error(response.message, "Error");

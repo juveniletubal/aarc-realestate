@@ -381,6 +381,7 @@ include __DIR__ . '/../includes/sidebar.php';
                 resetForm();
                 $('#modalLabel').text('Add New User');
                 $('#saveBtn').text('Save changes');
+                $('#saveBtn').attr('class', 'btn btn-success')
                 $('input[name="password"]').attr("placeholder", "•••••••••");
                 $('#dataModal').modal('show');
             });
@@ -494,6 +495,7 @@ include __DIR__ . '/../includes/sidebar.php';
                             populateForm(record);
                             $('#modalLabel').text('Edit User');
                             $('#saveBtn').text('Save update');
+                            $('#saveBtn').attr('class', 'btn btn-info')
                             $('#dataModal').modal('show');
                         } else {
                             toastr.error(response.message, "Error");
