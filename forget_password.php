@@ -13,9 +13,9 @@
 </head>
 
 <style>
-	/* body {
-		background-color: #F1F6F3;
-	} */
+	body {
+		background-color: #E4EBEC;
+	}
 
 	.login-wrap {
 		min-height: 100vh;
@@ -44,9 +44,6 @@
 									type="text"
 									class="form-control form-control-lg"
 									placeholder="Email" />
-								<div class="input-group-append custom">
-									<span class="input-group-text"><i class="fa fa-envelope-o" aria-hidden="true"></i></span>
-								</div>
 							</div>
 							<div class="row align-items-center">
 								<div class="col-5">

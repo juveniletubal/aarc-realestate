@@ -4,9 +4,13 @@ require_once '../../classes/Database.php';
 header('Content-Type: application/json');
 
 try {
-    $stmt = $pdo->prepare("SELECT id, title, price
-                           FROM properties 
-                           WHERE status = 'available' AND is_deleted = 0");
+    $stmt = $pdo->prepare("
+        SELECT id, 
+               CONCAT('Lot ', lot, ' / Block ', block) AS label, 
+               price, location
+        FROM properties 
+        WHERE status = 'available' AND is_deleted = 0
+    ");
     $stmt->execute();
     $property = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

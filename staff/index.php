@@ -8,6 +8,12 @@ $page->addBreadcrumb('Dashboard');
 
 loadCoreAssets($assets, 'dashboard');
 
+$welcomeMessage = "";
+if (isset($_SESSION['welcome_message'])) {
+    $welcomeMessage = $_SESSION['welcome_message'];
+    unset($_SESSION['welcome_message']);
+}
+
 include __DIR__ . '/../includes/header.php';
 ?>
 
@@ -42,3 +48,18 @@ include __DIR__ . '/../includes/sidebar.php';
 </div>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        <?php if (!empty($welcomeMessage)) : ?>
+            toastr.options = {
+                closeButton: true,
+                progressBar: true,
+                positionClass: "toast-bottom-right",
+                timeOut: "8000"
+            };
+
+            toastr.success("<?php echo $welcomeMessage; ?>");
+        <?php endif; ?>
+    });
+</script>

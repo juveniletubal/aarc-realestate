@@ -82,13 +82,14 @@ include __DIR__ . '/../includes/sidebar.php';
                                     <label>Director<span class="text-danger">*</span></label>
                                     <select class="custom-select" name="director" required>
                                         <option value="">Choose...</option>
+                                        <!-- PHP loop for users -->
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
                                     <label>Percentage %<span class="text-danger">*</span></label>
-                                    <select class="custom-select" id="percent" name="percent">
+                                    <select class="custom-select" name="director_percent" required>
                                         <?php for ($i = 0; $i <= 100; $i++): ?>
                                             <option value="<?= $i ?>"><?= $i ?>%</option>
                                         <?php endfor; ?>
@@ -103,13 +104,14 @@ include __DIR__ . '/../includes/sidebar.php';
                                     <label>Manager<span class="text-danger">*</span></label>
                                     <select class="custom-select" name="manager" required>
                                         <option value="">Choose...</option>
+                                        <!-- PHP loop for users -->
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
                                     <label>Percentage %<span class="text-danger">*</span></label>
-                                    <select class="custom-select" id="percent" name="percent">
+                                    <select class="custom-select" name="manager_percent" required>
                                         <?php for ($i = 0; $i <= 100; $i++): ?>
                                             <option value="<?= $i ?>"><?= $i ?>%</option>
                                         <?php endfor; ?>
@@ -122,15 +124,16 @@ include __DIR__ . '/../includes/sidebar.php';
                             <div class="col-md-8 col-sm-12">
                                 <div class="form-group">
                                     <label>Downline<span class="text-danger">*</span></label>
-                                    <select class="custom-select" name="director" required>
+                                    <select class="custom-select" name="downline" required>
                                         <option value="">Choose...</option>
+                                        <!-- PHP loop for users -->
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
                                     <label>Percentage %<span class="text-danger">*</span></label>
-                                    <select class="custom-select" id="percent" name="percent">
+                                    <select class="custom-select" name="downline_percent" required>
                                         <?php for ($i = 0; $i <= 100; $i++): ?>
                                             <option value="<?= $i ?>"><?= $i ?>%</option>
                                         <?php endfor; ?>
@@ -143,12 +146,17 @@ include __DIR__ . '/../includes/sidebar.php';
                             <label>Term<span class="text-danger">*</span></label>
                             <select class="custom-select" name="term" required>
                                 <option value="">Choose...</option>
-                                <option value="">3 Month</option>
-                                <option value="">6 Month</option>
-                                <option value="">12 Month</option>
-                                <option value="">48 Month</option>
+                                <option value="spot">Spot Cash</option>
+                                <option value="3">3 Months</option>
+                                <option value="6">6 Months</option>
+                                <option value="12">12 Months (1 Year)</option>
+                                <option value="24">24 Months (2 Years)</option>
+                                <option value="36">36 Months (3 Years)</option>
+                                <option value="48">48 Months (4 Years)</option>
+                                <option value="60">60 Months (5 Years)</option>
                             </select>
                         </div>
+
 
                     </form>
                 </div>
@@ -499,3 +507,10 @@ include __DIR__ . '/../includes/sidebar.php';
         });
     });
 </script>
+
+
+
+
+
+
+<!-- Commission Insert Nako -->

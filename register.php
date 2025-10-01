@@ -14,9 +14,9 @@
 </head>
 
 <style>
-	/* body {
-		background-color: #F1F6F3;
-	} */
+	body {
+		background-color: #E4EBEC;
+	}
 
 	.register-page-wrap {
 		min-height: 100vh;
@@ -156,7 +156,7 @@
 								</section>
 
 								<div class="text-center mt-4">
-									<a href="login">← Back to Login</a>
+									<a href="index">← Back to Home</a>
 								</div>
 							</form>
 						</div>

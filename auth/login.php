@@ -40,6 +40,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 $_SESSION['fullname'] = $person['firstname'] . ' ' . $person['lastname'];
+
+                if ($person['role'] == 'admin') {
+                    $role_type = 'Admin';
+                } elseif ($person['role'] == 'staff') {
+                    $role_type = 'Staff';
+                } elseif ($person['role'] == 'agent') {
+                    $role_type = 'Agent';
+                } else {
+                    $role_type = 'Client';
+                }
+
+                $_SESSION['welcome_message'] = "Welcome " . $_SESSION['fullname'] . " (" . $role_type . ")";
             } else {
                 $_SESSION['image'] = "../assets/img/person/person-m-10.webp";
             }

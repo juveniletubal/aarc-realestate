@@ -54,12 +54,13 @@ include __DIR__ . '/../includes/sidebar.php';
                         <thead>
                             <tr>
                                 <th class="table-plus">Title</th>
+                                <th>Lot / Block</th>
                                 <th>Lot Area</th>
                                 <th>Price</th>
                                 <th>Location</th>
                                 <th>Type</th>
                                 <th>Status</th>
-                                <th>Created</th>
+                                <th>Updated</th>
                                 <th class="datatable-nosort" style="width: 7%;">Action</th>
                             </tr>
                         </thead>
@@ -88,32 +89,73 @@ include __DIR__ . '/../includes/sidebar.php';
                             <label>Property Title<span class="text-danger">*</span></label>
                             <input class="form-control" type="text" name="title" required>
                         </div>
+
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Lot #<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" name="lot" id="lot" placeholder="Enter Lot Number" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Block<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="block" name="block" placeholder="Enter Block Number" required>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group">
-                            <label>Description<span class="text-danger">*</span></label>
+                            <label>Description</label>
                             <textarea class="form-control" style="height:100px;" name="description"></textarea>
                         </div>
                         <div class="form-group">
                             <label>Lot Area (sqm)<span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="lot_area" required>
+                            <input class="form-control" type="text" name="lot_area" id="lot_area" required>
                         </div>
                         <div class="form-group">
                             <label>Price<span class="text-danger">*</span></label>
                             <input class="form-control" type="text" name="price" id="price" required>
                         </div>
                         <div class="form-group">
-                            <label>Location (Barangay, City, Province)</label>
-                            <input class="form-control" type="text" name="location">
+                            <label for="location">Location<span class="text-danger">*</span></label>
+                            <select class="custom-select" name="location" id="location" required>
+                                <option value="">-- Select Barangay --</option>
+                                <option value="Apopong">Apopong</option>
+                                <option value="Baluan">Baluan</option>
+                                <option value="Batomelong">Batomelong</option>
+                                <option value="Buayan">Buayan</option>
+                                <option value="Bula">Bula</option>
+                                <option value="Calumpang">Calumpang</option>
+                                <option value="City Heights">City Heights</option>
+                                <option value="Conel">Conel</option>
+                                <option value="Dadiangas East">Dadiangas East</option>
+                                <option value="Dadiangas North">Dadiangas North</option>
+                                <option value="Dadiangas South">Dadiangas South</option>
+                                <option value="Dadiangas West">Dadiangas West</option>
+                                <option value="Fatima">Fatima</option>
+                                <option value="Katangawan">Katangawan</option>
+                                <option value="Labangal">Labangal</option>
+                                <option value="Lagao">Lagao</option>
+                                <option value="Mabuhay">Mabuhay</option>
+                                <option value="Olympog">Olympog</option>
+                                <option value="San Isidro">San Isidro</option>
+                                <option value="Siguel">Siguel</option>
+                                <option value="Silway">Silway</option>
+                                <option value="Tambler">Tambler</option>
+                                <option value="Tinagacan">Tinagacan</option>
+                                <option value="Upper Labay">Upper Labay</option>
+                            </select>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
-                                    <label>Property Type<span class="text-danger">*</span></label>
-                                    <select class="custom-select" name="property_type" required>
-                                        <option value="">Choose...</option>
-                                        <option value="Residential">Residential</option>
-                                        <option value="Commercial">Commercial</option>
+                                    <label>Property Type</label>
+                                    <select class="custom-select" name="property_type">
                                         <option value="Agricultural">Agricultural</option>
+                                        <option value="Commercial">Commercial</option>
+                                        <option value="Residential">Residential</option>
                                     </select>
                                 </div>
                             </div>
@@ -148,6 +190,7 @@ include __DIR__ . '/../includes/sidebar.php';
 
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
+<script src="https://cdn.jsdelivr.net/npm/cleave.js@1/dist/cleave.min.js"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -195,6 +238,9 @@ include __DIR__ . '/../includes/sidebar.php';
                             data: "title"
                         },
                         {
+                            data: "lot_block"
+                        },
+                        {
                             data: "lot_area"
                         },
                         {
@@ -210,7 +256,7 @@ include __DIR__ . '/../includes/sidebar.php';
                             data: "status"
                         },
                         {
-                            data: "created"
+                            data: "updated_at"
                         },
                         {
                             data: "id",
@@ -371,10 +417,12 @@ include __DIR__ . '/../includes/sidebar.php';
                 // Add form data
                 formData.append('action', isUpdate ? 'update' : 'insert');
                 formData.append('title', $('input[name="title"]').val());
+                formData.append('lot', $('input[name="lot"]').val());
+                formData.append('block', $('input[name="block"]').val());
                 formData.append('description', $('textarea[name="description"]').val());
                 formData.append('lot_area', $('input[name="lot_area"]').val());
                 formData.append('price', $('input[name="price"]').val());
-                formData.append('location', $('input[name="location"]').val());
+                formData.append('location', $('select[name="location"]').val());
                 formData.append('property_type', $('select[name="property_type"]').val());
                 formData.append('status', $('select[name="status"]').val());
 
@@ -418,17 +466,29 @@ include __DIR__ . '/../includes/sidebar.php';
 
             function validateForm() {
                 const title = $('input[name="title"]').val().trim();
-                const description = $('textarea[name="description"]').val().trim();
+                const lot = $('input[name="lot"]').val().trim();
+                const block = $('input[name="block"]').val().trim();
+                const lot_area = $('input[name="lot_area"]').val().trim();
                 const price = $('input[name="price"]').val().trim();
-                const propertyType = $('select[name="property_type"]').val();
+                const location = $('select[name="location"]').val();
 
                 if (!title) {
                     toastr.error("Property title is required", "Validation Error");
                     return false;
                 }
 
-                if (!description) {
-                    toastr.error("Description is required", "Validation Error");
+                if (!lot) {
+                    toastr.error("Lot Number is required", "Validation Error");
+                    return false;
+                }
+
+                if (!block) {
+                    toastr.error("Block Number is required", "Validation Error");
+                    return false;
+                }
+
+                if (!lot_area) {
+                    toastr.error("Lot Area is required", "Validation Error");
                     return false;
                 }
 
@@ -437,8 +497,8 @@ include __DIR__ . '/../includes/sidebar.php';
                     return false;
                 }
 
-                if (!propertyType) {
-                    toastr.error("Property type is required", "Validation Error");
+                if (!location) {
+                    toastr.error("Location is required", "Validation Error");
                     return false;
                 }
 
@@ -479,10 +539,12 @@ include __DIR__ . '/../includes/sidebar.php';
 
                 $('#id').val(property.id);
                 $('input[name="title"]').val(property.title);
+                $('input[name="lot"]').val(property.lot);
+                $('input[name="block"]').val(property.block);
                 $('textarea[name="description"]').val(property.description);
                 $('input[name="lot_area"]').val(property.lot_area);
                 $('input[name="price"]').val(property.price);
-                $('input[name="location"]').val(property.location);
+                $('select[name="location"]').val(property.location);
                 $('select[name="property_type"]').val(property.property_type);
                 $('select[name="status"]').val(property.status);
 
@@ -570,5 +632,20 @@ include __DIR__ . '/../includes/sidebar.php';
 
     priceInput.form?.addEventListener("submit", function() {
         priceInput.value = priceInput.value.replace(/,/g, "");
+    });
+</script>
+
+
+<script>
+    document.getElementById('lot').addEventListener('input', function() {
+        this.value = this.value.replace(/\D/g, '');
+    });
+
+    document.getElementById('block').addEventListener('input', function() {
+        this.value = this.value.replace(/\D/g, '');
+    });
+
+    document.getElementById('lot_area').addEventListener('input', function() {
+        this.value = this.value.replace(/\D/g, '');
     });
 </script>

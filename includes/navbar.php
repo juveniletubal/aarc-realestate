@@ -58,7 +58,7 @@
                     <a class="dropdown-item" href="profile.html"><i class="fa fa-user-o"></i> Profile</a>
                     <a class="dropdown-item" href="profile.html"><i class="fa fa-gear"></i> Setting</a>
                     <a class="dropdown-item" href="faq.html"><i class="fa fa-question-circle-o"></i> Help</a>
-                    <a class="dropdown-item" href="../auth/logout.php"><i class="fa fa-sign-out"></i> Log Out</a>
+                    <a class="dropdown-item" href="../auth/logout"><i class="fa fa-sign-out"></i> Log Out</a>
                 </div>
             </div>
         </div>

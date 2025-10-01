@@ -1,3 +1,6 @@
+<!-- Preloader -->
+<!-- <div id="preloader"></div> -->
+
 <?php $assets->renderJS(); ?>
 
 <script>

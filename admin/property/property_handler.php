@@ -64,8 +64,8 @@ class PropertyHandler
         $this->validateInput($_POST);
 
         $stmt = $this->pdo->prepare("
-            INSERT INTO properties (title, description, lot_area, price, location, property_type, status, images) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO properties (title, lot, block, description, lot_area, price, location, property_type, status, images) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
         $images = $this->handleImageUpload();
@@ -76,6 +76,8 @@ class PropertyHandler
 
         $stmt->execute([
             $_POST['title'],
+            $_POST['lot'],
+            $_POST['block'],
             $_POST['description'],
             $_POST['lot_area'] ?? '',
             $price,
@@ -108,7 +110,7 @@ class PropertyHandler
 
         $stmt = $this->pdo->prepare("
             UPDATE properties 
-            SET title = ?, description = ?, lot_area = ?, price = ?, location = ?, property_type = ?, status = ?, images = ?
+            SET title = ?, lot = ?, block = ?, description = ?, lot_area = ?, price = ?, location = ?, property_type = ?, status = ?, images = ?
             WHERE id = ? AND is_deleted = 0
         ");
 
@@ -119,6 +121,8 @@ class PropertyHandler
 
         $stmt->execute([
             $_POST['title'],
+            $_POST['lot'],
+            $_POST['block'],
             $_POST['description'],
             $_POST['lot_area'] ?? '',
             $price,

@@ -11,9 +11,26 @@ include 'includes_landing_page/header.php';
 
 <style>
   #hero {
-    background: url("assets/img/bg1.webp") center center/cover no-repeat;
     position: relative;
-    transition: background-image 1s ease-in-out;
+    overflow: hidden;
+  }
+
+  #hero .bg-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 1.5s ease-in-out;
+    z-index: 0;
+  }
+
+  #hero .bg-slide.active {
+    opacity: 1;
   }
 
   #hero::before {
@@ -26,6 +43,11 @@ include 'includes_landing_page/header.php';
     background: rgba(0, 0, 0, 0.4);
     z-index: 1;
   }
+
+  #hero .container {
+    position: relative;
+    z-index: 2;
+  }
 </style>
 
 <body class="index-page">
@@ -36,12 +58,20 @@ include 'includes_landing_page/header.php';
 
     <!-- Hero Section -->
     <section id="hero" class="hero section d-flex align-items-center min-vh-100">
+
+      <!-- Background layers -->
+      <div class="bg-slide active" style="background-image: url('assets/img/bg1.webp')"></div>
+      <div class="bg-slide" style="background-image: url('assets/img/bg2.webp')"></div>
+      <div class="bg-slide" style="background-image: url('assets/img/bg3.webp')"></div>
+      <div class="bg-slide" style="background-image: url('assets/img/bg4.webp')"></div>
+      <div class="bg-slide" style="background-image: url('assets/img/bg5.webp')"></div>
+
       <div class="container" data-aos="fade-up" data-aos-delay="100">
         <div class="hero-wrapper">
           <div class="row g-4">
 
             <!-- End Hero Content -->
-            <div class="col-lg-7 text-center text-lg-start">
+            <div class="col-lg-12 text-center">
               <div
                 class="hero-content"
                 data-aos="zoom-in"
@@ -55,7 +85,7 @@ include 'includes_landing_page/header.php';
                 </div>
 
                 <div
-                  class="search-container"
+                  class="search-container col-lg-8 mx-auto"
                   data-aos="fade-up"
                   data-aos-delay="300">
 
@@ -79,11 +109,9 @@ include 'includes_landing_page/header.php';
                           name="property_type"
                           required="">
                           <option value="">All Types</option>
-                          <!-- <option value="house">Single House</option>
-                          <option value="apartment">Apartment</option>
-                          <option value="condo">Condominium</option>
-                          <option value="villa">Villa</option>
-                          <option value="commercial">Commercial</option> -->
+                          <option value="Residential">Residential</option>
+                          <option value="Commercial">Commercial</option>
+                          <option value="Agricultural">Agricultural</option>
                         </select>
                         <i class="bi bi-building field-icon"></i>
                       </div>
@@ -102,7 +130,7 @@ include 'includes_landing_page/header.php';
             <!-- End Hero Content -->
 
             <!-- Hero Visual -->
-            <div class="col-lg-5">
+            <!-- <div class="col-lg-5">
               <div
                 class="hero-visual"
                 data-aos="fade-left"
@@ -140,7 +168,7 @@ include 'includes_landing_page/header.php';
 
                 </div>
               </div>
-            </div>
+            </div> -->
             <!-- End Hero Visual -->
 
           </div>

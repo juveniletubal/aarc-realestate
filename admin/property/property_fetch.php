@@ -10,13 +10,13 @@ $row = intval($_POST['start']);
 $rowperpage = intval($_POST['length']); // rows per page
 $searchValue = $_POST['search']['value'] ?? '';
 $columnIndex = $_POST['order'][0]['column'] ?? 5; // Default to created column
-$columnName = $_POST['columns'][$columnIndex]['data'] ?? 'created';
+$columnName = $_POST['columns'][$columnIndex]['data'] ?? 'updated_at';
 $columnSortOrder = $_POST['order'][0]['dir'] ?? 'desc';
 
 // Validate column name to prevent SQL injection
-$allowedColumns = ['title', 'lot_area', 'price', 'location', 'property_type', 'created', 'id'];
+$allowedColumns = ['title', 'lot_area', 'price', 'location', 'property_type', 'updated_at', 'id'];
 if (!in_array($columnName, $allowedColumns)) {
-    $columnName = 'created';
+    $columnName = 'updated_at';
 }
 
 try {
@@ -41,7 +41,7 @@ try {
     $totalRecordwithFilter = $records['allcount'];
 
     // Fetch records
-    $sql = "SELECT id, title, description, lot_area, price, location, status, property_type, created, images 
+    $sql = "SELECT id, title, lot, block, description, lot_area, price, location, status, property_type, updated_at, images 
             FROM properties 
             WHERE is_deleted = 0 $searchQuery
             ORDER BY $columnName $columnSortOrder 
@@ -67,7 +67,7 @@ try {
         $record['price'] = '₱' . number_format($record['price'], 2);
 
         // Format date
-        $record['created'] = date('Y-m-d h:i A', strtotime($record['created']));
+        $record['updated_at'] = date('Y-m-d h:i A', strtotime($record['updated_at']));
 
         // Format lot area
         if (empty($record['lot_area'])) {
@@ -80,6 +80,8 @@ try {
         if (empty($record['location'])) {
             $record['location'] = 'N/A';
         }
+
+        $record['lot_block'] = 'Lot ' . $record['lot'] . ' / ' . 'Block ' . $record['block'];
 
         // Convert images from comma-separated to array
         $record['images'] = !empty($record['images']) ? explode(',', $record['images']) : [];

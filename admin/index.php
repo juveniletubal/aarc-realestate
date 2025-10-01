@@ -8,6 +8,12 @@ $page->addBreadcrumb('Dashboard');
 
 loadCoreAssets($assets, 'dashboard');
 
+$welcomeMessage = "";
+if (isset($_SESSION['welcome_message'])) {
+    $welcomeMessage = $_SESSION['welcome_message'];
+    unset($_SESSION['welcome_message']);
+}
+
 include __DIR__ . '/../includes/header.php';
 ?>
 
@@ -25,12 +31,13 @@ include __DIR__ . '/../includes/sidebar.php';
                     <img src="../assets/images/banner-img.png" alt="" />
                 </div>
                 <div class="col-md-10">
-                    <h4 class="font-20 weight-500 mb-10 text-capitalize" data-color="#265ED7">
-                        Announcement <i class="fa fa-bullhorn"></i>
+                    <h4 class="font-20 weight-500 mb-10 text-capitalize">
+                        📢 Latest Announcement
                     </h4>
                     <p class="font-18 text-break">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. UndeascccccccccccccccccccccccccascaCaCsa
-                        hic non repellendus debitis iure, doloremque assumenda.ascasccccccccccccccccccccccccccccccc
+                        Welcome to <strong>Ammazeng Angels Realty Management System</strong>!
+                        Easily manage your properties, clients, payments, and commissions - all in one platform.
+                        Stay tuned here for updates, new features, and important reminders.
                     </p>
                 </div>
             </div>
@@ -250,15 +257,15 @@ include __DIR__ . '/../includes/sidebar.php';
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Configure toastr
-        toastr.options = {
-            closeButton: true,
-            progressBar: true,
-            positionClass: "toast-bottom-right",
-            timeOut: "5000"
-        };
+        <?php if (!empty($welcomeMessage)) : ?>
+            toastr.options = {
+                closeButton: true,
+                progressBar: true,
+                positionClass: "toast-bottom-right",
+                timeOut: "8000"
+            };
 
-        // Show toast on page load
-        toastr.success('Administrator!', 'Welcome');
+            toastr.success("<?php echo $welcomeMessage; ?>");
+        <?php endif; ?>
     });
 </script>

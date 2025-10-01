@@ -4,12 +4,12 @@
         <a href="#" class="logo d-flex align-items-center">
             <img src="../assets/img/aarc.webp"
                 alt="Amazzeng Angels Realty Logo"
-                width="26"
+                width="25"
                 class="me-2 mr-2 mt-1">
 
             <div class="d-flex flex-column lh-1">
-                <span style="font-size: 14px; line-height: 2;">AMMAZENG ANGELS</span>
-                <span style="font-size: 12px; line-height: 1;">REALTY CORPORATION</span>
+                <span style="font-size: 14px; line-height: 2; color: #ffd700;">AMMAZENG ANGELS</span>
+                <span style="font-size: 11px; line-height: 1;">REALTY CORPORATION</span>
             </div>
         </a>
 
@@ -77,7 +77,7 @@
                     </li>
 
                     <li>
-                        <a href="overdue" class="<?= $page->isActive('overdue') ?> dropdown-toggle no-arrow">
+                        <a href="del_test" class="<?= $page->isActive('overdue') ?> dropdown-toggle no-arrow">
                             <span class="micon fa fa-exclamation-circle"></span><span class="mtext">Overdue</span>
                         </a>
                     </li>

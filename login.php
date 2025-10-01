@@ -34,9 +34,9 @@ if (isset($_SESSION['user_id'])) {
 </head>
 
 <style>
-	/* body {
-		background-color: #F1F6F3;
-	} */
+	body {
+		background-color: #E4EBEC;
+	}
 
 	.login-wrap {
 		min-height: 100vh;
@@ -61,15 +61,9 @@ if (isset($_SESSION['user_id'])) {
 						<form method="POST" action="auth/login.php">
 							<div class="input-group custom">
 								<input type="text" name="username" class="form-control form-control-lg" placeholder="Username" required />
-								<!-- <div class="input-group-append custom">
-									<span class="input-group-text"><i class="fa fa-user-o"></i></span>
-								</div> -->
 							</div>
 							<div class="input-group custom">
 								<input type="password" name="password" class="form-control form-control-lg" placeholder="•••••••••" required />
-								<!-- <div class="input-group-append custom">
-									<span class="input-group-text"><i class="fa fa-key"></i></span>
-								</div> -->
 							</div>
 							<div class="row pb-30">
 								<div class="col-6">
@@ -88,12 +82,10 @@ if (isset($_SESSION['user_id'])) {
 									<div
 										class="font-14 weight-600 pt-10 pb-10 text-center"
 										data-color="#707373">
-										OR
+
 									</div>
-									<div class="input-group mb-0">
-										<a
-											class="btn btn-outline-success btn-lg btn-block"
-											href="register">Register To Create Account</a>
+									<div class="d-flex justify-content-center mb-0">
+										<a href="index" class="text-success">Back to Home</a>
 									</div>
 								</div>
 							</div>

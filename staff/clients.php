@@ -4,7 +4,7 @@ require_once __DIR__ . '/../includes/init.php';
 $page->setTitle('AARC - Clients');
 $page->setCurrentPage('clients');
 
-loadCoreAssets($assets, 'table_form');
+loadCoreAssets($assets, 'client_table_form');
 
 include __DIR__ . '/../includes/header.php';
 ?>
@@ -130,7 +130,7 @@ include __DIR__ . '/../includes/sidebar.php';
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
                                     <label>Property Title<span class="text-danger">*</span></label>
-                                    <select class="custom-select" id="propertySelect" name="property_id" required>
+                                    <select class="custom-select2 form-control" id="propertySelect" name="property_id" required>
                                         <option value="">Choose...</option>
                                     </select>
                                 </div>
@@ -139,15 +139,19 @@ include __DIR__ . '/../includes/sidebar.php';
                                 <div class="form-group">
                                     <label>Payment Terms<span class="text-danger">*</span></label>
                                     <select class="custom-select" name="payment_terms" required>
-                                        <option value="">Choose...</option>
-                                        <option value="monthly">Monthly</option>
-                                        <option value="quarterly">Quarterly</option>
                                         <option value="spot_cash">Spot Cash</option>
+                                        <option value="3">3 Months</option>
+                                        <option value="6">6 Months</option>
+                                        <option value="12">12 Months (1 Year)</option>
+                                        <option value="24">24 Months (2 Years)</option>
+                                        <option value="36">36 Months (3 Years)</option>
+                                        <option value="48">48 Months (4 Years)</option>
+                                        <option value="60">60 Months (5 Years)</option>
+                                        <option value="72">72 Months (6 Years)</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-
 
                         <div class="row">
                             <div class="col-md-4 col-sm-12">
@@ -169,7 +173,6 @@ include __DIR__ . '/../includes/sidebar.php';
                                 </div>
                             </div>
                         </div>
-
 
                         <div style="text-align:center; border-bottom:1px solid #ccc; line-height:0.1em; margin:10px 0 20px;">
                             <span style="background:#fff; padding:0 10px; color: #DC3545;">Use for login credentials</span>
@@ -277,9 +280,6 @@ include __DIR__ . '/../includes/sidebar.php';
                                 return `<div class="table-actions">
                                     <a href="#" class="edit-btn" data-id="${data}">
                                         <i class="fa fa-pencil" style="color:#17A2B8;"></i>
-                                    </a>
-                                    <a href="#" class="delete-btn" data-id="${data}">
-                                        <i class="fa fa-trash-o" style="color:red;"></i>
                                     </a>
                                 </div>`;
                             }
@@ -571,12 +571,12 @@ include __DIR__ . '/../includes/sidebar.php';
             dataType: "json",
             success: function(response) {
                 if (response.success) {
-                    property = response.data; // save for later use
+                    property = response.data
                     $("#propertySelect").empty().append('<option value="">Choose...</option>');
 
                     response.data.forEach(item => {
                         $("#propertySelect").append(
-                            `<option value="${item.id}">${item.title}</option>`
+                            `<option value="${item.id}">${item.label}  (${item.location})</option>`
                         );
                     });
                 } else {
@@ -608,30 +608,43 @@ include __DIR__ . '/../includes/sidebar.php';
 </script>
 
 <script>
+    // document.addEventListener("DOMContentLoaded", function() {
+    //     let agent = [];
+
+    //     $.ajax({
+    //         url: "client/agent_fetch.php",
+    //         method: "GET",
+    //         dataType: "json",
+    //         success: function(response) {
+    //             if (response.success) {
+    //                 agent = response.data; // save for later use
+    //                 $("#agentSelect").empty().append('<option value="">Choose...</option>');
+
+    //                 response.data.forEach(item => {
+    //                     $("#agentSelect").append(
+    //                         `<option value="${item.id}">${item.agent_name}</option>`
+    //                     );
+    //                 });
+    //             } else {
+    //                 toastr.error("Failed to load agent");
+    //             }
+    //         },
+    //         error: function() {
+    //             toastr.error("Error fetching agent");
+    //         }
+    //     });
+    // });
+</script>
+
+<script>
     document.addEventListener("DOMContentLoaded", function() {
-        let agent = [];
-
-        $.ajax({
-            url: "client/agent_fetch.php",
-            method: "GET",
-            dataType: "json",
-            success: function(response) {
-                if (response.success) {
-                    agent = response.data; // save for later use
-                    $("#agentSelect").empty().append('<option value="">Choose...</option>');
-
-                    response.data.forEach(item => {
-                        $("#agentSelect").append(
-                            `<option value="${item.id}">${item.agent_name}</option>`
-                        );
-                    });
-                } else {
-                    toastr.error("Failed to load agent");
-                }
-            },
-            error: function() {
-                toastr.error("Error fetching agent");
-            }
+        $(document).ready(function() {
+            $('#propertySelect').select2({
+                placeholder: "",
+                allowClear: true,
+                width: '100%',
+                dropdownParent: $('#dataModal')
+            });
         });
     });
 </script>

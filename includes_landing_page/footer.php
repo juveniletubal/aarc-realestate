@@ -76,23 +76,13 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const hero = document.getElementById("hero");
-
-        if (!hero) return; // Stop if #hero is missing
-
-        const images = [
-            "assets/img/bg1.webp",
-            "assets/img/bg2.webp",
-            "assets/img/bg3.webp",
-            "assets/img/bg4.webp",
-            "assets/img/bg5.webp"
-        ];
-
+        const slides = document.querySelectorAll("#hero .bg-slide");
         let current = 0;
 
         setInterval(() => {
-            current = (current + 1) % images.length;
-            hero.style.backgroundImage = `url('${images[current]}')`;
+            slides[current].classList.remove("active");
+            current = (current + 1) % slides.length;
+            slides[current].classList.add("active");
         }, 5000);
     });
 </script>
