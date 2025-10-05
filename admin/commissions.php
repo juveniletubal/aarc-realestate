@@ -507,10 +507,3 @@ include __DIR__ . '/../includes/sidebar.php';
         });
     });
 </script>
-
-
-
-
-
-
-<!-- Commission Insert Nako -->

@@ -25,30 +25,41 @@ include __DIR__ . '/../includes/sidebar.php';
 <div class="main-container">
     <div class="xs-pd-20-10 pd-ltr-20">
 
-        <div class="card-box pd-20 height-30-p mb-30">
+        <div class="card-box pd-20 height-30-p mb-30 position-relative">
+            <?php if ($_SESSION['role'] === 'admin'): ?>
+                <button id="editToggleBtn"
+                    class="btn btn-sm btn-info position-absolute"
+                    style="top: 10px; right: 10px; z-index: 1;"
+                    title="Edit Announcement">
+                    <i class="fa fa-edit"></i>
+                </button>
+            <?php endif; ?>
+
             <div class="row align-items-center">
                 <div class="col-md-2">
                     <img src="../assets/images/banner-img.png" alt="" />
                 </div>
                 <div class="col-md-10">
                     <h4 class="font-20 weight-500 mb-10 text-capitalize">
-                        📢 Latest Announcement
+                        📢 <span id="announcementTitle"></span>
                     </h4>
-                    <p class="font-18 text-break">
-                        Welcome to <strong>Ammazeng Angels Realty Management System</strong>!
-                        Easily manage your properties, clients, payments, and commissions - all in one platform.
-                        Stay tuned here for updates, new features, and important reminders.
-                    </p>
+
+                    <p class="font-18 text-break" id="announcementText"></p>
+
+                    <input type="text" id="announcementTitleInput" class="form-control mb-2 d-none">
+                    <textarea id="announcementContentInput" class="form-control d-none"></textarea>
                 </div>
             </div>
         </div>
+
+
 
         <div class="row pb-10">
             <div class="col-xl-3 col-lg-3 col-md-6 mb-20">
                 <div class="card-box height-100-p widget-style3">
                     <div class="d-flex flex-wrap">
                         <div class="widget-data">
-                            <div class="weight-700 font-24 text-dark">75</div>
+                            <div class="weight-700 font-24 text-dark" id="totalProperties">0</div>
                             <div class="font-14 text-secondary weight-500">
                                 Total Properties
                             </div>
@@ -65,7 +76,7 @@ include __DIR__ . '/../includes/sidebar.php';
                 <div class="card-box height-100-p widget-style3">
                     <div class="d-flex flex-wrap">
                         <div class="widget-data">
-                            <div class="weight-700 font-24 text-dark">1,000</div>
+                            <div class="weight-700 font-24 text-dark" id="totalAvailable">0</div>
                             <div class="font-14 text-secondary weight-500">
                                 Available
                             </div>
@@ -82,7 +93,7 @@ include __DIR__ . '/../includes/sidebar.php';
                 <div class="card-box height-100-p widget-style3">
                     <div class="d-flex flex-wrap">
                         <div class="widget-data">
-                            <div class="weight-700 font-24 text-dark">100</div>
+                            <div class="weight-700 font-24 text-dark" id="totalReserved">0</div>
                             <div class="font-14 text-secondary weight-500">
                                 Reserved
                             </div>
@@ -99,7 +110,7 @@ include __DIR__ . '/../includes/sidebar.php';
                 <div class="card-box height-100-p widget-style3">
                     <div class="d-flex flex-wrap">
                         <div class="widget-data">
-                            <div class="weight-700 font-24 text-dark">100</div>
+                            <div class="weight-700 font-24 text-dark" id="totalSold">0</div>
                             <div class="font-14 text-secondary weight-500">Sold</div>
                         </div>
                         <div class="widget-icon">
@@ -119,7 +130,7 @@ include __DIR__ . '/../includes/sidebar.php';
                 <div class="card-box height-100-p widget-style3">
                     <div class="d-flex flex-wrap">
                         <div class="widget-data">
-                            <div class="weight-700 font-24 text-dark">75</div>
+                            <div class="weight-700 font-24 text-dark" id="totalUsers">0</div>
                             <div class="font-14 text-secondary weight-500">
                                 Total Users
                             </div>
@@ -136,7 +147,7 @@ include __DIR__ . '/../includes/sidebar.php';
                 <div class="card-box height-100-p widget-style3">
                     <div class="d-flex flex-wrap">
                         <div class="widget-data">
-                            <div class="weight-700 font-24 text-dark">1,000</div>
+                            <div class="weight-700 font-24 text-dark" id="totalStaff">0</div>
                             <div class="font-14 text-secondary weight-500">
                                 Staff
                             </div>
@@ -153,7 +164,7 @@ include __DIR__ . '/../includes/sidebar.php';
                 <div class="card-box height-100-p widget-style3">
                     <div class="d-flex flex-wrap">
                         <div class="widget-data">
-                            <div class="weight-700 font-24 text-dark">100</div>
+                            <div class="weight-700 font-24 text-dark" id="totalAgent">0</div>
                             <div class="font-14 text-secondary weight-500">
                                 Agent
                             </div>
@@ -170,7 +181,7 @@ include __DIR__ . '/../includes/sidebar.php';
                 <div class="card-box height-100-p widget-style3">
                     <div class="d-flex flex-wrap">
                         <div class="widget-data">
-                            <div class="weight-700 font-24 text-dark">100</div>
+                            <div class="weight-700 font-24 text-dark" id="totalClient">0</div>
                             <div class="font-14 text-secondary weight-500">Client</div>
                         </div>
                         <div class="widget-icon">
@@ -254,6 +265,97 @@ include __DIR__ . '/../includes/sidebar.php';
 </div>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        $(document).ready(function() {
+            $.ajax({
+                url: 'dashboard/fetch_dashboard_stats.php',
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        // Users
+                        $('#totalUsers').text(response.users.total_users);
+                        $('#totalStaff').text(response.users.total_staff);
+                        $('#totalAgent').text(response.users.total_agent);
+                        $('#totalClient').text(response.users.total_client);
+
+                        // Properties
+                        $('#totalProperties').text(response.properties.total_properties);
+                        $('#totalAvailable').text(response.properties.total_available);
+                        $('#totalReserved').text(response.properties.total_reserved);
+                        $('#totalSold').text(response.properties.total_sold);
+                    } else {
+                        console.error(response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error:", error);
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        $(document).ready(function() {
+            // Fetch announcement on page load
+            $.get('dashboard/fetch_announcement.php', function(response) {
+                if (response.success) {
+                    $('#announcementTitle').text(response.title);
+                    $('#announcementText').text(response.content);
+
+                    $('#announcementTitleInput').val(response.title);
+                    $('#announcementContentInput').val(response.content);
+                }
+            }, 'json');
+
+            // Toggle edit/save
+            $('#editToggleBtn').on('click', function() {
+                let isEditing = $('#announcementContentInput').is(':visible');
+
+                if (isEditing) {
+                    // Save mode
+                    $.post('dashboard/update_announcement.php', {
+                        title: $('#announcementTitleInput').val(),
+                        content: $('#announcementContentInput').val()
+                    }, function(response) {
+                        if (response.success) {
+                            // Update UI
+                            $('#announcementTitle').text($('#announcementTitleInput').val());
+                            $('#announcementText').text($('#announcementContentInput').val());
+
+                            // Switch back to view mode
+                            $('#announcementTitle').removeClass('d-none');
+                            $('#announcementText').removeClass('d-none');
+                            $('#announcementTitleInput').addClass('d-none');
+                            $('#announcementContentInput').addClass('d-none');
+
+                            // Change icon back to edit
+                            $('#editToggleBtn i').removeClass('fa-save').addClass('fa-edit');
+                            $('#editToggleBtn').removeClass('btn-success').addClass('btn-info');
+                        } else {
+                            alert(response.message);
+                        }
+                    }, 'json');
+                } else {
+                    // Edit mode
+                    $('#announcementTitle').addClass('d-none');
+                    $('#announcementText').addClass('d-none');
+
+                    $('#announcementTitleInput').removeClass('d-none').focus();
+                    $('#announcementContentInput').removeClass('d-none');
+
+                    // Change icon to save
+                    $('#editToggleBtn i').removeClass('fa-edit').addClass('fa-save');
+                    $('#editToggleBtn').removeClass('btn-info').addClass('btn-success');
+                }
+            });
+        });
+    });
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {

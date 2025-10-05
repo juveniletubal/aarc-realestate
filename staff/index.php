@@ -31,13 +31,14 @@ include __DIR__ . '/../includes/sidebar.php';
                     <img src="../assets/images/banner-img.png" alt="" />
                 </div>
                 <div class="col-md-10">
-                    <h4 class="font-20 weight-500 mb-10 text-capitalize" data-color="#265ED7">
-                        Announcement <i class="fa fa-bullhorn"></i>
+                    <h4 class="font-20 weight-500 mb-10 text-capitalize">
+                        📢 <span id="announcementTitle"></span>
                     </h4>
-                    <p class="font-18 text-break">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. UndeascccccccccccccccccccccccccascaCaCsa
-                        hic non repellendus debitis iure, doloremque assumenda.ascasccccccccccccccccccccccccccccccc
-                    </p>
+
+                    <p class="font-18 text-break" id="announcementText"></p>
+
+                    <input type="text" id="announcementTitleInput" class="form-control mb-2 d-none">
+                    <textarea id="announcementContentInput" class="form-control d-none"></textarea>
                 </div>
             </div>
         </div>
@@ -48,6 +49,23 @@ include __DIR__ . '/../includes/sidebar.php';
 </div>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        $(document).ready(function() {
+            // Fetch announcement on page load
+            $.get('staff_dashboard/fetch_announcement.php', function(response) {
+                if (response.success) {
+                    $('#announcementTitle').text(response.title);
+                    $('#announcementText').text(response.content);
+
+                    $('#announcementTitleInput').val(response.title);
+                    $('#announcementContentInput').val(response.content);
+                }
+            }, 'json');
+        });
+    });
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {

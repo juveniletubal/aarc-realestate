@@ -4,7 +4,7 @@ require_once __DIR__ . '/../includes/init.php';
 $page->setTitle('AARC - Payments');
 $page->setCurrentPage('payments');
 
-loadCoreAssets($assets, 'table_form');
+loadCoreAssets($assets, 'client_table_form');
 
 include __DIR__ . '/../includes/header.php';
 ?>
@@ -48,10 +48,9 @@ include __DIR__ . '/../includes/sidebar.php';
                             <tr>
                                 <th>Client Name</th>
                                 <th>Amount Paid</th>
-                                <th>Date</th>
-                                <th>Due Date</th>
+                                <th>Payment Date</th>
                                 <th>Updated</th>
-                                <th class="datatable-nosort" style="width: 7%;">Action</th>
+                                <th class="datatable-nosort" style="width: 6%;">Action</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -62,8 +61,6 @@ include __DIR__ . '/../includes/sidebar.php';
         </div>
     </div>
 
-
-    <!-- Add/Edit agent Modal -->
     <div class="modal fade" id="dataModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -77,7 +74,7 @@ include __DIR__ . '/../includes/sidebar.php';
 
                         <div class="form-group">
                             <label>Client Name<span class="text-danger">*</span></label>
-                            <select class="custom-select" id="clientSelect" name="client_id" required>
+                            <select class="custom-select2 form-control" id="clientSelect" name="client_id" required>
                                 <option value="">Choose...</option>
                             </select>
                         </div>
@@ -88,8 +85,8 @@ include __DIR__ . '/../includes/sidebar.php';
                         </div>
 
                         <div class="form-group">
-                            <label>Date<span class="text-danger">*</span></label>
-                            <input class="form-control" placeholder="Select Date" type="date">
+                            <label>Payment Date<span class="text-danger">*</span></label>
+                            <input class="form-control" placeholder="Select Date" name="date_paid" type="date">
                         </div>
 
                     </form>
@@ -108,17 +105,11 @@ include __DIR__ . '/../includes/sidebar.php';
 <?php include __DIR__ . '/../includes/footer.php'; ?>
 
 <script>
-    const loggedInStaffId = "<?php echo $_SESSION['user_id'] ?? ''; ?>";
-    console.log("Login ID:", loggedInStaffId);
-</script>
-
-<script>
     document.addEventListener("DOMContentLoaded", function() {
         $(document).ready(function() {
             let currentId = null;
             let dataTable;
 
-            // Initialize DataTable
             initializeDataTable();
 
             function initializeDataTable() {
@@ -146,28 +137,16 @@ include __DIR__ . '/../includes/sidebar.php';
                         orderable: false
                     }],
                     order: [
-                        [6, "desc"]
+                        [3, "desc"]
                     ],
                     columns: [{
                             data: "fullname"
                         },
                         {
-                            data: "contact"
+                            data: "amount_paid"
                         },
                         {
-                            data: "property_title"
-                        },
-                        {
-                            data: "total_price"
-                        },
-                        {
-                            data: "balance"
-                        },
-                        {
-                            data: "payment_terms"
-                        },
-                        {
-                            data: "agent_name"
+                            data: "payment_date"
                         },
                         {
                             data: "updated_at"
@@ -179,9 +158,9 @@ include __DIR__ . '/../includes/sidebar.php';
                                     <a href="#" class="edit-btn" data-id="${data}">
                                         <i class="fa fa-pencil" style="color:#17A2B8;"></i>
                                     </a>
-                                    <a href="#" class="delete-btn" data-id="${data}">
+                                    <!-- <a href="#" class="delete-btn" data-id="${data}">
                                         <i class="fa fa-trash-o" style="color:red;"></i>
-                                    </a>
+                                    </a> -->
                                 </div>`;
                             }
                         }
@@ -196,32 +175,22 @@ include __DIR__ . '/../includes/sidebar.php';
                     }
                 });
 
-                // Handle edit button clicks
                 $('.data-table').on('click', '.edit-btn', function(e) {
                     e.preventDefault();
                     const dataId = $(this).data('id');
                     editData(dataId);
                 });
-
-                // Handle delete button clicks
-                $('.data-table').on('click', '.delete-btn', function(e) {
-                    e.preventDefault();
-                    const dataId = $(this).data('id');
-                    deleteData(dataId);
-                });
             }
 
-            // Add New Agent Button
             $('#addNewBtn').on('click', function() {
                 resetForm();
                 $('#modalLabel').text('Add New Payment');
                 $('#saveBtn').text('Save changes');
                 $('#saveBtn').attr('class', 'btn btn-success')
-                $('input[name="password"]').attr("placeholder", "•••••••••");
+                loadClients();
                 $('#dataModal').modal('show');
             });
 
-            // Save Agent Button
             $('#saveBtn').on('click', function() {
                 saveData();
             });
@@ -233,42 +202,32 @@ include __DIR__ . '/../includes/sidebar.php';
             }
 
             function saveData() {
+                console.log("saveData triggered");
                 if (!validateForm()) return;
 
                 const isUpdate = currentId !== null;
                 const formData = new FormData();
 
-                // Add form data
                 formData.append('action', isUpdate ? 'update' : 'insert');
-                formData.append('firstname', $('input[name="firstname"]').val());
-                formData.append('lastname', $('input[name="lastname"]').val());
-                formData.append('contact', $('input[name="contact"]').val());
-                formData.append('address', $('input[name="address"]').val());
-                formData.append('assigned_agent', $('select[name="assigned_agent"]').val());
-                formData.append('property_id', $('select[name="property_id"]').val());
-                formData.append('payment_terms', $('select[name="payment_terms"]').val());
-                formData.append('total_price', $('input[name="total_price"]').val());
-                formData.append('balance', $('input[name="balance"]').val());
-                formData.append('penalty', $('input[name="penalty"]').val());
-                formData.append('username', $('input[name="username"]').val());
-                formData.append('password', $('input[name="password"]').val());
-
-                formData.append('assigned_staff', loggedInStaffId);
+                formData.append('client_id', $('select[name="client_id"]').val());
+                formData.append('amount', $('input[name="amount"]').val());
+                formData.append('date_paid', $('input[name="date_paid"]').val());
 
                 if (isUpdate) {
                     formData.append('id', currentId);
                 }
 
                 $.ajax({
-                    url: 'client/client_handler.php',
+                    url: 'payment/payment_handler.php',
                     type: 'POST',
                     data: formData,
                     contentType: false,
                     processData: false,
                     success: function(response) {
+                        console.log("AJAX success:", response);
                         if (response.success) {
                             toastr.success(
-                                isUpdate ? "Client updated successfully!" : "Client added successfully!",
+                                isUpdate ? "Payment updated successfully!" : "Payment added successfully!",
                                 "Success"
                             );
                             $('#dataModal').modal('hide');
@@ -278,6 +237,7 @@ include __DIR__ . '/../includes/sidebar.php';
                         }
                     },
                     error: function(xhr) {
+                        console.error("AJAX error:", xhr.responseText);
                         const response = JSON.parse(xhr.responseText);
                         toastr.error(response.message || "An error occurred", "Error");
                     }
@@ -285,40 +245,20 @@ include __DIR__ . '/../includes/sidebar.php';
             }
 
             function validateForm() {
-                const firstname = $('input[name="firstname"]').val().trim();
-                const lastname = $('input[name="lastname"]').val().trim();
-                const contact = $('input[name="contact"]').val().trim();
-                const assigned_agent = $('select[name="assigned_agent"]').val();
-                const property_id = $('select[name="property_id"]').val();
-                const payment_terms = $('select[name="payment_terms"]').val();
-                const username = $('input[name="username"]').val().trim();
+                const client_id = $('select[name="client_id"]').val();
+                const amount = $('input[name="amount"]').val().trim();
+                const date_paid = $('input[name="date_paid"]').val().trim();
 
-                if (!firstname) {
-                    toastr.error("Firstname is required", "Validation Error");
+                if (!client_id) {
+                    toastr.error("Client Name is required", "Validation Error");
                     return false;
                 }
-                if (!lastname) {
-                    toastr.error("Lastname is required", "Validation Error");
+                if (!amount) {
+                    toastr.error("Amount paid is required", "Validation Error");
                     return false;
                 }
-                if (!contact) {
-                    toastr.error("Contact is required", "Validation Error");
-                    return false;
-                }
-                if (!assigned_agent) {
-                    toastr.error("Assigned agent is required", "Validation Error");
-                    return false;
-                }
-                if (!property_id) {
-                    toastr.error("Property is required", "Validation Error");
-                    return false;
-                }
-                if (!payment_terms) {
-                    toastr.error("Payment terms is required", "Validation Error");
-                    return false;
-                }
-                if (!username) {
-                    toastr.error("User username is required", "Validation Error");
+                if (!date_paid) {
+                    toastr.error("Date paid is required", "Validation Error");
                     return false;
                 }
 
@@ -327,7 +267,7 @@ include __DIR__ . '/../includes/sidebar.php';
 
             window.editData = function(id) {
                 $.ajax({
-                    url: 'client/client_handler.php',
+                    url: 'payment/payment_handler.php',
                     type: 'GET',
                     data: {
                         action: 'get',
@@ -337,7 +277,7 @@ include __DIR__ . '/../includes/sidebar.php';
                         if (response.success) {
                             const record = response.data;
                             populateForm(record);
-                            $('#modalLabel').text('Edit Client');
+                            $('#modalLabel').text('Edit Payment');
                             $('#saveBtn').text('Save update');
                             $('#saveBtn').attr('class', 'btn btn-info')
                             $('#dataModal').modal('show');
@@ -356,57 +296,10 @@ include __DIR__ . '/../includes/sidebar.php';
                 currentId = record.id;
 
                 $('#id').val(record.id);
-                $('input[name="firstname"]').val(record.firstname);
-                $('input[name="lastname"]').val(record.lastname);
-                $('input[name="contact"]').val(record.contact);
-                $('input[name="address"]').val(record.address);
-
-                $('select[name="assigned_agent"]').val(record.assigned_agent);
-                $('select[name="property_id"]').val(record.property_id);
-                $('select[name="payment_terms"]').val(record.payment_terms);
-
-                $('input[name="total_price"]').val(record.total_price);
-                $('input[name="balance"]').val(record.balance);
-                $('input[name="penalty"]').val(record.penalty);
-
-                $('input[name="username"]').val(record.username || "");
-                $('input[name="password"]').val("").attr("placeholder", "Leave blank to keep the current password");
+                $('input[name="amount"]').val(record.amount_paid);
+                $('input[name="date_paid"]').val(record.payment_date);
+                loadClients(record.client_id);
             }
-
-            window.deleteData = function(id) {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: 'user/user_handler.php',
-                            type: 'POST',
-                            data: {
-                                action: 'delete',
-                                id: id
-                            },
-                            success: function(response) {
-                                if (response.success) {
-                                    toastr.success("User deleted successfully!", "Success");
-                                    loadProperties();
-                                } else {
-                                    toastr.error(response.message, "Error");
-                                }
-                            },
-                            error: function(xhr) {
-                                const response = JSON.parse(xhr.responseText);
-                                toastr.error(response.message || "An error occurred", "Error");
-                            }
-                        });
-                    }
-                });
-            };
 
             function loadProperties() {
                 if (dataTable) {
@@ -418,125 +311,48 @@ include __DIR__ . '/../includes/sidebar.php';
         $('#dataModal').on('hide.bs.modal', function() {
             document.activeElement.blur();
         });
+
+        function loadClients(selectedId = null) {
+            $.ajax({
+                url: "payment/client_fetch.php",
+                method: "GET",
+                dataType: "json",
+                success: function(response) {
+                    if (response.success) {
+                        const $clientSelect = $("#clientSelect");
+                        $clientSelect.empty().append('<option value="">Choose...</option>');
+
+                        response.data.forEach(item => {
+                            $clientSelect.append(
+                                `<option value="${item.id}">${item.client_name}</option>`
+                            );
+                        });
+
+                        if (selectedId) {
+                            $clientSelect.val(selectedId).trigger('change');
+                        }
+                    } else {
+                        toastr.error("Failed to load clients");
+                    }
+                },
+                error: function() {
+                    toastr.error("Error fetching clients");
+                }
+            });
+        }
+
     });
 </script>
-
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         $(document).ready(function() {
-            $("#positionSelect").on("change", function() {
-                const selected = $(this).val();
-
-                if (selected === "manager" || selected === "downline") {
-                    $("#uplineWrapper").show();
-
-                    $.ajax({
-                        url: "agent/fetch_directors.php",
-                        method: "GET",
-                        dataType: "json",
-                        success: function(response) {
-                            if (response.success) {
-                                $("#uplineSelect").empty().append('<option value="">Choose...</option>');
-
-                                response.data.forEach(director => {
-                                    $("#uplineSelect").append(
-                                        `<option value="${director.id}">${director.name}</option>`
-                                    );
-                                });
-                            } else {
-                                toastr.error("Failed to load directors");
-                            }
-                        },
-                        error: function() {
-                            toastr.error("Error fetching directors");
-                        }
-                    });
-
-                } else {
-                    $("#uplineWrapper").hide();
-                    $("#uplineSelect").val("");
-                }
+            $('#clientSelect').select2({
+                placeholder: "",
+                allowClear: true,
+                width: '100%',
+                dropdownParent: $('#dataModal')
             });
         });
     });
 </script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        let property = [];
-
-        $.ajax({
-            url: "client/property_fetch.php",
-            method: "GET",
-            dataType: "json",
-            success: function(response) {
-                if (response.success) {
-                    property = response.data; // save for later use
-                    $("#propertySelect").empty().append('<option value="">Choose...</option>');
-
-                    response.data.forEach(item => {
-                        $("#propertySelect").append(
-                            `<option value="${item.id}">${item.title}</option>`
-                        );
-                    });
-                } else {
-                    toastr.error("Failed to load property");
-                }
-            },
-            error: function() {
-                toastr.error("Error fetching property");
-            }
-        });
-
-        // When user selects a property
-        $("#propertySelect").on("change", function() {
-            let selectedId = $(this).val();
-
-            let selected = property.find(p => p.id == selectedId);
-
-            if (selected) {
-                $("input[name='total_price']").val(selected.price);
-                $("input[name='balance']").val(selected.price);
-                $("input[name='penalty']").val("0");
-            } else {
-                $("input[name='total_price']").val("");
-                $("input[name='balance']").val("");
-                $("input[name='penalty']").val("");
-            }
-        });
-    });
-</script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        let agent = [];
-
-        $.ajax({
-            url: "client/agent_fetch.php",
-            method: "GET",
-            dataType: "json",
-            success: function(response) {
-                if (response.success) {
-                    agent = response.data; // save for later use
-                    $("#agentSelect").empty().append('<option value="">Choose...</option>');
-
-                    response.data.forEach(item => {
-                        $("#agentSelect").append(
-                            `<option value="${item.id}">${item.agent_name}</option>`
-                        );
-                    });
-                } else {
-                    toastr.error("Failed to load agent");
-                }
-            },
-            error: function() {
-                toastr.error("Error fetching agent");
-            }
-        });
-    });
-</script>
-
-
-
-<!-- Sa Payment nako -->

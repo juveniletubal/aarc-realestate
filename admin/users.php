@@ -52,7 +52,7 @@ include __DIR__ . '/../includes/sidebar.php';
                                 <th>Role</th>
                                 <th>Status</th>
                                 <th>Updated</th>
-                                <th class="datatable-nosort" style="width: 7%;">Action</th>
+                                <th class="datatable-nosort" style="width: 6%;">Action</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -135,7 +135,7 @@ include __DIR__ . '/../includes/sidebar.php';
                         <div class="form-group" style="margin-bottom: 30px;">
                             <label>Profile Image</label>
                             <input type="file" name="image" class="form-control-file form-control height-auto">
-                            <img id="imagePreview" src="" alt="Preview" style="width:110px; height: 120px; display:block; margin-top:10px; border-radius: 10px; object-fit: cover;">
+                            <img id="imageUsersPreview" src="" alt="Preview" style="width:110px; height: 120px; display:block; margin-top:10px; border-radius: 10px; object-fit: cover; border:1px solid #104F58;">
                         </div>
 
                         <div style="text-align:center; border-bottom:1px solid #ccc; line-height:0.1em; margin:10px 0 20px;">
@@ -157,117 +157,6 @@ include __DIR__ . '/../includes/sidebar.php';
                                 </div>
                             </div>
                         </div>
-
-
-                        <!-- <div class="row">
-                            <div class="col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label>Fullname<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="fullname" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label>Lastname<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="lastname" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label>Email Address<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="email" name="email" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label>Contact Number<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="phone" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label>Facebook Link</label>
-                                    <input class="form-control" type="text" name="facebook_link">
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label>License Number</label>
-                                    <input class="form-control" type="text" name="license_number" placeholder="Optional">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label>Position<span class="text-danger">*</span></label>
-                                    <select class="custom-select" id="positionSelect" name="position" required>
-                                        <option value="">Choose...</option>
-                                        <option value="director">Director</option>
-                                        <option value="manager">Manager</option>
-                                        <option value="downline">Downline</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4 col-sm-12" id="uplineWrapper" style="display: none;">
-                                <div class="form-group">
-                                    <label>Upline<span class="text-danger">*</span></label>
-                                    <select class="custom-select" id="uplineSelect" name="upline">
-                                        <option value="">Choose...</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-2 col-sm-12" id="percent">
-                                <div class="form-group">
-                                    <label>Percent %<span class="text-danger">*</span></label>
-                                    <select class="custom-select" id="percent" name="percent">
-                                        <option value="">Choose...</option>
-                                        <?php for ($i = 1; $i <= 100; $i++): ?>
-                                            <option value="<?= $i ?>"><?= $i ?>%</option>
-                                        <?php endfor; ?>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group" style="margin-bottom: 30px;">
-                            <label>Profile Image</label>
-                            <input type="file" name="image" class="form-control-file form-control height-auto">
-                        </div>
-
-                        <div style="text-align:center; border-bottom:1px solid #ccc; line-height:0.1em; margin:10px 0 20px;">
-                            <span style="background:#fff; padding:0 10px; color: #DC3545;">Use for login credentials</span>
-                        </div>
-
-
-                        <div class="row">
-                            <div class="col-md-6 col-sm-12">
-                                <label>Username<span class="text-danger">*</span></label>
-                                <div class="input-group custom">
-                                    <input class="form-control" type="text" name="username" required>
-                                    <div class="input-group-append custom">
-                                        <span class="input-group-text"><i class="fa fa-user-o"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-sm-12">
-                                <label>Password<span class="text-danger">*</span></label>
-                                <div class="input-group custom">
-                                    <input class="form-control" type="password" name="password" placeholder="">
-                                    <div class="input-group-append custom">
-                                        <span class="input-group-text"><i class="fa fa-key"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -289,7 +178,6 @@ include __DIR__ . '/../includes/sidebar.php';
             let currentId = null;
             let dataTable;
 
-            // Initialize DataTable
             initializeDataTable();
 
             function initializeDataTable() {
@@ -523,9 +411,9 @@ include __DIR__ . '/../includes/sidebar.php';
                 $('input[name="password"]').val("").attr("placeholder", "Leave blank to keep the current password");
 
                 if (record.image) {
-                    $('#imagePreview').attr("src", "../uploads/users/" + record.image).show();
+                    $('#imageUsersPreview').attr("src", "../uploads/users/" + record.image).show();
                 } else {
-                    $('#imagePreview').hide();
+                    $('#imageUsersPreview').hide();
                 }
             }
 

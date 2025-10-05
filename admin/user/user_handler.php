@@ -48,7 +48,7 @@ class UserHandler
 
     private function validateInput($data, $id = null)
     {
-        $required = ['firstname', 'lastname', 'contact'];
+        $required = ['firstname', 'lastname', 'contact', 'role'];
         foreach ($required as $field) {
             if (empty($data[$field])) {
                 throw new Exception(ucfirst($field) . ' is required');

@@ -14,3 +14,5 @@
 </head>
 
 <body>
+
+    <?php include_once 'user_update/modal.php'; ?>

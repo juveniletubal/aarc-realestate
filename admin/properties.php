@@ -61,7 +61,7 @@ include __DIR__ . '/../includes/sidebar.php';
                                 <th>Type</th>
                                 <th>Status</th>
                                 <th>Updated</th>
-                                <th class="datatable-nosort" style="width: 7%;">Action</th>
+                                <th class="datatable-nosort" style="width: 6%;">Action</th>
                             </tr>
                         </thead>
                         <tbody></tbody>

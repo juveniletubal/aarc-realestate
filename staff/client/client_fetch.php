@@ -9,7 +9,7 @@ $draw = intval($_POST['draw']);
 $row = intval($_POST['start']);
 $rowperpage = intval($_POST['length']);
 $searchValue = $_POST['search']['value'] ?? '';
-$columnIndex = $_POST['order'][0]['column'] ?? 7;
+$columnIndex = $_POST['order'][0]['column'] ?? 8;
 $columnName = $_POST['columns'][$columnIndex]['data'] ?? 'updated_at';
 $columnSortOrder = $_POST['order'][0]['dir'] ?? 'desc';
 
@@ -77,19 +77,32 @@ try {
             u.contact,
             u.role AS client_role,
             c.property_id,
-            p.title AS property_title,
+            CONCAT('Lot ', p.lot, ' / Block ', p.block, ' (', p.location, ')') AS property_title,
             c.total_price,
             c.balance,
             c.payment_terms,
             c.assigned_agent,
+            com.com_ref,
+            com.user_id AS agent_user_id,
             CONCAT(a.firstname, ' ', a.lastname) AS agent_name,
             a.role AS agent_role,
             c.updated_at
         FROM clients c
-        JOIN users u ON c.user_id = u.id AND u.is_deleted = 0 AND u.role = 'client'
-        LEFT JOIN properties p ON c.property_id = p.id
-        LEFT JOIN users a ON c.assigned_agent = a.id AND a.is_deleted = 0 AND (a.role = 'agent' OR a.role = 'staff')
-        WHERE 1=1 $searchQuery
+        JOIN users u 
+            ON c.user_id = u.id 
+        AND u.is_deleted = 0 
+        AND u.role = 'client'
+        LEFT JOIN properties p 
+            ON c.property_id = p.id
+        LEFT JOIN commissions com 
+            ON c.assigned_agent = com.com_ref 
+        AND com.role = 'director'
+        LEFT JOIN users a 
+            ON com.user_id = a.id 
+        AND a.is_deleted = 0 
+        AND (a.role = 'agent' OR a.role = 'staff')
+        WHERE 1=1
+        $searchQuery
         ORDER BY $columnName $columnSortOrder
         LIMIT :limit OFFSET :offset
     ";
@@ -124,20 +137,47 @@ try {
             $record['property_title'] = 'N/A';
         }
 
-        // Agent name fallback
+        $record['comRef'] = $record['com_ref'];
+
         if (empty($record['agent_name'])) {
-            $record['agent_name'] = 'Unassigned';
+            $record['agent_name'] = '<a href="#" 
+                class="assign-agent text-danger" 
+                data-id="' . $record['id'] . '" 
+                data-comref="' . htmlspecialchars($record['comRef']) . '">No Assigned</a>';
+        } else {
+            $record['agent_name'] = '<a href="#" 
+                class="text-success reassign-agent" 
+                data-id="' . $record['id'] . '" 
+                data-comref="' . htmlspecialchars($record['comRef']) . '">' . $record['agent_name'] . '</a>';
         }
 
         switch ($record['payment_terms']) {
-            case 'monthly':
-                $record['payment_terms'] = 'Monthly';
+            case 'spot':
+                $record['payment_terms'] = 'Spot Cash';
                 break;
-            case 'quarterly':
-                $record['payment_terms'] = 'Quarterly';
+            case '3':
+                $record['payment_terms'] = '3 Months';
+                break;
+            case '6':
+                $record['payment_terms'] = '6 Months';
+                break;
+            case '12':
+                $record['payment_terms'] = '12 Months';
+                break;
+            case '24':
+                $record['payment_terms'] = '24 Months';
+                break;
+            case '36':
+                $record['payment_terms'] = '36 Months';
+                break;
+            case '48':
+                $record['payment_terms'] = '48 Months';
+                break;
+            case '60':
+                $record['payment_terms'] = '60 Months';
                 break;
             default:
-                $record['payment_terms'] = 'Spot Cash';
+                $record['payment_terms'] = 'Unknown';
                 break;
         }
     }

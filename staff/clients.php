@@ -54,7 +54,7 @@ include __DIR__ . '/../includes/sidebar.php';
                                 <th>Terms</th>
                                 <th>Agent Assigned</th>
                                 <th>Updated</th>
-                                <th class="datatable-nosort" style="width: 7%;">Action</th>
+                                <th class="datatable-nosort" style="width: 6%;">Action</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -76,7 +76,7 @@ include __DIR__ . '/../includes/sidebar.php';
                 </div>
                 <div class="modal-body">
                     <form id="dataForm">
-                        <input type="hidden" name="id" id="id" value="">
+                        <input type="text" name="id" id="id" value="">
 
                         <div class="row">
                             <div class="col-md-6 col-sm-12">
@@ -108,7 +108,7 @@ include __DIR__ . '/../includes/sidebar.php';
                             </div>
                         </div>
 
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
                                     <label>Assigned Agent<span class="text-danger">*</span></label>
@@ -124,7 +124,7 @@ include __DIR__ . '/../includes/sidebar.php';
                                     <input class="form-control" type="text" name="" disabled value="Manager name / Downline name">
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="row">
                             <div class="col-md-6 col-sm-12">
@@ -204,6 +204,115 @@ include __DIR__ . '/../includes/sidebar.php';
         </div>
     </div>
 
+
+
+    <!-- Add/Edit commissions Modal -->
+    <div class="modal fade" id="comModal" tabindex="-1" role="dialog" aria-labelledby="modalComLabel">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalComLabel">Add New User</h5>
+                    <button type="button" class="close" data-dismiss="modal"> × </button>
+                </div>
+                <div class="modal-body">
+                    <form id="comForm">
+                        <input type="hidden" name="com_ref" id="com_ref" value="">
+                        <input type="hidden" name="clientId" id="clientId" value="">
+
+                        <div class="row">
+                            <div class="col-md-8 col-sm-12">
+                                <div class="form-group">
+                                    <label>Director<span class="text-danger">*</span></label>
+                                    <select class="custom-select2" name="director" id="director" required>
+                                        <option value="">Choose...</option>
+                                        <!-- PHP loop for users -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <div class="form-group">
+                                    <label>Percentage %<span class="text-danger">*</span></label>
+                                    <select class="custom-select" name="director_percent" required>
+                                        <?php for ($i = 0; $i <= 100; $i++): ?>
+                                            <option value="<?= $i ?>"><?= $i ?>%</option>
+                                        <?php endfor; ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8 col-sm-12">
+                                <div class="form-group">
+                                    <label>Manager</label>
+                                    <select class="custom-select2" name="manager" id="manager" required>
+                                        <option value="">Choose...</option>
+                                        <!-- PHP loop for users -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <div class="form-group">
+                                    <label>Percentage %</label>
+                                    <select class="custom-select" name="manager_percent" required>
+                                        <?php for ($i = 0; $i <= 100; $i++): ?>
+                                            <option value="<?= $i ?>"><?= $i ?>%</option>
+                                        <?php endfor; ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8 col-sm-12">
+                                <div class="form-group">
+                                    <label>Downline</label>
+                                    <select class="custom-select2" name="downline" id="downline" required>
+                                        <option value="">Choose...</option>
+                                        <!-- PHP loop for users -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <div class="form-group">
+                                    <label>Percentage %</label>
+                                    <select class="custom-select" name="downline_percent" required>
+                                        <?php for ($i = 0; $i <= 100; $i++): ?>
+                                            <option value="<?= $i ?>"><?= $i ?>%</option>
+                                        <?php endfor; ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Term<span class="text-danger">*</span></label>
+                            <select class="custom-select" name="term" required>
+                                <option value="">Choose...</option>
+                                <option value="spot">Spot Cash</option>
+                                <option value="3">3 Months</option>
+                                <option value="6">6 Months</option>
+                                <option value="12">12 Months (1 Year)</option>
+                                <option value="24">24 Months (2 Years)</option>
+                                <option value="36">36 Months (3 Years)</option>
+                                <option value="48">48 Months (4 Years)</option>
+                                <option value="60">60 Months (5 Years)</option>
+                            </select>
+                        </div>
+
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="saveComBtn">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 </div>
 
 
@@ -248,7 +357,7 @@ include __DIR__ . '/../includes/sidebar.php';
                         orderable: false
                     }],
                     order: [
-                        [6, "desc"]
+                        [7, "desc"]
                     ],
                     columns: [{
                             data: "fullname"
@@ -302,7 +411,25 @@ include __DIR__ . '/../includes/sidebar.php';
                     editData(dataId);
                 });
 
-                // Handle delete button clicks
+                $('.data-table').on('click', '.reassign-agent', function(e) {
+                    e.preventDefault();
+                    const clientId = $(this).data('id');
+                    const comRef = $(this).data('comref');
+                    editComData(clientId, comRef);
+                });
+
+                $('.data-table').on('click', '.assign-agent', function(e) {
+                    e.preventDefault();
+                    const clientId = $(this).data('id');
+                    const comRef = $(this).data('comref');
+                    resetComForm();
+                    $('#clientId').val(clientId);
+                    $('#com_ref').val(comRef || '');
+                    $('#modalComLabel').text('Add New Commissions');
+                    $('#saveComBtn').text('Save changes').attr('class', 'btn btn-success');
+                    $('#comModal').modal('show');
+                });
+
                 $('.data-table').on('click', '.delete-btn', function(e) {
                     e.preventDefault();
                     const dataId = $(this).data('id');
@@ -310,17 +437,17 @@ include __DIR__ . '/../includes/sidebar.php';
                 });
             }
 
-            // Add New Agent Button
+            // Add New Button
             $('#addNewBtn').on('click', function() {
                 resetForm();
                 $('#modalLabel').text('Add New Client');
                 $('#saveBtn').text('Save changes');
                 $('#saveBtn').attr('class', 'btn btn-success')
                 $('input[name="password"]').attr("placeholder", "•••••••••");
+                loadProperty();
                 $('#dataModal').modal('show');
             });
 
-            // Save Agent Button
             $('#saveBtn').on('click', function() {
                 saveData();
             });
@@ -343,7 +470,7 @@ include __DIR__ . '/../includes/sidebar.php';
                 formData.append('lastname', $('input[name="lastname"]').val());
                 formData.append('contact', $('input[name="contact"]').val());
                 formData.append('address', $('input[name="address"]').val());
-                formData.append('assigned_agent', $('select[name="assigned_agent"]').val());
+                // formData.append('assigned_agent', $('select[name="assigned_agent"]').val());
                 formData.append('property_id', $('select[name="property_id"]').val());
                 formData.append('payment_terms', $('select[name="payment_terms"]').val());
                 formData.append('total_price', $('input[name="total_price"]').val());
@@ -387,7 +514,7 @@ include __DIR__ . '/../includes/sidebar.php';
                 const firstname = $('input[name="firstname"]').val().trim();
                 const lastname = $('input[name="lastname"]').val().trim();
                 const contact = $('input[name="contact"]').val().trim();
-                const assigned_agent = $('select[name="assigned_agent"]').val();
+                // const assigned_agent = $('select[name="assigned_agent"]').val();
                 const property_id = $('select[name="property_id"]').val();
                 const payment_terms = $('select[name="payment_terms"]').val();
                 const username = $('input[name="username"]').val().trim();
@@ -404,10 +531,10 @@ include __DIR__ . '/../includes/sidebar.php';
                     toastr.error("Contact is required", "Validation Error");
                     return false;
                 }
-                if (!assigned_agent) {
-                    toastr.error("Assigned agent is required", "Validation Error");
-                    return false;
-                }
+                // if (!assigned_agent) {
+                //     toastr.error("Assigned agent is required", "Validation Error");
+                //     return false;
+                // }
                 if (!property_id) {
                     toastr.error("Property is required", "Validation Error");
                     return false;
@@ -460,8 +587,9 @@ include __DIR__ . '/../includes/sidebar.php';
                 $('input[name="contact"]').val(record.contact);
                 $('input[name="address"]').val(record.address);
 
-                $('select[name="assigned_agent"]').val(record.assigned_agent);
-                $('select[name="property_id"]').val(record.property_id);
+                // $('select[name="property_id"]').val(record.property_id);
+                loadProperty(record.property_id);
+
                 $('select[name="payment_terms"]').val(record.payment_terms);
 
                 $('input[name="total_price"]').val(record.total_price);
@@ -471,6 +599,120 @@ include __DIR__ . '/../includes/sidebar.php';
                 $('input[name="username"]').val(record.username || "");
                 $('input[name="password"]').val("").attr("placeholder", "Leave blank to keep the current password");
             }
+
+            // Commissions
+            $('#saveComBtn').on('click', function() {
+                saveComData();
+            });
+
+            function resetComForm() {
+                $('#comForm')[0].reset();
+                $('#com_ref').val('');
+                currentId = null;
+            }
+
+            function saveComData() {
+                if (!validateComForm()) return;
+
+                const isUpdate = currentId !== null;
+                const formData = new FormData();
+
+                formData.append('action', isUpdate ? 'update' : 'insert');
+                formData.append('clientId', $('#clientId').val());
+                formData.append('director', $('select[name="director"]').val());
+                formData.append('director_percent', $('select[name="director_percent"]').val());
+                formData.append('manager', $('select[name="manager"]').val());
+                formData.append('manager_percent', $('select[name="manager_percent"]').val());
+                formData.append('downline', $('select[name="downline"]').val());
+                formData.append('downline_percent', $('select[name="downline_percent"]').val());
+                formData.append('term', $('select[name="term"]').val());
+
+                $.ajax({
+                    url: 'client/assigned_handler.php',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(
+                                isUpdate ? "Assigned updated successfully!" : "Assigned added successfully!",
+                                "Success"
+                            );
+                            $('#comModal').modal('hide');
+                            loadProperties();
+                        } else {
+                            toastr.error(response.message, "Error");
+                        }
+                    },
+                    error: function(xhr) {
+                        const response = JSON.parse(xhr.responseText);
+                        toastr.error(response.message || "An error occurred", "Error");
+                    }
+                });
+            }
+
+            function validateComForm() {
+                const director = $('select[name="director"]').val();
+                const director_percent = $('select[name="director_percent"]').val();
+                const term = $('select[name="term"]').val();
+
+                if (!director) {
+                    toastr.error("Director is required", "Validation Error");
+                    return false;
+                }
+                if (!director_percent) {
+                    toastr.error("Director percent is required", "Validation Error");
+                    return false;
+                }
+                if (!term) {
+                    toastr.error("Term is required", "Validation Error");
+                    return false;
+                }
+                return true;
+            }
+
+            window.editComData = function(clientId, comRef) {
+                $.ajax({
+                    url: 'client/assigned_handler.php',
+                    type: 'GET',
+                    data: {
+                        action: 'get',
+                        id: clientId
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            const record = response.data;
+                            // populateComForm(record);
+
+                            $('#clientId').val(clientId);
+                            $('#com_ref').val(comRef || '');
+                            $('#modalComLabel').text('Edit Commissions');
+                            $('#saveComBtn').text('Save update').attr('class', 'btn btn-info');
+                            $('#comModal').modal('show');
+                        } else {
+                            toastr.error(response.message, "Error");
+                        }
+                    },
+                    error: function(xhr) {
+                        const response = JSON.parse(xhr.responseText);
+                        toastr.error(response.message || "An error occurred", "Error");
+                    }
+                });
+            };
+
+            // function populateComForm(record) {
+            //     currentId = record.id;
+
+            //     $('#com_ref').val(record.com_ref);
+            //     $('select[name="director"]').val(record.director);
+            //     $('select[name="director_percent"]').val(record.director_percent);
+            //     $('select[name="manager"]').val(record.manager);
+            //     $('select[name="manager_percent"]').val(record.manager_percent);
+            //     $('select[name="downline"]').val(record.downline);
+            //     $('select[name="downline_percent"]').val(record.downline_percent);
+            //     $('select[name="term"]').val(record.term);
+            // }
 
             window.deleteData = function(id) {
                 Swal.fire({
@@ -514,126 +756,139 @@ include __DIR__ . '/../includes/sidebar.php';
             }
         });
 
-        $('#dataModal').on('hide.bs.modal', function() {
+        $('#dataModal, #comModal').on('hide.bs.modal', function() {
             document.activeElement.blur();
         });
-    });
-</script>
 
+        function loadProperty(selectedId = null) {
+            $.ajax({
+                url: "client/property_fetch.php",
+                method: "GET",
+                dataType: "json",
+                success: function(response) {
+                    if (response.success) {
+                        const $propertySelect = $("#propertySelect");
+                        $propertySelect.empty().append('<option value="">Choose...</option>');
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        $(document).ready(function() {
-            $("#positionSelect").on("change", function() {
-                const selected = $(this).val();
+                        response.data.forEach(item => {
+                            $propertySelect.append(
+                                `<option value="${item.id}">${item.label}</option>`
+                            );
+                        });
 
-                if (selected === "manager" || selected === "downline") {
-                    $("#uplineWrapper").show();
-
-                    $.ajax({
-                        url: "agent/fetch_directors.php",
-                        method: "GET",
-                        dataType: "json",
-                        success: function(response) {
-                            if (response.success) {
-                                $("#uplineSelect").empty().append('<option value="">Choose...</option>');
-
-                                response.data.forEach(director => {
-                                    $("#uplineSelect").append(
-                                        `<option value="${director.id}">${director.name}</option>`
-                                    );
-                                });
-                            } else {
-                                toastr.error("Failed to load directors");
-                            }
-                        },
-                        error: function() {
-                            toastr.error("Error fetching directors");
+                        if (selectedId) {
+                            $propertySelect.val(selectedId).trigger('change');
                         }
-                    });
-
-                } else {
-                    $("#uplineWrapper").hide();
-                    $("#uplineSelect").val("");
+                    } else {
+                        toastr.error("Failed to load property");
+                    }
+                },
+                error: function() {
+                    toastr.error("Error fetching property");
                 }
             });
-        });
-    });
-</script>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        let property = [];
+            $("#propertySelect").on("change", function() {
+                let selectedId = $(this).val();
 
-        $.ajax({
-            url: "client/property_fetch.php",
-            method: "GET",
-            dataType: "json",
-            success: function(response) {
-                if (response.success) {
-                    property = response.data
-                    $("#propertySelect").empty().append('<option value="">Choose...</option>');
+                let selected = property.find(p => p.id == selectedId);
 
-                    response.data.forEach(item => {
-                        $("#propertySelect").append(
-                            `<option value="${item.id}">${item.label}  (${item.location})</option>`
-                        );
-                    });
+                if (selected) {
+                    $("input[name='total_price']").val(selected.price);
+                    $("input[name='balance']").val(selected.price);
+                    $("input[name='penalty']").val("0");
                 } else {
-                    toastr.error("Failed to load property");
+                    $("input[name='total_price']").val("");
+                    $("input[name='balance']").val("");
+                    $("input[name='penalty']").val("");
                 }
-            },
-            error: function() {
-                toastr.error("Error fetching property");
-            }
-        });
+            });
+        }
 
-        // When user selects a property
-        $("#propertySelect").on("change", function() {
-            let selectedId = $(this).val();
-
-            let selected = property.find(p => p.id == selectedId);
-
-            if (selected) {
-                $("input[name='total_price']").val(selected.price);
-                $("input[name='balance']").val(selected.price);
-                $("input[name='penalty']").val("0");
-            } else {
-                $("input[name='total_price']").val("");
-                $("input[name='balance']").val("");
-                $("input[name='penalty']").val("");
-            }
-        });
     });
 </script>
 
 <script>
     // document.addEventListener("DOMContentLoaded", function() {
-    //     let agent = [];
+    //     let property = [];
 
     //     $.ajax({
-    //         url: "client/agent_fetch.php",
+    //         url: "client/property_fetch.php",
     //         method: "GET",
     //         dataType: "json",
     //         success: function(response) {
     //             if (response.success) {
-    //                 agent = response.data; // save for later use
-    //                 $("#agentSelect").empty().append('<option value="">Choose...</option>');
+    //                 property = response.data
+    //                 $("#propertySelect").empty().append('<option value="">Choose...</option>');
 
     //                 response.data.forEach(item => {
-    //                     $("#agentSelect").append(
-    //                         `<option value="${item.id}">${item.agent_name}</option>`
+    //                     $("#propertySelect").append(
+    //                         `<option value="${item.id}">${item.label}  (${item.location})</option>`
     //                     );
     //                 });
     //             } else {
-    //                 toastr.error("Failed to load agent");
+    //                 toastr.error("Failed to load property");
     //             }
     //         },
     //         error: function() {
-    //             toastr.error("Error fetching agent");
+    //             toastr.error("Error fetching property");
+    //         }
+    //     });
+
+    //     // When user selects a property
+    //     $("#propertySelect").on("change", function() {
+    //         let selectedId = $(this).val();
+
+    //         let selected = property.find(p => p.id == selectedId);
+
+    //         if (selected) {
+    //             $("input[name='total_price']").val(selected.price);
+    //             $("input[name='balance']").val(selected.price);
+    //             $("input[name='penalty']").val("0");
+    //         } else {
+    //             $("input[name='total_price']").val("");
+    //             $("input[name='balance']").val("");
+    //             $("input[name='penalty']").val("");
     //         }
     //     });
     // });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let agent = [];
+
+        $.ajax({
+            url: "client/agent_fetch.php",
+            method: "GET",
+            dataType: "json",
+            success: function(response) {
+                if (response.success) {
+                    agent = response.data;
+                    $("#manager").empty().append('<option value=""></option>');
+                    $("#director").empty().append('<option value=""></option>');
+                    $("#downline").empty().append('<option value=""></option>');
+
+                    response.data.forEach(item => {
+                        $("#manager").append(
+                            `<option value="${item.id}">${item.agent_name}</option>`
+                        );
+                        $("#director").append(
+                            `<option value="${item.id}">${item.agent_name}</option>`
+                        );
+                        $("#downline").append(
+                            `<option value="${item.id}">${item.agent_name}</option>`
+                        );
+                    });
+                } else {
+                    toastr.error("Failed to load agent");
+                }
+            },
+            error: function() {
+                toastr.error("Error fetching agent");
+            }
+        });
+    });
 </script>
 
 <script>
@@ -646,5 +901,19 @@ include __DIR__ . '/../includes/sidebar.php';
                 dropdownParent: $('#dataModal')
             });
         });
+
+        $(document).ready(function() {
+            $('#director, #manager, #downline').select2({
+                placeholder: "",
+                allowClear: true,
+                width: '100%',
+                dropdownParent: $('#comModal')
+            });
+        });
     });
 </script>
+
+
+
+
+<!-- sa edit Agent Assigned nako -->

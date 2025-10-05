@@ -47,7 +47,7 @@ class PropertyHandler
 
     private function validateInput($data)
     {
-        $required = ['title', 'description', 'price', 'property_type'];
+        $required = ['title', 'lot', 'block', 'lot_area', 'price', 'location'];
         foreach ($required as $field) {
             if (empty($data[$field])) {
                 throw new Exception(ucfirst($field) . ' is required');
