@@ -73,20 +73,20 @@ include __DIR__ . '/../includes/sidebar.php';
                         <input type="hidden" name="id" id="id" value="">
 
                         <div class="form-group">
-                            <label>Client Name<span class="text-danger">*</span></label>
+                            <label for="clientSelect">Client Name<span class="text-danger">*</span></label>
                             <select class="custom-select2 form-control" id="clientSelect" name="client_id" required>
                                 <option value="">Choose...</option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label>Amount Paid<span class="text-danger">*</span></label>
-                            <input class="form-control" type="text" name="amount" required>
+                            <label for="amount_paid">Amount Paid<span class="text-danger">*</span></label>
+                            <input class="form-control" type="text" name="amount" id="amount_paid" required>
                         </div>
 
                         <div class="form-group">
-                            <label>Payment Date<span class="text-danger">*</span></label>
-                            <input class="form-control" placeholder="Select Date" name="date_paid" type="date">
+                            <label for="date_paid">Payment Date<span class="text-danger">*</span></label>
+                            <input class="form-control" placeholder="Select Date" name="date_paid" id="date_paid" type="date">
                         </div>
 
                     </form>
@@ -120,12 +120,6 @@ include __DIR__ . '/../includes/sidebar.php';
                         url: "payment/payment_fetch.php",
                         type: "POST",
                         error: function(xhr, error, code) {
-                            console.log('DataTable Ajax Error:');
-                            console.log('Status:', xhr.status);
-                            console.log('Response:', xhr.responseText);
-                            console.log('Error:', error);
-                            console.log('Code:', code);
-
                             toastr.error('Failed to load record data. Please refresh the page.', 'Error');
                         }
                     },
@@ -202,7 +196,6 @@ include __DIR__ . '/../includes/sidebar.php';
             }
 
             function saveData() {
-                console.log("saveData triggered");
                 if (!validateForm()) return;
 
                 const isUpdate = currentId !== null;
@@ -224,7 +217,6 @@ include __DIR__ . '/../includes/sidebar.php';
                     contentType: false,
                     processData: false,
                     success: function(response) {
-                        console.log("AJAX success:", response);
                         if (response.success) {
                             toastr.success(
                                 isUpdate ? "Payment updated successfully!" : "Payment added successfully!",
@@ -237,7 +229,6 @@ include __DIR__ . '/../includes/sidebar.php';
                         }
                     },
                     error: function(xhr) {
-                        console.error("AJAX error:", xhr.responseText);
                         const response = JSON.parse(xhr.responseText);
                         toastr.error(response.message || "An error occurred", "Error");
                     }
@@ -354,5 +345,14 @@ include __DIR__ . '/../includes/sidebar.php';
                 dropdownParent: $('#dataModal')
             });
         });
+    });
+</script>
+
+<script>
+    document.getElementById('amount_paid').addEventListener('input', function() {
+        this.value = this.value
+            .replace(/[^0-9.]/g, '') // allow only numbers and dot
+            .replace(/(\..*?)\..*/g, '$1') // allow only one dot
+            .replace(/^(\d+)(\.\d{0,2}).*$/, '$1$2'); // limit to 2 decimals
     });
 </script>

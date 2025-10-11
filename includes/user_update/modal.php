@@ -13,14 +13,14 @@
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label>Fistname<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" name="firstname" required>
+                                <label for="f_name">Fistname<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" name="firstname2" id="f_name" required>
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label>Lastname<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" name="lastname" required>
+                                <label for="l_name">Lastname<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" name="lastname2" id="l_name" required>
                             </div>
                         </div>
                     </div>
@@ -28,14 +28,14 @@
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label>Contact Number<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" name="contact" required>
+                                <label for="cont_act">Contact Number<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" name="contact2" id="cont_act" required>
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label>Email Address</label>
-                                <input class="form-control" type="email" name="email">
+                                <label for="mail">Email Address</label>
+                                <input class="form-control" type="email" name="email2" id="mail">
                             </div>
                         </div>
                     </div>
@@ -44,26 +44,26 @@
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label>Address</label>
-                                <input class="form-control" type="text" name="address">
+                                <label for="a_ddress">Address</label>
+                                <input class="form-control" type="text" name="address2" id="a_ddress">
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label>Facebook Link</label>
-                                <input class="form-control" type="text" name="facebook_link">
+                                <label for="fbLink">Facebook Link</label>
+                                <input class="form-control" type="text" name="facebook_link2" id="fbLink">
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Role</label>
-                        <input class="form-control" type="text" name="role" readonly>
+                        <label for="rol_e">Role</label>
+                        <input class="form-control" type="text" name="role2" id="rol_e" readonly>
                     </div>
 
                     <div class="form-group" style="margin-bottom: 30px;">
-                        <label>Profile Image</label>
-                        <input type="file" name="image" class="form-control-file form-control height-auto">
+                        <label for="imageInput">Profile Image</label>
+                        <input type="file" name="image" id="imageInput" class="form-control-file form-control height-auto">
                         <img id="imagePreview" src="" alt="Preview" style="width:110px; height: 120px; display:block; margin-top:10px; border-radius: 8px; object-fit: cover; border:1px solid #104F58;">
                     </div>
 
@@ -74,14 +74,14 @@
                     <div class="row">
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label>Username<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" name="username">
+                                <label for="usernameProfile">Username<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" name="username2" id="usernameProfile">
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12">
                             <div class="form-group">
-                                <label>Password</label>
-                                <input class="form-control" type="text" name="password" placeholder="Leave blank to keep current">
+                                <label for="passwordProfile">Password</label>
+                                <input class="form-control" type="text" name="password2" id="passwordProfile" placeholder="Leave blank to keep current">
                             </div>
                         </div>
                     </div>
@@ -109,15 +109,15 @@
                     if (res.success) {
                         const u = res.data;
                         $('#user_id').val(u.id);
-                        $('[name="firstname"]').val(u.firstname);
-                        $('[name="lastname"]').val(u.lastname);
-                        $('[name="contact"]').val(u.contact);
-                        $('[name="email"]').val(u.email);
-                        $('[name="address"]').val(u.address);
-                        $('[name="facebook_link"]').val(u.facebook_link);
-                        $('[name="role"]').val(u.role);
-                        $('[name="username"]').val(u.username);
-                        $('[name="password"]').val('');
+                        $('[name="firstname2"]').val(u.firstname);
+                        $('[name="lastname2"]').val(u.lastname);
+                        $('[name="contact2"]').val(u.contact);
+                        $('[name="email2"]').val(u.email);
+                        $('[name="address2"]').val(u.address);
+                        $('[name="facebook_link2"]').val(u.facebook_link);
+                        $('[name="role2"]').val(u.role);
+                        $('[name="username2"]').val(u.username);
+                        $('[name="password2"]').val('');
 
                         if (u.image) {
                             $('#imagePreview').attr('src', '../uploads/users/' + u.image).show();

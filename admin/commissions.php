@@ -35,9 +35,6 @@ include __DIR__ . '/../includes/sidebar.php';
                             </ol>
                         </nav>
                     </div>
-                    <div class="col-md-6 col-sm-12 text-right">
-                        <button class="btn btn-success" id="addNewBtn">Add New</button>
-                    </div>
                 </div>
             </div>
 
@@ -45,15 +42,13 @@ include __DIR__ . '/../includes/sidebar.php';
                 <div class="pb-20 pt-20">
                     <table class="data-table table stripe hover nowrap">
                         <thead>
-                            <!-- <tr>
-                                <th>Name</th>
-                                <th>Contact</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Status</th>
+                            <tr>
+                                <th>Names</th>
+                                <th>Roles (Percent)</th>
+                                <th>Term</th>
                                 <th>Updated</th>
                                 <th class="datatable-nosort" style="width: 7%;">Action</th>
-                            </tr> -->
+                            </tr>
                         </thead>
                         <tbody></tbody>
                     </table>
@@ -63,33 +58,31 @@ include __DIR__ . '/../includes/sidebar.php';
         </div>
     </div>
 
-
-    <!-- Add/Edit agent Modal -->
-    <div class="modal fade" id="dataModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel">
+    <div class="modal fade" id="comModal" tabindex="-1" role="dialog" aria-labelledby="modalComLabel">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalLabel">Add New User</h5>
+                    <h5 class="modal-title" id="modalComLabel">Add New User</h5>
                     <button type="button" class="close" data-dismiss="modal"> × </button>
                 </div>
                 <div class="modal-body">
-                    <form id="dataForm">
-                        <input type="hidden" name="id" id="id" value="">
+                    <form id="comForm">
+                        <input type="hidden" name="com_ref" id="com_ref" value="">
+                        <input type="hidden" name="clientId" id="clientId" value="">
 
                         <div class="row">
                             <div class="col-md-8 col-sm-12">
                                 <div class="form-group">
-                                    <label>Director<span class="text-danger">*</span></label>
-                                    <select class="custom-select" name="director" required>
+                                    <label for="director">Director<span class="text-danger">*</span></label>
+                                    <select class="custom-select2" name="director" id="director" required>
                                         <option value="">Choose...</option>
-                                        <!-- PHP loop for users -->
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label>Percentage %<span class="text-danger">*</span></label>
-                                    <select class="custom-select" name="director_percent" required>
+                                    <label for="dirPercent">Percentage %<span class="text-danger">*</span></label>
+                                    <select class="custom-select" name="director_percent" id="dirPercent" required>
                                         <?php for ($i = 0; $i <= 100; $i++): ?>
                                             <option value="<?= $i ?>"><?= $i ?>%</option>
                                         <?php endfor; ?>
@@ -101,17 +94,16 @@ include __DIR__ . '/../includes/sidebar.php';
                         <div class="row">
                             <div class="col-md-8 col-sm-12">
                                 <div class="form-group">
-                                    <label>Manager<span class="text-danger">*</span></label>
-                                    <select class="custom-select" name="manager" required>
+                                    <label for="manager">Manager</label>
+                                    <select class="custom-select2" name="manager" id="manager" required>
                                         <option value="">Choose...</option>
-                                        <!-- PHP loop for users -->
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label>Percentage %<span class="text-danger">*</span></label>
-                                    <select class="custom-select" name="manager_percent" required>
+                                    <label for="manPercent">Percentage %</label>
+                                    <select class="custom-select" name="manager_percent" id="manPercent" required>
                                         <?php for ($i = 0; $i <= 100; $i++): ?>
                                             <option value="<?= $i ?>"><?= $i ?>%</option>
                                         <?php endfor; ?>
@@ -123,17 +115,16 @@ include __DIR__ . '/../includes/sidebar.php';
                         <div class="row">
                             <div class="col-md-8 col-sm-12">
                                 <div class="form-group">
-                                    <label>Downline<span class="text-danger">*</span></label>
-                                    <select class="custom-select" name="downline" required>
+                                    <label for="downline">Downline</label>
+                                    <select class="custom-select2" name="downline" id="downline" required>
                                         <option value="">Choose...</option>
-                                        <!-- PHP loop for users -->
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label>Percentage %<span class="text-danger">*</span></label>
-                                    <select class="custom-select" name="downline_percent" required>
+                                    <label for="downPercent">Percentage %</label>
+                                    <select class="custom-select" name="downline_percent" id="downPercent" required>
                                         <?php for ($i = 0; $i <= 100; $i++): ?>
                                             <option value="<?= $i ?>"><?= $i ?>%</option>
                                         <?php endfor; ?>
@@ -143,8 +134,8 @@ include __DIR__ . '/../includes/sidebar.php';
                         </div>
 
                         <div class="form-group">
-                            <label>Term<span class="text-danger">*</span></label>
-                            <select class="custom-select" name="term" required>
+                            <label for="comTerm">Term<span class="text-danger">*</span></label>
+                            <select class="custom-select" name="term" id="comTerm" required>
                                 <option value="">Choose...</option>
                                 <option value="spot">Spot Cash</option>
                                 <option value="3">3 Months</option>
@@ -154,15 +145,15 @@ include __DIR__ . '/../includes/sidebar.php';
                                 <option value="36">36 Months (3 Years)</option>
                                 <option value="48">48 Months (4 Years)</option>
                                 <option value="60">60 Months (5 Years)</option>
+                                <option value="72">72 Months (6 Years)</option>
                             </select>
                         </div>
-
 
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-success" id="saveBtn">Save changes</button>
+                    <button type="button" class="btn btn-success" id="saveComBtn">Save changes</button>
                 </div>
             </div>
         </div>
@@ -176,10 +167,8 @@ include __DIR__ . '/../includes/sidebar.php';
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         $(document).ready(function() {
-            let currentId = null;
             let dataTable;
 
-            // Initialize DataTable
             initializeDataTable();
 
             function initializeDataTable() {
@@ -207,34 +196,28 @@ include __DIR__ . '/../includes/sidebar.php';
                         orderable: false
                     }],
                     order: [
-                        [5, "desc"]
+                        [3, "desc"]
                     ],
                     columns: [{
-                            data: "fullname"
+                            data: "names"
                         },
                         {
-                            data: "contact"
+                            data: "roles"
                         },
                         {
-                            data: "email"
-                        },
-                        {
-                            data: "role"
-                        },
-                        {
-                            data: "status"
+                            data: "term"
                         },
                         {
                             data: "updated_at"
                         },
                         {
                             data: "id",
-                            render: function(data) {
+                            render: function(data, type, row) {
                                 return `<div class="table-actions">
-                                    <a href="#" class="edit-btn" data-id="${data}">
+                                    <a href="#" class="edit-btn" data-id="${data}" data-comref="${row.com_ref}">
                                         <i class="fa fa-pencil" style="color:#17A2B8;"></i>
                                     </a>
-                                    <a href="#" class="delete-btn" data-id="${data}">
+                                    <a href="#" class="delete-btn" data-id="${data}" data-comref="${row.com_ref}">
                                         <i class="fa fa-trash-o" style="color:red;"></i>
                                     </a>
                                 </div>`;
@@ -251,84 +234,52 @@ include __DIR__ . '/../includes/sidebar.php';
                     }
                 });
 
-                // Handle edit button clicks
                 $('.data-table').on('click', '.edit-btn', function(e) {
                     e.preventDefault();
-                    const dataId = $(this).data('id');
-                    editData(dataId);
+                    const clientId = $(this).data('id');
+                    const comRef = $(this).data('comref');
+                    editComData(clientId, comRef);
                 });
 
-                // Handle delete button clicks
                 $('.data-table').on('click', '.delete-btn', function(e) {
                     e.preventDefault();
-                    const dataId = $(this).data('id');
-                    deleteData(dataId);
+                    const clientId = $(this).data('id');
+                    const comRef = $(this).data('comref');
+                    deleteData(clientId, comRef);
                 });
             }
 
-            // Add New Agent Button
-            $('#addNewBtn').on('click', function() {
-                resetForm();
-                $('#modalLabel').text('Add New Commission');
-                $('#saveBtn').text('Save changes');
-                $('#saveBtn').attr('class', 'btn btn-success')
-                $('input[name="password"]').attr("placeholder", "•••••••••");
-                $('#dataModal').modal('show');
+            $('#saveComBtn').on('click', function() {
+                saveComData();
             });
 
-            // Save Agent Button
-            $('#saveBtn').on('click', function() {
-                saveData();
-            });
+            function saveComData() {
+                if (!validateComForm()) return;
 
-            function resetForm() {
-                $('#dataForm')[0].reset();
-                $('#id').val('');
-                currentId = null;
-            }
-
-            function saveData() {
-                if (!validateForm()) return;
-
-                const isUpdate = currentId !== null;
                 const formData = new FormData();
 
-                // Add form data
-                formData.append('action', isUpdate ? 'update' : 'insert');
-                formData.append('firstname', $('input[name="firstname"]').val());
-                formData.append('lastname', $('input[name="lastname"]').val());
-                formData.append('contact', $('input[name="contact"]').val());
-                formData.append('email', $('input[name="email"]').val());
-                formData.append('address', $('input[name="address"]').val());
-                formData.append('facebook_link', $('input[name="facebook_link"]').val());
-                formData.append('role', $('select[name="role"]').val());
-
-                const imageFile = $('input[name="image"]')[0].files[0];
-                if (imageFile) {
-                    formData.append('image', imageFile);
-                }
-
-                formData.append('username', $('input[name="username"]').val());
-                formData.append('password', $('input[name="password"]').val());
-
-                if (isUpdate) {
-                    formData.append('id', currentId);
-                }
+                formData.append('action', 'update');
+                formData.append('clientId', $('input[name="clientId"]').val());
+                formData.append('com_ref', $('input[name="com_ref"]').val());
+                formData.append('director', $('select[name="director"]').val());
+                formData.append('director_percent', $('select[name="director_percent"]').val());
+                formData.append('manager', $('select[name="manager"]').val());
+                formData.append('manager_percent', $('select[name="manager_percent"]').val());
+                formData.append('downline', $('select[name="downline"]').val());
+                formData.append('downline_percent', $('select[name="downline_percent"]').val());
+                formData.append('term', $('select[name="term"]').val());
 
                 $.ajax({
-                    url: 'user/user_handler.php',
+                    url: 'commission/assigned_handler.php',
                     type: 'POST',
                     data: formData,
                     contentType: false,
                     processData: false,
                     success: function(response) {
                         if (response.success) {
-                            toastr.success(
-                                isUpdate ? "User updated successfully!" : "User added successfully!",
-                                "Success"
-                            );
-                            $('#dataModal').modal('hide');
-                            loadProperties();
+                            toastr.success("Assigned updated successfully!", "Success");
+                            $('#comModal').modal('hide');
+                            loadCommissions();
                         } else {
                             toastr.error(response.message, "Error");
                         }
@@ -340,86 +291,104 @@ include __DIR__ . '/../includes/sidebar.php';
                 });
             }
 
-            function validateForm() {
-                const firstname = $('input[name="firstname"]').val().trim();
-                const lastname = $('input[name="lastname"]').val().trim();
-                const contact = $('input[name="contact"]').val().trim();
-                const role = $('select[name="role"]').val();
-                const username = $('input[name="username"]').val().trim();
+            function validateComForm() {
+                const director = $('select[name="director"]').val();
+                const manager = $('select[name="manager"]').val();
+                const downline = $('select[name="downline"]').val();
 
-                if (!firstname) {
-                    toastr.error("User firstname is required", "Validation Error");
+                const director_percent = $('select[name="director_percent"]').val();
+                const term = $('select[name="term"]').val();
+
+                if (!director) {
+                    toastr.error("Director is required", "Validation Error");
                     return false;
                 }
-                if (!lastname) {
-                    toastr.error("User lastname is required", "Validation Error");
+                if (!director_percent) {
+                    toastr.error("Director percent is required", "Validation Error");
                     return false;
                 }
-                if (!contact) {
-                    toastr.error("User contact is required", "Validation Error");
+                if (!term) {
+                    toastr.error("Term is required", "Validation Error");
                     return false;
                 }
-                if (!role) {
-                    toastr.error("User role is required", "Validation Error");
+
+                if (manager && director === manager) {
+                    toastr.error("Manager cannot be the same as Director", "Validation Error");
                     return false;
                 }
-                if (!username) {
-                    toastr.error("User username is required", "Validation Error");
+                if (downline && director === downline) {
+                    toastr.error("Downline cannot be the same as Director", "Validation Error");
+                    return false;
+                }
+                if (manager && downline && manager === downline) {
+                    toastr.error("Downline cannot be the same as Manager", "Validation Error");
                     return false;
                 }
 
                 return true;
             }
 
-            window.editData = function(id) {
+            window.editComData = function(clientId, comRef) {
+                reset2ComForm();
+                $('#clientId').val(clientId);
+                $('#com_ref').val(comRef);
+
+                $('#modalComLabel').text('Edit Commissions');
+                $('#saveComBtn').text('Save update').attr('class', 'btn btn-info');
+
+                if (!comRef) {
+                    $('#comModal').modal('show');
+                    return;
+                }
+
                 $.ajax({
-                    url: 'user/user_handler.php',
+                    url: 'commission/fetch_commission.php',
                     type: 'GET',
                     data: {
-                        action: 'get',
-                        id: id
+                        com_ref: comRef
                     },
+                    dataType: 'json',
                     success: function(response) {
-                        if (response.success) {
-                            const record = response.data;
-                            populateForm(record);
-                            $('#modalLabel').text('Edit User');
-                            $('#saveBtn').text('Save update');
-                            $('#saveBtn').attr('class', 'btn btn-update')
-                            $('#dataModal').modal('show');
+                        if (response.success && response.data) {
+                            const data = response.data;
+
+                            if (data.director) {
+                                $('#director').val(data.director.user_id).trigger('change');
+                                $('select[name="director_percent"]').val(data.director.percent);
+                            }
+
+                            if (data.manager) {
+                                $('#manager').val(data.manager.user_id).trigger('change');
+                                $('select[name="manager_percent"]').val(data.manager.percent);
+                            }
+
+                            if (data.downline) {
+                                $('#downline').val(data.downline.user_id).trigger('change');
+                                $('select[name="downline_percent"]').val(data.downline.percent);
+                            }
+
+                            if (data.term) {
+                                $('select[name="term"]').val(data.term);
+                            }
+
+                            $('#comModal').modal('show');
                         } else {
-                            toastr.error(response.message, "Error");
+                            toastr.warning('No commission data found for this record.');
+                            $('#comModal').modal('show');
                         }
                     },
-                    error: function(xhr) {
-                        const response = JSON.parse(xhr.responseText);
-                        toastr.error(response.message || "An error occurred", "Error");
+                    error: function() {
+                        toastr.error('Error fetching commission data.');
                     }
                 });
             };
 
-            function populateForm(record) {
-                currentId = record.id;
-
-                $('#id').val(record.id);
-                $('input[name="firstname"]').val(record.firstname);
-                $('input[name="lastname"]').val(record.lastname);
-                $('input[name="contact"]').val(record.contact);
-                $('input[name="email"]').val(record.email);
-                $('input[name="address"]').val(record.address);
-                $('input[name="facebook_link"]').val(record.facebook_link);
-                $('select[name="role"]').val(record.role);
-                $('input[name="username"]').val(record.username || "");
-                $('input[name="password"]').val("").attr("placeholder", "Leave blank to keep the current password");
-
-                if (record.image) {
-                    $('#imagePreview').attr("src", "../uploads/users/" + record.image).show();
-                } else {
-                    $('#imagePreview').hide();
-                }
+            function reset2ComForm() {
+                $('#comForm')[0].reset();
+                $('#director, #manager, #downline').val('').trigger('change');
             }
 
-            window.deleteData = function(id) {
+            window.deleteData = function(clientId, comRef) {
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",
@@ -431,16 +400,17 @@ include __DIR__ . '/../includes/sidebar.php';
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: 'user/user_handler.php',
+                            url: 'commission/assigned_handler.php',
                             type: 'POST',
                             data: {
                                 action: 'delete',
-                                id: id
+                                clientId: clientId,
+                                com_ref: comRef
                             },
                             success: function(response) {
                                 if (response.success) {
-                                    toastr.success("User deleted successfully!", "Success");
-                                    loadProperties();
+                                    toastr.success("Commission deleted successfully!", "Success");
+                                    loadCommissions();
                                 } else {
                                     toastr.error(response.message, "Error");
                                 }
@@ -454,55 +424,64 @@ include __DIR__ . '/../includes/sidebar.php';
                 });
             };
 
-            function loadProperties() {
+            function loadCommissions() {
                 if (dataTable) {
                     dataTable.ajax.reload(null, false);
                 }
             }
         });
 
-        $('#dataModal').on('hide.bs.modal', function() {
+        $('#comModal').on('hide.bs.modal', function() {
             document.activeElement.blur();
         });
     });
 </script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let agent = [];
+
+        $.ajax({
+            url: "commission/agent_fetch.php",
+            method: "GET",
+            dataType: "json",
+            success: function(response) {
+                if (response.success) {
+                    agent = response.data;
+                    $("#manager").empty().append('<option value=""></option>');
+                    $("#director").empty().append('<option value=""></option>');
+                    $("#downline").empty().append('<option value=""></option>');
+
+                    response.data.forEach(item => {
+                        $("#manager").append(
+                            `<option value="${item.id}">${item.agent_name}</option>`
+                        );
+                        $("#director").append(
+                            `<option value="${item.id}">${item.agent_name}</option>`
+                        );
+                        $("#downline").append(
+                            `<option value="${item.id}">${item.agent_name}</option>`
+                        );
+                    });
+                } else {
+                    toastr.error("Failed to load agent");
+                }
+            },
+            error: function() {
+                toastr.error("Error fetching agent");
+            }
+        });
+    });
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         $(document).ready(function() {
-            $("#positionSelect").on("change", function() {
-                const selected = $(this).val();
-
-                if (selected === "manager" || selected === "downline") {
-                    $("#uplineWrapper").show();
-
-                    $.ajax({
-                        url: "agent/fetch_directors.php",
-                        method: "GET",
-                        dataType: "json",
-                        success: function(response) {
-                            if (response.success) {
-                                $("#uplineSelect").empty().append('<option value="">Choose...</option>');
-
-                                response.data.forEach(director => {
-                                    $("#uplineSelect").append(
-                                        `<option value="${director.id}">${director.name}</option>`
-                                    );
-                                });
-                            } else {
-                                toastr.error("Failed to load directors");
-                            }
-                        },
-                        error: function() {
-                            toastr.error("Error fetching directors");
-                        }
-                    });
-
-                } else {
-                    $("#uplineWrapper").hide();
-                    $("#uplineSelect").val("");
-                }
+            $('#director, #manager, #downline').select2({
+                placeholder: "",
+                allowClear: true,
+                width: '100%',
+                dropdownParent: $('#comModal')
             });
         });
     });

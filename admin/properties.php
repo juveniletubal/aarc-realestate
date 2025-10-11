@@ -99,7 +99,7 @@ include __DIR__ . '/../includes/sidebar.php';
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
-                                    <label>Block<span class="text-danger">*</span></label>
+                                    <label>Block #<span class="text-danger">*</span></label>
                                     <input class="form-control" type="text" id="block" name="block" placeholder="Enter Block Number" required>
                                 </div>
                             </div>

@@ -64,11 +64,9 @@ class ClientHandler
                 VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
             ");
 
-            $assignedStaff = $_POST['assigned_staff'] ?? null;
-
             $stmt->execute([
                 $userId,
-                $assignedStaff,
+                $_POST['assigned_staff'],
                 $_POST['property_id'],
                 $_POST['payment_terms'],
                 $_POST['total_price'],

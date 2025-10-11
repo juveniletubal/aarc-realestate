@@ -30,9 +30,6 @@ class PaymentHandler
                 case 'get':
                     $this->getData();
                     break;
-                case 'list':
-                    $this->listData();
-                    break;
                 default:
                     throw new Exception('Invalid action');
             }
@@ -62,7 +59,7 @@ class PaymentHandler
             $datePaid = $_POST['date_paid'];
 
             // 1️⃣ Check if client exists and fetch first_payment_date
-            $stmt = $this->pdo->prepare("SELECT first_payment_date FROM clients WHERE id = ?");
+            $stmt = $this->pdo->prepare("SELECT first_payment_date, balance FROM clients WHERE id = ?");
             $stmt->execute([$clientId]);
             $client = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -77,6 +74,14 @@ class PaymentHandler
         ");
             $stmt->execute([$clientId, $amount, $datePaid]);
 
+            // ✅ 3️⃣ Update client balance (subtract the payment amount)
+            $stmt = $this->pdo->prepare("
+                UPDATE clients
+                SET balance = GREATEST(balance - ?, 0)
+                WHERE id = ?
+            ");
+            $stmt->execute([$amount, $clientId]);
+
             // 3️⃣ If first_payment_date is NULL → set it to this date
             if (empty($client['first_payment_date'])) {
                 $stmt = $this->pdo->prepare("
@@ -89,7 +94,7 @@ class PaymentHandler
 
             echo json_encode([
                 'success' => true,
-                'message' => 'Payment recorded successfully.'
+                'message' => 'Payment recorded successfully and balance updated.'
             ]);
         } catch (Exception $e) {
             echo json_encode([
@@ -120,17 +125,20 @@ class PaymentHandler
                 throw new Exception("Payment record not found.");
             }
 
-            // Get client info (for first_payment_date)
-            $stmt = $this->pdo->prepare("SELECT first_payment_date FROM clients WHERE id = ?");
+            $oldAmount = (float)$existingPayment['amount_paid'];
+
+            // 2️⃣ Get client info (for balance and first_payment_date)
+            $stmt = $this->pdo->prepare("SELECT balance, first_payment_date FROM clients WHERE id = ?");
             $stmt->execute([$clientId]);
             $client = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Track if we need to update client's first_payment_date
+            if (!$client) {
+                throw new Exception("Client not found.");
+            }
+
             $shouldUpdateFirstDate = false;
 
             if (!empty($client['first_payment_date'])) {
-                // If the client's first payment date matches the old payment date,
-                // update it to the new one
                 if ($client['first_payment_date'] === $existingPayment['payment_date']) {
                     $shouldUpdateFirstDate = true;
                 }
@@ -139,10 +147,20 @@ class PaymentHandler
             // Update the payment record
             $stmt = $this->pdo->prepare("
             UPDATE payments
-            SET client_id = ?, amount = ?, payment_date = ?, updated_at = NOW()
+            SET client_id = ?, amount_paid = ?, payment_date = ?, updated_at = NOW()
             WHERE id = ?
         ");
             $stmt->execute([$clientId, $amount, $datePaid, $id]);
+
+            // 4️⃣ Adjust client balance based on amount difference
+            $difference = $oldAmount - $amount;
+
+            $stmt = $this->pdo->prepare("
+            UPDATE clients
+            SET balance = GREATEST(balance + ?, 0)
+            WHERE id = ?
+        ");
+            $stmt->execute([$difference, $clientId]);
 
             // If needed, update the client's first payment date too
             if ($shouldUpdateFirstDate) {
@@ -156,7 +174,7 @@ class PaymentHandler
 
             echo json_encode([
                 'success' => true,
-                'message' => 'Payment updated successfully.'
+                'message' => 'Payment updated successfully and balance adjusted.'
             ]);
         } catch (Exception $e) {
             echo json_encode([
@@ -215,39 +233,6 @@ class PaymentHandler
             echo json_encode([
                 'success' => true,
                 'data' => $payment
-            ]);
-        } catch (Exception $e) {
-            echo json_encode([
-                'success' => false,
-                'message' => $e->getMessage()
-            ]);
-        }
-    }
-
-
-    private function listData()
-    {
-        try {
-            $stmt = $this->pdo->prepare("
-                SELECT 
-                    p.id,
-                    p.amount_paid,
-                    p.payment_date,
-                    u.firstname,
-                    u.lastname
-                FROM payments p
-                JOIN clients c ON p.client_id = c.id
-                JOIN users u ON c.user_id = u.id
-                WHERE u.is_deleted = 0
-                ORDER BY p.date_paid DESC
-            ");
-
-            $stmt->execute();
-            $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            echo json_encode([
-                'success' => true,
-                'data' => $payments
             ]);
         } catch (Exception $e) {
             echo json_encode([

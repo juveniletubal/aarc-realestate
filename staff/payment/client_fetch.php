@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 try {
     $stmt = $pdo->prepare("
         SELECT 
-            u.id, 
+            c.id, 
             CONCAT(u.firstname, ' ', u.lastname) AS client_name
         FROM clients c
         INNER JOIN users u ON c.user_id = u.id

@@ -55,16 +55,16 @@ class UserHandler
             }
         }
 
-        $sql = "SELECT id FROM agents WHERE email = ? AND is_deleted = 0";
+        $sql = "SELECT id FROM users WHERE username = ? AND is_deleted = 0";
         if ($id) $sql .= " AND id != ?";
         $stmt = $this->pdo->prepare($sql);
 
-        $params = [$data['email']];
+        $params = [$data['username']];
         if ($id) $params[] = $id;
 
         $stmt->execute($params);
         if ($stmt->fetch()) {
-            throw new Exception('Email already exists. Please use another email.');
+            throw new Exception('Username already exists. Please use another username.');
         }
     }
 

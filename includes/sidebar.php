@@ -77,6 +77,12 @@
                     </li>
 
                     <li>
+                        <a href="commissions" class="<?= $page->isActive('commissions') ?> dropdown-toggle no-arrow">
+                            <span class="micon fa fa-percent"></span><span class="mtext">Commissions</span>
+                        </a>
+                    </li>
+
+                    <li>
                         <a href="del_test" class="<?= $page->isActive('overdue') ?> dropdown-toggle no-arrow">
                             <span class="micon fa fa-exclamation-circle"></span><span class="mtext">Overdue</span>
                         </a>

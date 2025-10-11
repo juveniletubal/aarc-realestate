@@ -52,6 +52,7 @@ include __DIR__ . '/../includes/sidebar.php';
                                 <th>Total Price</th>
                                 <th>Balance</th>
                                 <th>Terms</th>
+                                <th>Due Date</th>
                                 <th>Agent Assigned</th>
                                 <th>Updated</th>
                                 <th class="datatable-nosort" style="width: 6%;">Action</th>
@@ -76,19 +77,19 @@ include __DIR__ . '/../includes/sidebar.php';
                 </div>
                 <div class="modal-body">
                     <form id="dataForm">
-                        <input type="text" name="id" id="id" value="">
+                        <input type="hidden" name="id" id="id" value="">
 
                         <div class="row">
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
-                                    <label>Fistname<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="firstname" required>
+                                    <label for="firstname">Fistname<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" name="firstname" id="firstname" required>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
-                                    <label>Lastname<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="lastname" required>
+                                    <label for="lastname">Lastname<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" name="lastname" id="lastname" required>
                                 </div>
                             </div>
                         </div>
@@ -96,40 +97,22 @@ include __DIR__ . '/../includes/sidebar.php';
                         <div class="row">
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
-                                    <label>Contact Number<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="contact" required>
+                                    <label for="contact">Contact Number<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" name="contact" id="contact" required>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
-                                    <label>Address</label>
-                                    <input class="form-control" type="text" name="address">
+                                    <label for="address">Address</label>
+                                    <input class="form-control" type="text" name="address" id="address">
                                 </div>
                             </div>
                         </div>
 
-                        <!-- <div class="row">
-                            <div class="col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label>Assigned Agent<span class="text-danger">*</span></label>
-                                    <select class="custom-select" id="agentSelect" name="assigned_agent" required>
-                                        <option value="">Choose...</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 col-sm-12">
-                                <div class="form-group">
-                                    <label>Upline or Downline</label>
-                                    <input class="form-control" type="text" name="" disabled value="Manager name / Downline name">
-                                </div>
-                            </div>
-                        </div> -->
-
                         <div class="row">
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
-                                    <label>Property Title<span class="text-danger">*</span></label>
+                                    <label for="propertySelect">Property Title<span class="text-danger">*</span></label>
                                     <select class="custom-select2 form-control" id="propertySelect" name="property_id" required>
                                         <option value="">Choose...</option>
                                     </select>
@@ -137,8 +120,8 @@ include __DIR__ . '/../includes/sidebar.php';
                             </div>
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
-                                    <label>Payment Terms<span class="text-danger">*</span></label>
-                                    <select class="custom-select" name="payment_terms" required>
+                                    <label id="paymentTerm">Payment Terms<span class="text-danger">*</span></label>
+                                    <select class="custom-select" name="payment_terms" id="paymentTerm" required>
                                         <option value="spot_cash">Spot Cash</option>
                                         <option value="3">3 Months</option>
                                         <option value="6">6 Months</option>
@@ -156,20 +139,20 @@ include __DIR__ . '/../includes/sidebar.php';
                         <div class="row">
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label>Total Price</label>
-                                    <input class="form-control" type="text" name="total_price" disabled>
+                                    <label for="totalPrice">Total Price</label>
+                                    <input class="form-control" type="text" id="totalPrice" name="total_price" disabled>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label>Balance</label>
-                                    <input class="form-control" type="text" name="balance" disabled>
+                                    <label for="balance">Balance</label>
+                                    <input class="form-control" type="text" id="balance" name="balance" disabled>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label>Penalty</label>
-                                    <input class="form-control" type="text" name="penalty" disabled>
+                                    <label for="penalty">Penalty</label>
+                                    <input class="form-control" type="text" id="penalty" name="penalty" disabled>
                                 </div>
                             </div>
                         </div>
@@ -181,15 +164,15 @@ include __DIR__ . '/../includes/sidebar.php';
 
                         <div class="row">
                             <div class="col-md-6 col-sm-12">
-                                <label>Username<span class="text-danger">*</span></label>
+                                <label for="usernameField">Username<span class="text-danger">*</span></label>
                                 <div class="input-group custom">
-                                    <input class="form-control" type="text" name="username" required>
+                                    <input class="form-control" type="text" name="username" id="usernameField" required>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
-                                <label>Password<span class="text-danger">*</span></label>
+                                <label for="passwordField">Password<span class="text-danger">*</span></label>
                                 <div class="input-group custom">
-                                    <input class="form-control" type="password" name="password" placeholder="">
+                                    <input class="form-control" type="password" name="password" id="passwordField" placeholder="">
                                 </div>
                             </div>
                         </div>
@@ -222,17 +205,16 @@ include __DIR__ . '/../includes/sidebar.php';
                         <div class="row">
                             <div class="col-md-8 col-sm-12">
                                 <div class="form-group">
-                                    <label>Director<span class="text-danger">*</span></label>
+                                    <label for="director">Director<span class="text-danger">*</span></label>
                                     <select class="custom-select2" name="director" id="director" required>
                                         <option value="">Choose...</option>
-                                        <!-- PHP loop for users -->
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label>Percentage %<span class="text-danger">*</span></label>
-                                    <select class="custom-select" name="director_percent" required>
+                                    <label for="dirPercent">Percentage %<span class="text-danger">*</span></label>
+                                    <select class="custom-select" name="director_percent" id="dirPercent" required>
                                         <?php for ($i = 0; $i <= 100; $i++): ?>
                                             <option value="<?= $i ?>"><?= $i ?>%</option>
                                         <?php endfor; ?>
@@ -244,17 +226,16 @@ include __DIR__ . '/../includes/sidebar.php';
                         <div class="row">
                             <div class="col-md-8 col-sm-12">
                                 <div class="form-group">
-                                    <label>Manager</label>
+                                    <label for="manager">Manager</label>
                                     <select class="custom-select2" name="manager" id="manager" required>
                                         <option value="">Choose...</option>
-                                        <!-- PHP loop for users -->
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label>Percentage %</label>
-                                    <select class="custom-select" name="manager_percent" required>
+                                    <label for="manPercent">Percentage %</label>
+                                    <select class="custom-select" name="manager_percent" id="manPercent" required>
                                         <?php for ($i = 0; $i <= 100; $i++): ?>
                                             <option value="<?= $i ?>"><?= $i ?>%</option>
                                         <?php endfor; ?>
@@ -266,17 +247,16 @@ include __DIR__ . '/../includes/sidebar.php';
                         <div class="row">
                             <div class="col-md-8 col-sm-12">
                                 <div class="form-group">
-                                    <label>Downline</label>
+                                    <label for="downline">Downline</label>
                                     <select class="custom-select2" name="downline" id="downline" required>
                                         <option value="">Choose...</option>
-                                        <!-- PHP loop for users -->
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label>Percentage %</label>
-                                    <select class="custom-select" name="downline_percent" required>
+                                    <label for="downPercent">Percentage %</label>
+                                    <select class="custom-select" name="downline_percent" id="downPercent" required>
                                         <?php for ($i = 0; $i <= 100; $i++): ?>
                                             <option value="<?= $i ?>"><?= $i ?>%</option>
                                         <?php endfor; ?>
@@ -286,8 +266,8 @@ include __DIR__ . '/../includes/sidebar.php';
                         </div>
 
                         <div class="form-group">
-                            <label>Term<span class="text-danger">*</span></label>
-                            <select class="custom-select" name="term" required>
+                            <label for="comTerm">Term<span class="text-danger">*</span></label>
+                            <select class="custom-select" name="term" id="comTerm" required>
                                 <option value="">Choose...</option>
                                 <option value="spot">Spot Cash</option>
                                 <option value="3">3 Months</option>
@@ -297,9 +277,9 @@ include __DIR__ . '/../includes/sidebar.php';
                                 <option value="36">36 Months (3 Years)</option>
                                 <option value="48">48 Months (4 Years)</option>
                                 <option value="60">60 Months (5 Years)</option>
+                                <option value="72">72 Months (6 Years)</option>
                             </select>
                         </div>
-
 
                     </form>
                 </div>
@@ -320,7 +300,6 @@ include __DIR__ . '/../includes/sidebar.php';
 
 <script>
     const loggedInStaffId = "<?php echo $_SESSION['user_id'] ?? ''; ?>";
-    console.log("Login ID:", loggedInStaffId);
 </script>
 
 <script>
@@ -329,7 +308,6 @@ include __DIR__ . '/../includes/sidebar.php';
             let currentId = null;
             let dataTable;
 
-            // Initialize DataTable
             initializeDataTable();
 
             function initializeDataTable() {
@@ -340,11 +318,6 @@ include __DIR__ . '/../includes/sidebar.php';
                         url: "client/client_fetch.php",
                         type: "POST",
                         error: function(xhr, error, code) {
-                            console.log('DataTable Ajax Error:');
-                            console.log('Status:', xhr.status);
-                            console.log('Response:', xhr.responseText);
-                            console.log('Error:', error);
-                            console.log('Code:', code);
 
                             toastr.error('Failed to load record data. Please refresh the page.', 'Error');
                         }
@@ -376,6 +349,9 @@ include __DIR__ . '/../includes/sidebar.php';
                         },
                         {
                             data: "payment_terms"
+                        },
+                        {
+                            data: "due_date"
                         },
                         {
                             data: "agent_name"
@@ -464,22 +440,24 @@ include __DIR__ . '/../includes/sidebar.php';
                 const isUpdate = currentId !== null;
                 const formData = new FormData();
 
+                let penaltyDisplay = $('input[name="penalty"]').val();
+                let penaltyValue = penaltyDisplay.replace(/[^0-9.]/g, '');
+
                 // Add form data
                 formData.append('action', isUpdate ? 'update' : 'insert');
                 formData.append('firstname', $('input[name="firstname"]').val());
                 formData.append('lastname', $('input[name="lastname"]').val());
                 formData.append('contact', $('input[name="contact"]').val());
                 formData.append('address', $('input[name="address"]').val());
-                // formData.append('assigned_agent', $('select[name="assigned_agent"]').val());
                 formData.append('property_id', $('select[name="property_id"]').val());
                 formData.append('payment_terms', $('select[name="payment_terms"]').val());
                 formData.append('total_price', $('input[name="total_price"]').val());
                 formData.append('balance', $('input[name="balance"]').val());
-                formData.append('penalty', $('input[name="penalty"]').val());
+                formData.append('penalty', penaltyValue);
                 formData.append('username', $('input[name="username"]').val());
                 formData.append('password', $('input[name="password"]').val());
 
-                formData.append('assigned_staff', loggedInStaffId);
+                formData.append('assigned_staff', "<?php echo htmlspecialchars($_SESSION['user_id'] ?? '', ENT_QUOTES, 'UTF-8'); ?>");
 
                 if (isUpdate) {
                     formData.append('id', currentId);
@@ -498,7 +476,7 @@ include __DIR__ . '/../includes/sidebar.php';
                                 "Success"
                             );
                             $('#dataModal').modal('hide');
-                            loadProperties();
+                            loadRecords();
                         } else {
                             toastr.error(response.message, "Error");
                         }
@@ -514,7 +492,6 @@ include __DIR__ . '/../includes/sidebar.php';
                 const firstname = $('input[name="firstname"]').val().trim();
                 const lastname = $('input[name="lastname"]').val().trim();
                 const contact = $('input[name="contact"]').val().trim();
-                // const assigned_agent = $('select[name="assigned_agent"]').val();
                 const property_id = $('select[name="property_id"]').val();
                 const payment_terms = $('select[name="payment_terms"]').val();
                 const username = $('input[name="username"]').val().trim();
@@ -531,10 +508,6 @@ include __DIR__ . '/../includes/sidebar.php';
                     toastr.error("Contact is required", "Validation Error");
                     return false;
                 }
-                // if (!assigned_agent) {
-                //     toastr.error("Assigned agent is required", "Validation Error");
-                //     return false;
-                // }
                 if (!property_id) {
                     toastr.error("Property is required", "Validation Error");
                     return false;
@@ -564,8 +537,7 @@ include __DIR__ . '/../includes/sidebar.php';
                             const record = response.data;
                             populateForm(record);
                             $('#modalLabel').text('Edit Client');
-                            $('#saveBtn').text('Save update');
-                            $('#saveBtn').attr('class', 'btn btn-info')
+                            $('#saveBtn').text('Update changes').attr('class', 'btn btn-info');
                             $('#dataModal').modal('show');
                         } else {
                             toastr.error(response.message, "Error");
@@ -594,7 +566,13 @@ include __DIR__ . '/../includes/sidebar.php';
 
                 $('input[name="total_price"]').val(record.total_price);
                 $('input[name="balance"]').val(record.balance);
-                $('input[name="penalty"]').val(record.penalty);
+                // $('input[name="penalty"]').val(record.penalty);
+
+                if (record.penalty) {
+                    $('input[name="penalty"]').val(record.penalty + '% Monthly');
+                } else {
+                    $('input[name="penalty"]').val('');
+                }
 
                 $('input[name="username"]').val(record.username || "");
                 $('input[name="password"]').val("").attr("placeholder", "Leave blank to keep the current password");
@@ -614,11 +592,12 @@ include __DIR__ . '/../includes/sidebar.php';
             function saveComData() {
                 if (!validateComForm()) return;
 
-                const isUpdate = currentId !== null;
+                const isUpdate = $('#com_ref').val().trim() !== '';
                 const formData = new FormData();
 
                 formData.append('action', isUpdate ? 'update' : 'insert');
                 formData.append('clientId', $('#clientId').val());
+                formData.append('com_ref', $('#com_ref').val());
                 formData.append('director', $('select[name="director"]').val());
                 formData.append('director_percent', $('select[name="director_percent"]').val());
                 formData.append('manager', $('select[name="manager"]').val());
@@ -634,13 +613,14 @@ include __DIR__ . '/../includes/sidebar.php';
                     contentType: false,
                     processData: false,
                     success: function(response) {
+                        console.log("Action:", isUpdate ? "update" : "insert");
                         if (response.success) {
                             toastr.success(
                                 isUpdate ? "Assigned updated successfully!" : "Assigned added successfully!",
                                 "Success"
                             );
                             $('#comModal').modal('hide');
-                            loadProperties();
+                            loadRecords();
                         } else {
                             toastr.error(response.message, "Error");
                         }
@@ -654,6 +634,9 @@ include __DIR__ . '/../includes/sidebar.php';
 
             function validateComForm() {
                 const director = $('select[name="director"]').val();
+                const manager = $('select[name="manager"]').val();
+                const downline = $('select[name="downline"]').val();
+
                 const director_percent = $('select[name="director_percent"]').val();
                 const term = $('select[name="term"]').val();
 
@@ -669,50 +652,84 @@ include __DIR__ . '/../includes/sidebar.php';
                     toastr.error("Term is required", "Validation Error");
                     return false;
                 }
+
+                // ✅ Prevent duplicate selections (if they are not empty)
+                if (manager && director === manager) {
+                    toastr.error("Manager cannot be the same as Director", "Validation Error");
+                    return false;
+                }
+                if (downline && director === downline) {
+                    toastr.error("Downline cannot be the same as Director", "Validation Error");
+                    return false;
+                }
+                if (manager && downline && manager === downline) {
+                    toastr.error("Downline cannot be the same as Manager", "Validation Error");
+                    return false;
+                }
+
                 return true;
             }
 
+
             window.editComData = function(clientId, comRef) {
+                reset2ComForm();
+                $('#clientId').val(clientId);
+                $('#com_ref').val(comRef);
+
+                $('#modalComLabel').text('Edit Commissions');
+                $('#saveComBtn').text('Update changes').attr('class', 'btn btn-info');
+
+                if (!comRef) {
+                    $('#comModal').modal('show');
+                    return;
+                }
+
                 $.ajax({
-                    url: 'client/assigned_handler.php',
+                    url: 'client/fetch_commission.php',
                     type: 'GET',
                     data: {
-                        action: 'get',
-                        id: clientId
+                        com_ref: comRef
                     },
+                    dataType: 'json',
                     success: function(response) {
-                        if (response.success) {
-                            const record = response.data;
-                            // populateComForm(record);
+                        if (response.success && response.data) {
+                            const data = response.data;
 
-                            $('#clientId').val(clientId);
-                            $('#com_ref').val(comRef || '');
-                            $('#modalComLabel').text('Edit Commissions');
-                            $('#saveComBtn').text('Save update').attr('class', 'btn btn-info');
+                            if (data.director) {
+                                $('#director').val(data.director.user_id).trigger('change');
+                                $('select[name="director_percent"]').val(data.director.percent);
+                            }
+
+                            if (data.manager) {
+                                $('#manager').val(data.manager.user_id).trigger('change');
+                                $('select[name="manager_percent"]').val(data.manager.percent);
+                            }
+
+                            if (data.downline) {
+                                $('#downline').val(data.downline.user_id).trigger('change');
+                                $('select[name="downline_percent"]').val(data.downline.percent);
+                            }
+
+                            if (data.term) {
+                                $('select[name="term"]').val(data.term);
+                            }
+
                             $('#comModal').modal('show');
                         } else {
-                            toastr.error(response.message, "Error");
+                            toastr.warning('No commission data found for this record.');
+                            $('#comModal').modal('show');
                         }
                     },
-                    error: function(xhr) {
-                        const response = JSON.parse(xhr.responseText);
-                        toastr.error(response.message || "An error occurred", "Error");
+                    error: function() {
+                        toastr.error('Error fetching commission data.');
                     }
                 });
             };
 
-            // function populateComForm(record) {
-            //     currentId = record.id;
-
-            //     $('#com_ref').val(record.com_ref);
-            //     $('select[name="director"]').val(record.director);
-            //     $('select[name="director_percent"]').val(record.director_percent);
-            //     $('select[name="manager"]').val(record.manager);
-            //     $('select[name="manager_percent"]').val(record.manager_percent);
-            //     $('select[name="downline"]').val(record.downline);
-            //     $('select[name="downline_percent"]').val(record.downline_percent);
-            //     $('select[name="term"]').val(record.term);
-            // }
+            function reset2ComForm() {
+                $('#comForm')[0].reset();
+                $('#director, #manager, #downline').val('').trigger('change');
+            }
 
             window.deleteData = function(id) {
                 Swal.fire({
@@ -735,7 +752,7 @@ include __DIR__ . '/../includes/sidebar.php';
                             success: function(response) {
                                 if (response.success) {
                                     toastr.success("User deleted successfully!", "Success");
-                                    loadProperties();
+                                    loadRecords();
                                 } else {
                                     toastr.error(response.message, "Error");
                                 }
@@ -749,7 +766,7 @@ include __DIR__ . '/../includes/sidebar.php';
                 });
             };
 
-            function loadProperties() {
+            function loadRecords() {
                 if (dataTable) {
                     dataTable.ajax.reload(null, false);
                 }
@@ -769,6 +786,8 @@ include __DIR__ . '/../includes/sidebar.php';
                     if (response.success) {
                         const $propertySelect = $("#propertySelect");
                         $propertySelect.empty().append('<option value="">Choose...</option>');
+
+                        propertyList = response.data;
 
                         response.data.forEach(item => {
                             $propertySelect.append(
@@ -791,12 +810,12 @@ include __DIR__ . '/../includes/sidebar.php';
             $("#propertySelect").on("change", function() {
                 let selectedId = $(this).val();
 
-                let selected = property.find(p => p.id == selectedId);
+                let selected = propertyList.find(p => p.id == selectedId);
 
                 if (selected) {
                     $("input[name='total_price']").val(selected.price);
                     $("input[name='balance']").val(selected.price);
-                    $("input[name='penalty']").val("0");
+                    $("input[name='penalty']").val("5% Monthly");
                 } else {
                     $("input[name='total_price']").val("");
                     $("input[name='balance']").val("");
@@ -804,54 +823,7 @@ include __DIR__ . '/../includes/sidebar.php';
                 }
             });
         }
-
     });
-</script>
-
-<script>
-    // document.addEventListener("DOMContentLoaded", function() {
-    //     let property = [];
-
-    //     $.ajax({
-    //         url: "client/property_fetch.php",
-    //         method: "GET",
-    //         dataType: "json",
-    //         success: function(response) {
-    //             if (response.success) {
-    //                 property = response.data
-    //                 $("#propertySelect").empty().append('<option value="">Choose...</option>');
-
-    //                 response.data.forEach(item => {
-    //                     $("#propertySelect").append(
-    //                         `<option value="${item.id}">${item.label}  (${item.location})</option>`
-    //                     );
-    //                 });
-    //             } else {
-    //                 toastr.error("Failed to load property");
-    //             }
-    //         },
-    //         error: function() {
-    //             toastr.error("Error fetching property");
-    //         }
-    //     });
-
-    //     // When user selects a property
-    //     $("#propertySelect").on("change", function() {
-    //         let selectedId = $(this).val();
-
-    //         let selected = property.find(p => p.id == selectedId);
-
-    //         if (selected) {
-    //             $("input[name='total_price']").val(selected.price);
-    //             $("input[name='balance']").val(selected.price);
-    //             $("input[name='penalty']").val("0");
-    //         } else {
-    //             $("input[name='total_price']").val("");
-    //             $("input[name='balance']").val("");
-    //             $("input[name='penalty']").val("");
-    //         }
-    //     });
-    // });
 </script>
 
 <script>
@@ -912,8 +884,3 @@ include __DIR__ . '/../includes/sidebar.php';
         });
     });
 </script>
-
-
-
-
-<!-- sa edit Agent Assigned nako -->

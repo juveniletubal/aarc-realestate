@@ -60,9 +60,7 @@ include __DIR__ . '/../includes/sidebar.php';
                     <div class="d-flex flex-wrap">
                         <div class="widget-data">
                             <div class="weight-700 font-24 text-dark" id="totalProperties">0</div>
-                            <div class="font-14 text-secondary weight-500">
-                                Total Properties
-                            </div>
+                            <div class="font-14 text-secondary weight-500">Total Properties</div>
                         </div>
                         <div class="widget-icon">
                             <div class="icon" data-color="#00eccf">
@@ -77,9 +75,7 @@ include __DIR__ . '/../includes/sidebar.php';
                     <div class="d-flex flex-wrap">
                         <div class="widget-data">
                             <div class="weight-700 font-24 text-dark" id="totalAvailable">0</div>
-                            <div class="font-14 text-secondary weight-500">
-                                Available
-                            </div>
+                            <div class="font-14 text-secondary weight-500">Available</div>
                         </div>
                         <div class="widget-icon">
                             <div class="icon text-warning">
@@ -94,9 +90,7 @@ include __DIR__ . '/../includes/sidebar.php';
                     <div class="d-flex flex-wrap">
                         <div class="widget-data">
                             <div class="weight-700 font-24 text-dark" id="totalReserved">0</div>
-                            <div class="font-14 text-secondary weight-500">
-                                Reserved
-                            </div>
+                            <div class="font-14 text-secondary weight-500">Reserved</div>
                         </div>
                         <div class="widget-icon">
                             <div class="icon">
@@ -131,9 +125,7 @@ include __DIR__ . '/../includes/sidebar.php';
                     <div class="d-flex flex-wrap">
                         <div class="widget-data">
                             <div class="weight-700 font-24 text-dark" id="totalUsers">0</div>
-                            <div class="font-14 text-secondary weight-500">
-                                Total Users
-                            </div>
+                            <div class="font-14 text-secondary weight-500">Total Users</div>
                         </div>
                         <div class="widget-icon">
                             <div class="icon" data-color="#E34861">
@@ -276,16 +268,16 @@ include __DIR__ . '/../includes/sidebar.php';
                 success: function(response) {
                     if (response.success) {
                         // Users
-                        $('#totalUsers').text(response.users.total_users);
-                        $('#totalStaff').text(response.users.total_staff);
-                        $('#totalAgent').text(response.users.total_agent);
-                        $('#totalClient').text(response.users.total_client);
+                        $('#totalUsers').text(response.users.total_users ?? 0);
+                        $('#totalStaff').text(response.users.total_staff ?? 0);
+                        $('#totalAgent').text(response.users.total_agent ?? 0);
+                        $('#totalClient').text(response.users.total_client ?? 0);
 
                         // Properties
-                        $('#totalProperties').text(response.properties.total_properties);
-                        $('#totalAvailable').text(response.properties.total_available);
-                        $('#totalReserved').text(response.properties.total_reserved);
-                        $('#totalSold').text(response.properties.total_sold);
+                        $('#totalProperties').text(response.properties.total_properties ?? 0);
+                        $('#totalAvailable').text(response.properties.total_available ?? 0);
+                        $('#totalReserved').text(response.properties.total_reserved ?? 0);
+                        $('#totalSold').text(response.properties.total_sold ?? 0);
                     } else {
                         console.error(response.message);
                     }

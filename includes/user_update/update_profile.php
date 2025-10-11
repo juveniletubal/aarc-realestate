@@ -17,14 +17,14 @@ try {
     $existingImage = $existing['image'] ?? '';
 
     // Collect fields
-    $firstname = $_POST['firstname'];
-    $lastname = $_POST['lastname'];
-    $contact = $_POST['contact'];
-    $email = $_POST['email'];
-    $address = $_POST['address'];
-    $facebook_link = $_POST['facebook_link'];
-    $username = $_POST['username'];
-    $password = $_POST['password'] ?? '';
+    $firstname = $_POST['firstname2'];
+    $lastname = $_POST['lastname2'];
+    $contact = $_POST['contact2'];
+    $email = $_POST['email2'];
+    $address = $_POST['address2'];
+    $facebook_link = $_POST['facebook_link2'];
+    $username = $_POST['username2'];
+    $password = $_POST['password2'] ?? '';
 
     // Handle image upload
     $uploadDir = '../../uploads/users/';

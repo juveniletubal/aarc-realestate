@@ -75,9 +75,9 @@ class CommissionHandler
             $com_ref = uniqid("com_");
 
             $stmt = $this->pdo->prepare("
-            INSERT INTO commissions (com_ref, user_id, role, percent, term, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, NOW(), NOW())
-        ");
+                INSERT INTO commissions (com_ref, user_id, role, percent, term, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, NOW(), NOW())
+            ");
 
             if (!empty($director_id)) {
                 $stmt->execute([$com_ref, $director_id, 'director', $director_percent, $term]);
@@ -92,9 +92,9 @@ class CommissionHandler
             }
 
             $updateClient = $this->pdo->prepare("
-                UPDATE clients 
-                    SET assigned_agent = ? WHERE id = ?
-                ");
+                    UPDATE clients 
+                        SET assigned_agent = ? WHERE id = ?
+                    ");
             $updateClient->execute([$com_ref, $client_id]);
 
             echo json_encode([
@@ -110,43 +110,75 @@ class CommissionHandler
     private function updateData()
     {
         try {
-            $id = (int) ($_POST['id'] ?? 0);
-            if (!$id) throw new Exception('Invalid client ID');
+            $client_id = $_POST['clientId'] ?? null;
+            if (!$client_id) {
+                throw new Exception("Client ID is required.");
+            }
 
-            $this->validateInput($_POST, $id);
+            $this->validateInput($_POST, $client_id);
 
-            // Get existing client
-            $stmt = $this->pdo->prepare("SELECT user_id FROM clients WHERE id = ?");
-            $stmt->execute([$id]);
-            $existing = $stmt->fetch();
-            if (!$existing) throw new Exception('Client not found');
+            $stmt = $this->pdo->prepare("SELECT assigned_agent FROM clients WHERE id = ?");
+            $stmt->execute([$client_id]);
+            $client = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Update user account
-            $userId = $this->updateUserAccount($existing['user_id'], $_POST);
+            if (!$client) {
+                throw new Exception("Client not found.");
+            }
 
-            $assignedStaff = $_POST['assigned_staff'] ?? null;
+            $existing_com_ref = $client['assigned_agent'];
+            $hasExistingCom = !empty($existing_com_ref);
 
-            $stmt = $this->pdo->prepare("
-                UPDATE clients
-                SET assigned_staff = ?, property_id = ?, payment_terms = ?, total_price = ?, balance = ?, penalty = ?, updated_at = NOW()
-                WHERE id = ?
-            ");
+            if ($hasExistingCom) {
+                $delete = $this->pdo->prepare("DELETE FROM commissions WHERE com_ref = ?");
+                $delete->execute([$existing_com_ref]);
+                $com_ref = $existing_com_ref;
+            } else {
+                $com_ref = uniqid("com_");
+            }
 
-            $stmt->execute([
-                $assignedStaff,
-                $_POST['property_id'],
-                $_POST['payment_terms'],
-                $_POST['total_price'],
-                $_POST['balance'] ?? 0,
-                $_POST['penalty'] ?? 0,
-                $id
+            $stmtInsert = $this->pdo->prepare("
+            INSERT INTO commissions (com_ref, user_id, role, percent, term, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, NOW(), NOW())
+        ");
+
+            $director_id = $_POST['director'] ?? null;
+            $director_percent = $_POST['director_percent'] ?? 0;
+
+            $manager_id = $_POST['manager'] ?? null;
+            $manager_percent = $_POST['manager_percent'] ?? 0;
+
+            $downline_id = $_POST['downline'] ?? null;
+            $downline_percent = $_POST['downline_percent'] ?? 0;
+
+            $term = $_POST['term'] ?? null;
+
+            if (!empty($director_id)) {
+                $stmtInsert->execute([$com_ref, $director_id, 'director', $director_percent, $term]);
+            }
+            if (!empty($manager_id)) {
+                $stmtInsert->execute([$com_ref, $manager_id, 'manager', $manager_percent, $term]);
+            }
+            if (!empty($downline_id)) {
+                $stmtInsert->execute([$com_ref, $downline_id, 'downline', $downline_percent, $term]);
+            }
+
+            $updateClient = $this->pdo->prepare("
+            UPDATE clients 
+            SET assigned_agent = ? 
+            WHERE id = ?
+        ");
+            $updateClient->execute([$com_ref, $client_id]);
+
+            echo json_encode([
+                'success' => true,
+                'com_ref' => $com_ref,
+                'message' => 'Commission(s) and client updated successfully.'
             ]);
-
-            echo json_encode(['success' => true]);
         } catch (Exception $e) {
             echo json_encode(['success' => false, 'message' => $e->getMessage()]);
         }
     }
+
 
     private function deleteData()
     {
@@ -176,22 +208,34 @@ class CommissionHandler
             if (!$id) throw new Exception('Invalid client ID');
 
             $stmt = $this->pdo->prepare("
-                SELECT c.*, u.firstname, u.lastname, u.contact, u.address, u.username, u.role,
-                CONCAT('Lot ', p.lot, ' / Block ', p.block, ' (', p.location, ')') AS label
-                FROM clients c
-                JOIN users u ON c.user_id = u.id
-                LEFT JOIN properties p ON c.property_id = p.id
-                WHERE c.id = ? AND u.is_deleted = 0
-            ");
+            SELECT 
+                c.id AS client_id,
+                c.assigned_agent,
+                cm.com_ref,
+                cm.user_id,
+                u.firstname,
+                u.lastname,
+                cm.role,
+                cm.percent,
+                cm.term
+            FROM clients c
+            JOIN commissions cm ON c.assigned_agent = cm.com_ref
+            JOIN users u ON cm.user_id = u.id
+            WHERE c.id = ? 
+              AND cm.is_deleted = 0 
+              AND c.is_deleted = 0
+        ");
             $stmt->execute([$id]);
-            $client = $stmt->fetch();
-            if (!$client) throw new Exception('Client not found');
+            $commissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            echo json_encode(['success' => true, 'data' => $client]);
+            if (!$commissions) throw new Exception('Client not found or no commissions');
+
+            echo json_encode(['success' => true, 'data' => $commissions]);
         } catch (Exception $e) {
             echo json_encode(['success' => false, 'message' => $e->getMessage()]);
         }
     }
+
 
     private function listData()
     {
@@ -206,54 +250,6 @@ class CommissionHandler
         $clients = $stmt->fetchAll();
 
         echo json_encode(['success' => true, 'data' => $clients]);
-    }
-
-    private function createUserAccount($data)
-    {
-        if (empty($data['username'])) throw new Exception('Username is required');
-        if (empty($data['password'])) throw new Exception('Password is required');
-
-        $password = password_hash($data['password'], PASSWORD_DEFAULT);
-
-        $stmt = $this->pdo->prepare("
-            INSERT INTO users (firstname, lastname, contact, address, username, password, role)
-            VALUES (?, ?, ?, ?, ?, ?, 'client')
-        ");
-        $stmt->execute([
-            $data['firstname'],
-            $data['lastname'],
-            $data['contact'],
-            $data['address'],
-            $data['username'],
-            $password
-        ]);
-
-        return (int)$this->pdo->lastInsertId();
-    }
-
-    private function updateUserAccount($userId, $data)
-    {
-        $sql = "UPDATE users SET firstname = ?, lastname = ?, contact = ?, address = ?, username = ?";
-        $params = [
-            $data['firstname'],
-            $data['lastname'],
-            $data['contact'],
-            $data['address'],
-            $data['username']
-        ];
-
-        if (!empty($data['password'])) {
-            $sql .= ", password = ?";
-            $params[] = password_hash($data['password'], PASSWORD_DEFAULT);
-        }
-
-        $sql .= " WHERE id = ? AND role = 'client'";
-        $params[] = $userId;
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($params);
-
-        return $userId;
     }
 }
 
