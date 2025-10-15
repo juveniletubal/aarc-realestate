@@ -74,14 +74,6 @@ class ClientHandler
                 $_POST['penalty'] ?? 0
             ]);
 
-            // Update properties from available to reserved
-            $stmt = $this->pdo->prepare("
-                UPDATE properties
-                SET status = 'reserved'
-                WHERE id = ?
-            ");
-            $stmt->execute([$_POST['property_id']]);
-
             echo json_encode(['success' => true, 'id' => $this->pdo->lastInsertId(), 'user_id' => $userId]);
         } catch (Exception $e) {
             echo json_encode(['success' => false, 'message' => $e->getMessage()]);
@@ -135,14 +127,7 @@ class ClientHandler
             $id = (int) ($_POST['id'] ?? $_GET['id'] ?? 0);
             if (!$id) throw new Exception('Invalid client ID');
 
-            // Soft delete client + user
-            $stmt = $this->pdo->prepare("SELECT user_id FROM clients WHERE id = ?");
-            $stmt->execute([$id]);
-            $client = $stmt->fetch();
-            if (!$client) throw new Exception('Client not found');
-
             $this->pdo->prepare("UPDATE clients SET is_deleted = 1 WHERE id = ?")->execute([$id]);
-            $this->pdo->prepare("UPDATE users SET is_deleted = 1 WHERE id = ?")->execute([$client['user_id']]);
 
             echo json_encode(['success' => true]);
         } catch (Exception $e) {
@@ -156,18 +141,15 @@ class ClientHandler
             $id = (int) ($_GET['id'] ?? 0);
             if (!$id) throw new Exception('Invalid client ID');
 
-            $prop_id = (int) ($_GET['prop_id'] ?? 0);
-            if (!$id) throw new Exception('Invalid Property ID');
-
             $stmt = $this->pdo->prepare("
                 SELECT c.*, u.firstname, u.lastname, u.contact, u.address, u.username, u.role,
                 CONCAT('Lot ', p.lot, ' / Block ', p.block, ' (', p.location, ')') AS label
                 FROM clients c
                 JOIN users u ON c.user_id = u.id
                 LEFT JOIN properties p ON c.property_id = p.id
-                WHERE c.id = ? AND c.property_id = ? AND u.is_deleted = 0
+                WHERE c.id = ? AND u.is_deleted = 0
             ");
-            $stmt->execute([$id, $prop_id]);
+            $stmt->execute([$id]);
             $client = $stmt->fetch();
             if (!$client) throw new Exception('Client not found');
 

@@ -55,6 +55,7 @@ class PaymentHandler
             $this->validateInput($_POST);
 
             $clientId = $_POST['client_id'];
+            $propertyId = $_POST['property_id'];
             $amount = $_POST['amount'];
             $datePaid = $_POST['date_paid'];
 
@@ -69,10 +70,10 @@ class PaymentHandler
 
             // 2️⃣ Insert payment record
             $stmt = $this->pdo->prepare("
-            INSERT INTO payments (client_id, amount_paid, payment_date, created_at, updated_at)
-            VALUES (?, ?, ?, NOW(), NOW())
+            INSERT INTO payments (client_id, amount_paid, property_id, payment_date, created_at, updated_at)
+            VALUES (?, ?, ?, ?, NOW(), NOW())
         ");
-            $stmt->execute([$clientId, $amount, $datePaid]);
+            $stmt->execute([$clientId, $amount, $propertyId, $datePaid]);
 
             // ✅ 3️⃣ Update client balance (subtract the payment amount)
             $stmt = $this->pdo->prepare("
@@ -91,6 +92,14 @@ class PaymentHandler
             ");
                 $stmt->execute([$datePaid, $clientId]);
             }
+
+            // Update properties from reserved to sold
+            $stmt = $this->pdo->prepare("
+                UPDATE properties
+                SET status = 'sold'
+                WHERE id = ?
+            ");
+            $stmt->execute([$_POST['property_id']]);
 
             echo json_encode([
                 'success' => true,
@@ -113,6 +122,7 @@ class PaymentHandler
             $this->validateInput($_POST, $id);
 
             $clientId = $_POST['client_id'];
+            $propertyId = $_POST['property_id'];
             $amount = $_POST['amount'];
             $datePaid = $_POST['date_paid'];
 
@@ -147,10 +157,10 @@ class PaymentHandler
             // Update the payment record
             $stmt = $this->pdo->prepare("
             UPDATE payments
-            SET client_id = ?, amount_paid = ?, payment_date = ?, updated_at = NOW()
+            SET client_id = ?, amount_paid = ?, property_id = ?, payment_date = ?, updated_at = NOW()
             WHERE id = ?
         ");
-            $stmt->execute([$clientId, $amount, $datePaid, $id]);
+            $stmt->execute([$clientId, $amount, $propertyId,  $datePaid, $id]);
 
             // 4️⃣ Adjust client balance based on amount difference
             $difference = $oldAmount - $amount;

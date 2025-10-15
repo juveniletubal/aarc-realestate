@@ -24,6 +24,13 @@ function loadCoreAssets($assets, $page_type = 'basic')
             $assets->addJS('js/jquery.dataTables.bundle.min.js', 2, ['defer' => true]);
             // $assets->addJS('js/dashboard3.js', 3, ['defer' => true]);
             break;
+        case 'client_dashboard':
+            $assets->addCSS('css/datatables.bundle.min.css', 3);
+
+            $assets->addJS('js/jquery.dataTables.bundle.min.js', 2, ['defer' => true]);
+            // $assets->addJS('js/apexcharts.min.js', 3, ['defer' => true]);
+            // $assets->addJS('js/dashboard.js', 4, ['defer' => true]);
+            break;
 
         case 'table_form_dropzone':
             $assets->addCSS('css/datatables.bundle.min.css', 3);

@@ -3,8 +3,6 @@ require_once __DIR__ . '/../includes/init.php';
 
 $page->setTitle('AARC - Dashboard');
 $page->setCurrentPage('dashboard');
-$page->addBreadcrumb('Dashboard', 'index');
-$page->addBreadcrumb('Dashboard');
 
 loadCoreAssets($assets, 'dashboard');
 

@@ -72,6 +72,7 @@ try {
     $sql = "
         SELECT 
             c.id,
+            u.id AS userid,
             u.firstname,
             u.lastname,
             u.contact,
@@ -89,19 +90,19 @@ try {
             a.role AS agent_role,
             c.updated_at
         FROM clients c
-        JOIN users u 
-            ON c.user_id = u.id 
-        AND u.is_deleted = 0 
-        AND u.role = 'client'
-        LEFT JOIN properties p 
-            ON c.property_id = p.id
-        LEFT JOIN commissions com 
-            ON c.assigned_agent = com.com_ref 
-        AND com.role = 'director'
-        LEFT JOIN users a 
-            ON com.user_id = a.id 
-        AND a.is_deleted = 0 
-        AND (a.role = 'agent' OR a.role = 'staff')
+            JOIN users u 
+                ON c.user_id = u.id 
+            AND u.is_deleted = 0 
+            AND u.role = 'client'
+            LEFT JOIN properties p 
+                ON c.property_id = p.id
+            LEFT JOIN commissions com 
+                ON c.assigned_agent = com.com_ref 
+            AND com.role = 'director'
+            LEFT JOIN users a 
+                ON com.user_id = a.id 
+            AND a.is_deleted = 0 
+            AND (a.role = 'agent' OR a.role = 'staff')
         WHERE 1=1 AND c.is_deleted = 0
         $searchQuery
         ORDER BY $columnName $columnSortOrder

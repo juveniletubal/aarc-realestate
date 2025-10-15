@@ -11,7 +11,7 @@ if (!$userId) {
 }
 
 try {
-    $stmt = $pdo->prepare("SELECT id, firstname, lastname, contact, email, address, facebook_link, role, username, image FROM users WHERE id = ? AND is_deleted = 0");
+    $stmt = $pdo->prepare("SELECT id, firstname, lastname, contact, email, address, facebook_link, role, username, image, created_at FROM users WHERE id = ? AND is_deleted = 0");
     $stmt->execute([$userId]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 

@@ -3,10 +3,17 @@ require_once '../../classes/Database.php';
 header('Content-Type: application/json');
 
 try {
+    // Get client ID if provided (for edit mode)
     $clientId = isset($_GET['client_id']) ? (int) $_GET['client_id'] : 0;
 
     $params = [];
-    $params[':client_id'] = $clientId > 0 ? $clientId : 0;
+    $extraPropertyCondition = "";
+
+    // If editing, include the client's current property even if it's reserved/sold
+    if ($clientId > 0) {
+        $extraPropertyCondition = "OR id = (SELECT property_id FROM clients WHERE id = :client_id)";
+        $params[':client_id'] = $clientId;
+    }
 
     $stmt = $pdo->prepare("
         SELECT 
@@ -16,12 +23,10 @@ try {
             location,
             status
         FROM properties
-        WHERE is_deleted = 0
-          AND (
-              status IN ('available', 'reserved', 'sold')
-              OR id IN (SELECT property_id FROM clients WHERE id = :client_id)
-          )
+        WHERE (status = 'available' $extraPropertyCondition)
+          AND is_deleted = 0
     ");
+
     $stmt->execute($params);
     $properties = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

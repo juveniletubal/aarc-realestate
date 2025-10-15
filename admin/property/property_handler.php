@@ -63,137 +63,167 @@ class PropertyHandler
     {
         $this->validateInput($_POST);
 
-        $stmt = $this->pdo->prepare("
+        try {
+            $check = $this->pdo->prepare("
+                SELECT COUNT(*) FROM properties 
+                WHERE location = ? AND lot = ? AND block = ? AND is_deleted = 0
+            ");
+            $check->execute([$_POST['location'], $_POST['lot'], $_POST['block']]);
+            $exists = $check->fetchColumn();
+
+            if ($exists > 0) {
+                throw new Exception("A property with the same Location, Lot, and Block already exists.");
+            }
+
+            $stmt = $this->pdo->prepare("
             INSERT INTO properties (title, lot, block, description, lot_area, price, location, property_type, status, images) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
-        $images = $this->handleImageUpload();
-        $price = (float) str_replace(',', '', $_POST['price']);
+            $images = $this->handleImageUpload();
+            $price = (float) str_replace(',', '', $_POST['price']);
 
-        // Store images as comma-separated string instead of JSON
-        $imagesString = !empty($images) ? implode(',', $images) : '';
+            $imagesString = !empty($images) ? implode(',', $images) : '';
 
-        $stmt->execute([
-            $_POST['title'],
-            $_POST['lot'],
-            $_POST['block'],
-            $_POST['description'],
-            $_POST['lot_area'] ?? '',
-            $price,
-            $_POST['location'] ?? '',
-            $_POST['property_type'],
-            $_POST['status'],
-            $imagesString
-        ]);
+            $stmt->execute([
+                $_POST['title'],
+                $_POST['lot'],
+                $_POST['block'],
+                $_POST['description'],
+                $_POST['lot_area'] ?? '',
+                $price,
+                $_POST['location'] ?? '',
+                $_POST['property_type'],
+                $_POST['status'],
+                $imagesString
+            ]);
 
-        echo json_encode(['success' => true, 'id' => $this->pdo->lastInsertId()]);
+            echo json_encode(['success' => true, 'id' => $this->pdo->lastInsertId()]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
     }
 
     private function updateProperty()
     {
-        $id = (int) $_POST['id'];
-        if (!$id) throw new Exception('Invalid property ID');
+        try {
+            $id = (int) $_POST['id'];
+            if (!$id) throw new Exception('Invalid property ID');
 
-        $this->validateInput($_POST);
+            $this->validateInput($_POST);
 
-        // Get existing property
-        $stmt = $this->pdo->prepare("SELECT images FROM properties WHERE id = ? AND is_deleted = 0");
-        $stmt->execute([$id]);
-        $existing = $stmt->fetch();
+            // Get existing property
+            $stmt = $this->pdo->prepare("SELECT images FROM properties WHERE id = ? AND is_deleted = 0");
+            $stmt->execute([$id]);
+            $existing = $stmt->fetch();
 
-        if (!$existing) throw new Exception('Property not found');
+            if (!$existing) throw new Exception('Property not found');
 
-        // Convert existing images from comma-separated to array
-        $existingImages = !empty($existing['images']) ? explode(',', $existing['images']) : [];
-        $newImages = $this->handleImageUpload($id, $existingImages);
+            // Convert existing images from comma-separated to array
+            $existingImages = !empty($existing['images']) ? explode(',', $existing['images']) : [];
+            $newImages = $this->handleImageUpload($id, $existingImages);
 
-        $stmt = $this->pdo->prepare("
+            $stmt = $this->pdo->prepare("
             UPDATE properties 
             SET title = ?, lot = ?, block = ?, description = ?, lot_area = ?, price = ?, location = ?, property_type = ?, status = ?, images = ?
             WHERE id = ? AND is_deleted = 0
         ");
 
-        $price = (float) str_replace(',', '', $_POST['price']);
+            $price = (float) str_replace(',', '', $_POST['price']);
 
-        // Store images as comma-separated string
-        $imagesString = !empty($newImages) ? implode(',', $newImages) : '';
+            // Store images as comma-separated string
+            $imagesString = !empty($newImages) ? implode(',', $newImages) : '';
 
-        $stmt->execute([
-            $_POST['title'],
-            $_POST['lot'],
-            $_POST['block'],
-            $_POST['description'],
-            $_POST['lot_area'] ?? '',
-            $price,
-            $_POST['location'] ?? '',
-            $_POST['property_type'],
-            $_POST['status'],
-            $imagesString,
-            $id
-        ]);
+            $stmt->execute([
+                $_POST['title'],
+                $_POST['lot'],
+                $_POST['block'],
+                $_POST['description'],
+                $_POST['lot_area'] ?? '',
+                $price,
+                $_POST['location'] ?? '',
+                $_POST['property_type'],
+                $_POST['status'],
+                $imagesString,
+                $id
+            ]);
 
-        echo json_encode(['success' => true]);
+            echo json_encode(['success' => true]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
     }
 
     private function deleteProperty()
     {
-        $id = (int) ($_POST['id'] ?? $_GET['id'] ?? 0);
-        if (!$id) throw new Exception('Invalid property ID');
+        try {
+            $id = (int) ($_POST['id'] ?? $_GET['id'] ?? 0);
+            if (!$id) throw new Exception('Invalid property ID');
 
-        // Get images before soft delete
-        $stmt = $this->pdo->prepare("SELECT images FROM properties WHERE id = ? AND is_deleted = 0");
-        $stmt->execute([$id]);
-        $property = $stmt->fetch();
+            // Get images before soft delete
+            $stmt = $this->pdo->prepare("SELECT images FROM properties WHERE id = ? AND is_deleted = 0");
+            $stmt->execute([$id]);
+            $property = $stmt->fetch();
 
-        if (!$property) throw new Exception('Property not found');
+            if (!$property) throw new Exception('Property not found');
 
-        // Soft delete
-        $stmt = $this->pdo->prepare("UPDATE properties SET is_deleted = 1, images = '' WHERE id = ?");
-        $stmt->execute([$id]);
+            // Soft delete
+            $stmt = $this->pdo->prepare("UPDATE properties SET is_deleted = 1, images = '' WHERE id = ?");
+            $stmt->execute([$id]);
 
-        // Delete images from server
-        if (!empty($property['images'])) {
-            $images = explode(',', $property['images']);
-            foreach ($images as $image) {
-                $imagePath = $this->uploadDir . trim($image);
-                if (file_exists($imagePath)) {
-                    unlink($imagePath);
+            // Delete images from server
+            if (!empty($property['images'])) {
+                $images = explode(',', $property['images']);
+                foreach ($images as $image) {
+                    $imagePath = $this->uploadDir . trim($image);
+                    if (file_exists($imagePath)) {
+                        unlink($imagePath);
+                    }
                 }
             }
-        }
 
-        echo json_encode(['success' => true]);
+            echo json_encode(['success' => true]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
     }
 
     private function getProperty()
     {
-        $id = (int) ($_GET['id'] ?? 0);
-        if (!$id) throw new Exception('Invalid property ID');
+        try {
+            $id = (int) ($_GET['id'] ?? 0);
+            if (!$id) throw new Exception('Invalid property ID');
 
-        $stmt = $this->pdo->prepare("SELECT * FROM properties WHERE id = ? AND is_deleted = 0");
-        $stmt->execute([$id]);
-        $property = $stmt->fetch();
+            $stmt = $this->pdo->prepare("SELECT * FROM properties WHERE id = ? AND is_deleted = 0");
+            $stmt->execute([$id]);
+            $property = $stmt->fetch();
 
-        if (!$property) throw new Exception('Property not found');
+            if (!$property) throw new Exception('Property not found');
 
-        // Convert comma-separated images to array
-        $property['images'] = !empty($property['images']) ? explode(',', $property['images']) : [];
+            // Convert comma-separated images to array
+            $property['images'] = !empty($property['images']) ? explode(',', $property['images']) : [];
 
-        echo json_encode(['success' => true, 'data' => $property]);
+            echo json_encode(['success' => true, 'data' => $property]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
     }
 
     private function listProperties()
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM properties WHERE is_deleted = 0 ORDER BY created DESC");
-        $stmt->execute();
-        $properties = $stmt->fetchAll();
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM properties WHERE is_deleted = 0 ORDER BY created DESC");
+            $stmt->execute();
+            $properties = $stmt->fetchAll();
 
-        foreach ($properties as &$property) {
-            $property['images'] = !empty($property['images']) ? explode(',', $property['images']) : [];
+            foreach ($properties as &$property) {
+                $property['images'] = !empty($property['images']) ? explode(',', $property['images']) : [];
+            }
+
+            echo json_encode(['success' => true, 'data' => $properties]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
         }
-
-        echo json_encode(['success' => true, 'data' => $properties]);
     }
 
     private function handleImageUpload($propertyId = null, $existingImages = [])

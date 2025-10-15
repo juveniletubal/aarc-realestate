@@ -47,6 +47,8 @@ include __DIR__ . '/../includes/sidebar.php';
                         <thead>
                             <tr>
                                 <th>Client Name</th>
+                                <th>Property</th>
+                                <th>Location</th>
                                 <th>Amount Paid</th>
                                 <th>Payment Date</th>
                                 <th>Updated</th>
@@ -75,6 +77,12 @@ include __DIR__ . '/../includes/sidebar.php';
                         <div class="form-group">
                             <label for="clientSelect">Client Name<span class="text-danger">*</span></label>
                             <select class="custom-select2 form-control" id="clientSelect" name="client_id" required>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="display: none;">
+                            <label for="propertySelect">Property</label>
+                            <select class="custom-select" id="propertySelect" name="property_id">
                                 <option value="">Choose...</option>
                             </select>
                         </div>
@@ -131,10 +139,16 @@ include __DIR__ . '/../includes/sidebar.php';
                         orderable: false
                     }],
                     order: [
-                        [3, "desc"]
+                        [5, "desc"]
                     ],
                     columns: [{
                             data: "fullname"
+                        },
+                        {
+                            data: "property_title"
+                        },
+                        {
+                            data: "location"
                         },
                         {
                             data: "amount_paid"
@@ -152,9 +166,6 @@ include __DIR__ . '/../includes/sidebar.php';
                                     <a href="#" class="edit-btn" data-id="${data}">
                                         <i class="fa fa-pencil" style="color:#17A2B8;"></i>
                                     </a>
-                                    <!-- <a href="#" class="delete-btn" data-id="${data}">
-                                        <i class="fa fa-trash-o" style="color:red;"></i>
-                                    </a> -->
                                 </div>`;
                             }
                         }
@@ -179,14 +190,38 @@ include __DIR__ . '/../includes/sidebar.php';
             $('#addNewBtn').on('click', function() {
                 resetForm();
                 $('#modalLabel').text('Add New Payment');
-                $('#saveBtn').text('Save changes');
-                $('#saveBtn').attr('class', 'btn btn-success')
-                loadClients();
+                $('#saveBtn').text('Save changes').attr('class', 'btn btn-success');
                 $('#dataModal').modal('show');
+                loadClients();
             });
 
             $('#saveBtn').on('click', function() {
-                saveData();
+                if (!validateForm()) return;
+
+                const clientName = $('#clientSelect option:selected').text();
+                const amount = $('input[name="amount"]').val();
+                const datePaid = $('input[name="date_paid"]').val();
+
+                Swal.fire({
+                    title: 'Confirm Save',
+                    html: `
+                        <div style="text-align: left; font-size: 16px; padding-top: 8px;">
+                            <p><strong>Client:</strong> ${clientName}</p>
+                            <p><strong>Amount Paid:</strong> ₱${amount}</p>
+                            <p><strong>Date Paid:</strong> ${datePaid}</p>
+                        </div>
+                    `,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#086C55',
+                    cancelButtonColor: '#A4A4A4',
+                    confirmButtonText: 'Yes, save it',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        saveData();
+                    }
+                });
             });
 
             function resetForm() {
@@ -196,13 +231,12 @@ include __DIR__ . '/../includes/sidebar.php';
             }
 
             function saveData() {
-                if (!validateForm()) return;
-
                 const isUpdate = currentId !== null;
                 const formData = new FormData();
 
                 formData.append('action', isUpdate ? 'update' : 'insert');
                 formData.append('client_id', $('select[name="client_id"]').val());
+                formData.append('property_id', $('select[name="property_id"]').val());
                 formData.append('amount', $('input[name="amount"]').val());
                 formData.append('date_paid', $('input[name="date_paid"]').val());
 
@@ -289,7 +323,7 @@ include __DIR__ . '/../includes/sidebar.php';
                 $('#id').val(record.id);
                 $('input[name="amount"]').val(record.amount_paid);
                 $('input[name="date_paid"]').val(record.payment_date);
-                loadClients(record.client_id);
+                loadClients(record.client_id, record.property_id);
             }
 
             function loadProperties() {
@@ -303,7 +337,7 @@ include __DIR__ . '/../includes/sidebar.php';
             document.activeElement.blur();
         });
 
-        function loadClients(selectedId = null) {
+        function loadClients(selectedClientId = null, selectedPropertyId = null) {
             $.ajax({
                 url: "payment/client_fetch.php",
                 method: "GET",
@@ -315,12 +349,13 @@ include __DIR__ . '/../includes/sidebar.php';
 
                         response.data.forEach(item => {
                             $clientSelect.append(
-                                `<option value="${item.id}">${item.client_name}</option>`
+                                `<option value="${item.client_id}">${item.client_name} (${item.property_title})</option>`
                             );
                         });
 
-                        if (selectedId) {
-                            $clientSelect.val(selectedId).trigger('change');
+                        if (selectedClientId) {
+                            $clientSelect.val(selectedClientId).trigger("change");
+                            loadProperties(selectedClientId, selectedPropertyId);
                         }
                     } else {
                         toastr.error("Failed to load clients");
@@ -328,6 +363,54 @@ include __DIR__ . '/../includes/sidebar.php';
                 },
                 error: function() {
                     toastr.error("Error fetching clients");
+                }
+            });
+        }
+
+        $(document).on("change", "#clientSelect", function() {
+            const clientId = $(this).val();
+            loadProperties(clientId);
+        });
+
+
+        function loadProperties(clientId, selectedPropertyId = null) {
+            const $propertySelect = $("#propertySelect");
+            $propertySelect.empty().append('<option value="">Choose...</option>');
+
+            $propertySelect.off('change');
+
+            if (!clientId) return;
+
+            $.ajax({
+                url: "payment/property_fetch.php",
+                method: "GET",
+                data: {
+                    client_id: clientId
+                },
+                dataType: "json",
+                success: function(response) {
+                    if (response.success && response.data.length > 0) {
+                        response.data.forEach(item => {
+                            $propertySelect.append(
+                                `<option value="${item.id}">${item.property_title}</option>`
+                            );
+                        });
+
+                        if (response.data.length === 1) {
+                            $propertySelect
+                                .val(response.data[0].id)
+                                .trigger('change');
+                            $propertySelect.find('option[value=""]').remove();
+                        } else if (selectedPropertyId) {
+                            $propertySelect.val(selectedPropertyId).trigger('change');
+                        }
+
+                    } else {
+                        toastr.warning("No property found for this client.");
+                    }
+                },
+                error: function() {
+                    toastr.error("Error fetching properties");
                 }
             });
         }
@@ -344,6 +427,41 @@ include __DIR__ . '/../includes/sidebar.php';
                 width: '100%',
                 dropdownParent: $('#dataModal')
             });
+
+            $('#clientSelect').select2({
+                placeholder: "",
+                allowClear: true,
+                width: '100%',
+                dropdownParent: $('#dataModal'),
+                escapeMarkup: function(markup) {
+                    return markup;
+                },
+                templateResult: function(data) {
+                    if (!data.id) return data.text;
+
+                    const match = data.text.match(/^(.*?)\s*\((.*?)\)$/);
+                    if (match) {
+                        return `
+                <span>
+                    <span style="font-weight:500;font-size: 0.95rem;">${match[1]}</span>
+                    <span style="font-size: 0.80em;"> &nbsp;(${match[2]})</span>
+                </span>`;
+                    }
+                    return data.text;
+                },
+                templateSelection: function(data) {
+                    if (!data.id) return data.text;
+
+                    const match = data.text.match(/^(.*?)\s*\((.*?)\)$/);
+                    if (match) {
+                        return `
+                        <span style="font-weight:500;font-size: 0.95rem;">${match[1]}</span>
+                        <span style="font-size: 0.80em;"> &nbsp;(${match[2]})</span>`;
+                    }
+                    return data.text;
+                }
+            });
+
         });
     });
 </script>
@@ -351,8 +469,8 @@ include __DIR__ . '/../includes/sidebar.php';
 <script>
     document.getElementById('amount_paid').addEventListener('input', function() {
         this.value = this.value
-            .replace(/[^0-9.]/g, '') // allow only numbers and dot
-            .replace(/(\..*?)\..*/g, '$1') // allow only one dot
-            .replace(/^(\d+)(\.\d{0,2}).*$/, '$1$2'); // limit to 2 decimals
+            .replace(/[^0-9.]/g, '')
+            .replace(/(\..*?)\..*/g, '$1')
+            .replace(/^(\d+)(\.\d{0,2}).*$/, '$1$2');
     });
 </script>

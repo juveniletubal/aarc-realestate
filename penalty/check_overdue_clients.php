@@ -66,16 +66,16 @@ try {
     $logFile = __DIR__ . '/penalty_log.txt';
     file_put_contents($logFile, date('Y-m-d H:i:s') . " - Updated " . count($results) . " clients\n", FILE_APPEND);
 
-    // echo json_encode([
-    //     'success' => true,
-    //     'message' => 'Overdue clients updated successfully.',
-    //     'data' => $results
-    // ]);
+    echo json_encode([
+        'success' => true,
+        'message' => 'Overdue clients updated successfully.',
+        'data' => $results
+    ]);
 } catch (Exception $e) {
     $pdo->rollBack();
     file_put_contents(__DIR__ . '/penalty_log.txt', date('Y-m-d H:i:s') . " - ERROR: " . $e->getMessage() . "\n", FILE_APPEND);
-    // echo json_encode([
-    //     'success' => false,
-    //     'message' => $e->getMessage()
-    // ]);
+    echo json_encode([
+        'success' => false,
+        'message' => $e->getMessage()
+    ]);
 }

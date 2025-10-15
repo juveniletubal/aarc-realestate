@@ -37,6 +37,12 @@
                     </li>
 
                     <li>
+                        <a href="clients" class="<?= $page->isActive('clients') ?> dropdown-toggle no-arrow">
+                            <span class="micon fa fa-users"></span><span class="mtext">Clients</span>
+                        </a>
+                    </li>
+
+                    <li>
                         <a href="users" class="<?= $page->isActive('users') ?> dropdown-toggle no-arrow">
                             <span class="micon fa fa-user-secret"></span><span class="mtext">Users</span>
                         </a>
@@ -121,7 +127,7 @@
 
                     <li>
                         <a href="payments" class="<?= $page->isActive('payments') ?> dropdown-toggle no-arrow">
-                            <span class="micon fa fa-bullhorn"></span><span class="mtext">My Payments</span>
+                            <span class="micon fa fa-money"></span><span class="mtext">Payments</span>
                         </a>
                     </li>
 

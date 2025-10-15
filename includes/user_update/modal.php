@@ -56,9 +56,19 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="rol_e">Role</label>
-                        <input class="form-control" type="text" name="role2" id="rol_e" readonly>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="role2">Role</label>
+                                <input class="form-control" type="text" id="role2" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label for="registered">Date Registered</label>
+                                <input class="form-control" type="text" id="registered" disabled>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="form-group" style="margin-bottom: 30px;">
@@ -115,9 +125,19 @@
                         $('[name="email2"]').val(u.email);
                         $('[name="address2"]').val(u.address);
                         $('[name="facebook_link2"]').val(u.facebook_link);
-                        $('[name="role2"]').val(u.role);
+                        $('#role2').val(u.role.charAt(0).toUpperCase() + u.role.slice(1));
                         $('[name="username2"]').val(u.username);
                         $('[name="password2"]').val('');
+
+                        const date = new Date(u.created_at.replace(' ', 'T'));
+                        const formatted = date.toLocaleString('en-PH', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                        $('#registered').val(formatted);
 
                         if (u.image) {
                             $('#imagePreview').attr('src', '../uploads/users/' + u.image).show();

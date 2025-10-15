@@ -55,9 +55,9 @@ include __DIR__ . '/../includes/sidebar.php';
                             <tr>
                                 <th class="table-plus">Title</th>
                                 <th>Lot / Block</th>
+                                <th>Location</th>
                                 <th>Lot Area</th>
                                 <th>Price</th>
-                                <th>Location</th>
                                 <th>Type</th>
                                 <th>Status</th>
                                 <th>Updated</th>
@@ -232,7 +232,7 @@ include __DIR__ . '/../includes/sidebar.php';
                         orderable: false
                     }],
                     order: [
-                        [5, "desc"]
+                        [7, "desc"]
                     ],
                     columns: [{
                             data: "title"
@@ -241,13 +241,13 @@ include __DIR__ . '/../includes/sidebar.php';
                             data: "lot_block"
                         },
                         {
+                            data: "location"
+                        },
+                        {
                             data: "lot_area"
                         },
                         {
                             data: "price"
-                        },
-                        {
-                            data: "location"
                         },
                         {
                             data: "property_type"
