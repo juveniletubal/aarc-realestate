@@ -65,7 +65,7 @@ if (isset($_SESSION['user_id'])) {
 							<h4 class="text-success">Ammazeng Angels</h4>
 							<p class="text-muted" style="font-size: 17px;">Realty Corporation</p>
 						</div>
-						<form method="POST" action="auth/login.php">
+						<form id="loginForm" method="POST" action="auth/login.php">
 							<div class="input-group custom">
 								<input type="text" name="username" class="form-control form-control-lg" placeholder="Username" required />
 							</div>
