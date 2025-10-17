@@ -11,7 +11,8 @@ try {
     $stmt = $pdo->prepare("
         SELECT 
             id, 
-            CONCAT('Lot ', lot, ' / Block ', block, ' (', location, ')') AS label, 
+            CONCAT('Lot ', lot, ' , Block ', block) AS title,
+            CONCAT(' - ', location, ' (', status, ')') AS label,
             price, 
             location,
             status

@@ -421,12 +421,12 @@ include __DIR__ . '/../includes/sidebar.php';
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         $(document).ready(function() {
-            $('#clientSelect').select2({
-                placeholder: "",
-                allowClear: true,
-                width: '100%',
-                dropdownParent: $('#dataModal')
-            });
+            // $('#clientSelect').select2({
+            //     placeholder: "",
+            //     allowClear: true,
+            //     width: '100%',
+            //     dropdownParent: $('#dataModal')
+            // });
 
             $('#clientSelect').select2({
                 placeholder: "",

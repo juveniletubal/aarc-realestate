@@ -56,6 +56,18 @@ class ClientHandler
                 throw new Exception("This client is already assigned to the selected property.");
             }
 
+            $stmt = $this->pdo->prepare("SELECT status FROM properties WHERE id = ?");
+            $stmt->execute([$_POST['property_id']]);
+            $property = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$property) {
+                throw new Exception("Invalid property selected.");
+            }
+
+            if ($property['status'] === 'sold') {
+                throw new Exception("This property has already been sold. Please select another one.");
+            }
+
             $stmt = $this->pdo->prepare("
                 INSERT INTO clients (user_id, assigned_staff, property_id, payment_terms, total_price, balance, penalty, created_at, updated_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())

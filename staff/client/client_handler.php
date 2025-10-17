@@ -57,6 +57,18 @@ class ClientHandler
         try {
             $this->validateInput($_POST);
 
+            $stmt = $this->pdo->prepare("SELECT status FROM properties WHERE id = ?");
+            $stmt->execute([$_POST['property_id']]);
+            $property = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$property) {
+                throw new Exception("Invalid property selected.");
+            }
+
+            if ($property['status'] === 'sold') {
+                throw new Exception("This property has already been sold. Please select another one.");
+            }
+
             $userId = $this->createUserAccount($_POST);
 
             $stmt = $this->pdo->prepare("

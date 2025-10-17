@@ -798,65 +798,6 @@ include __DIR__ . '/../includes/sidebar.php';
             document.activeElement.blur();
         });
 
-        function loadProperty(selectedId = null) {
-            $.ajax({
-                url: "client/property_fetch.php",
-                method: "GET",
-                dataType: "json",
-                success: function(response) {
-                    if (response.success) {
-                        const $propertySelect = $("#propertySelect");
-                        $propertySelect.empty().append('<option value="">Choose...</option>');
-
-                        propertyList = response.data;
-                        let selectedProperty = propertyList.find(p => p.id == selectedId);
-
-                        if (selectedProperty) {
-                            $propertySelect.append(
-                                `<option value="${selectedProperty.id}" disabled selected>
-                            ${selectedProperty.label} (${selectedProperty.status})
-                        </option>`
-                            );
-                        }
-
-                        response.data.forEach(item => {
-                            if (item.status === "available") {
-                                $propertySelect.append(
-                                    `<option value="${item.id}">${item.label}</option>`
-                                );
-                            }
-                        });
-
-                        if (selectedProperty) {
-                            $("input[name='total_price']").val(selectedProperty.price);
-                            $("input[name='balance']").val(selectedProperty.price);
-                            $("input[name='penalty']").val("5% Monthly");
-                        }
-                    } else {
-                        toastr.error("Failed to load property");
-                    }
-                },
-                error: function() {
-                    toastr.error("Error fetching property");
-                }
-            });
-
-            $("#propertySelect").off("change").on("change", function() {
-                let selectedId = $(this).val();
-                let selected = propertyList.find(p => p.id == selectedId);
-
-                if (selected) {
-                    $("input[name='total_price']").val(selected.price);
-                    $("input[name='balance']").val(selected.price);
-                    $("input[name='penalty']").val("5% Monthly");
-                } else {
-                    $("input[name='total_price']").val("");
-                    $("input[name='balance']").val("");
-                    $("input[name='penalty']").val("");
-                }
-            });
-        }
-
         // function loadProperty(selectedId = null) {
         //     $.ajax({
         //         url: "client/property_fetch.php",
@@ -868,15 +809,28 @@ include __DIR__ . '/../includes/sidebar.php';
         //                 $propertySelect.empty().append('<option value="">Choose...</option>');
 
         //                 propertyList = response.data;
+        //                 let selectedProperty = propertyList.find(p => p.id == selectedId);
+
+        //                 if (selectedProperty) {
+        //                     $propertySelect.append(
+        //                         `<option value="${selectedProperty.id}" disabled selected>
+        //                     ${selectedProperty.label} (${selectedProperty.status})
+        //                 </option>`
+        //                     );
+        //                 }
 
         //                 response.data.forEach(item => {
-        //                     $propertySelect.append(
-        //                         `<option value="${item.id}">${item.label}</option>`
-        //                     );
+        //                     if (item.status === "available") {
+        //                         $propertySelect.append(
+        //                             `<option value="${item.id}">${item.label}</option>`
+        //                         );
+        //                     }
         //                 });
 
-        //                 if (selectedId) {
-        //                     $propertySelect.val(selectedId).trigger('change');
+        //                 if (selectedProperty) {
+        //                     $("input[name='total_price']").val(selectedProperty.price);
+        //                     $("input[name='balance']").val(selectedProperty.price);
+        //                     $("input[name='penalty']").val("5% Monthly");
         //                 }
         //             } else {
         //                 toastr.error("Failed to load property");
@@ -887,9 +841,8 @@ include __DIR__ . '/../includes/sidebar.php';
         //         }
         //     });
 
-        //     $("#propertySelect").on("change", function() {
+        //     $("#propertySelect").off("change").on("change", function() {
         //         let selectedId = $(this).val();
-
         //         let selected = propertyList.find(p => p.id == selectedId);
 
         //         if (selected) {
@@ -903,6 +856,54 @@ include __DIR__ . '/../includes/sidebar.php';
         //         }
         //     });
         // }
+
+        // OLD
+        function loadProperty(selectedId = null) {
+            $.ajax({
+                url: "client/property_fetch.php",
+                method: "GET",
+                dataType: "json",
+                success: function(response) {
+                    if (response.success) {
+                        const $propertySelect = $("#propertySelect");
+                        $propertySelect.empty().append('<option value="">Choose...</option>');
+
+                        propertyList = response.data;
+
+                        response.data.forEach(item => {
+                            $propertySelect.append(
+                                `<option value="${item.id}">${item.title} ${item.label}</option>`
+                            );
+                        });
+
+                        if (selectedId) {
+                            $propertySelect.val(selectedId).trigger('change');
+                        }
+                    } else {
+                        toastr.error("Failed to load property");
+                    }
+                },
+                error: function() {
+                    toastr.error("Error fetching property");
+                }
+            });
+
+            $("#propertySelect").on("change", function() {
+                let selectedId = $(this).val();
+
+                let selected = propertyList.find(p => p.id == selectedId);
+
+                if (selected) {
+                    $("input[name='total_price']").val(selected.price);
+                    $("input[name='balance']").val(selected.price);
+                    $("input[name='penalty']").val("5% Monthly");
+                } else {
+                    $("input[name='total_price']").val("");
+                    $("input[name='balance']").val("");
+                    $("input[name='penalty']").val("");
+                }
+            });
+        }
     });
 </script>
 
@@ -1029,7 +1030,7 @@ include __DIR__ . '/../includes/sidebar.php';
 
                             response.data.forEach(item => {
                                 $propertySelect2.append(
-                                    `<option value="${item.id}">${item.label}</option>`
+                                    `<option value="${item.id}">${item.title} ${item.label}</option>`
                                 );
                             });
 
@@ -1109,20 +1110,88 @@ include __DIR__ . '/../includes/sidebar.php';
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         $(document).ready(function() {
+            // $('#propertySelect').select2({
+            //     placeholder: "",
+            //     allowClear: true,
+            //     width: '100%',
+            //     dropdownParent: $('#dataModal')
+            // });
+
             $('#propertySelect').select2({
                 placeholder: "",
                 allowClear: true,
                 width: '100%',
-                dropdownParent: $('#dataModal')
+                dropdownParent: $('#dataModal'),
+                escapeMarkup: function(markup) {
+                    return markup;
+                },
+                templateResult: function(data) {
+                    if (!data.id) return data.text;
+
+                    const match = data.text.match(/^(.*?)\s*\((.*?)\)$/);
+                    if (match) {
+                        return `
+                <span>
+                    <span style="font-weight:500;font-size: 0.95rem;">${match[1]}</span>
+                    <span style="font-size: 0.80em;"> &nbsp;(${match[2]})</span>
+                </span>`;
+                    }
+                    return data.text;
+                },
+                templateSelection: function(data) {
+                    if (!data.id) return data.text;
+
+                    const match = data.text.match(/^(.*?)\s*\((.*?)\)$/);
+                    if (match) {
+                        return `
+                        <span style="font-weight:500;font-size: 0.95rem;">${match[1]}</span>
+                        <span style="font-size: 0.80em;"> &nbsp;(${match[2]})</span>`;
+                    }
+                    return data.text;
+                }
             });
         });
 
         $(document).ready(function() {
-            $('#propertySelect2, #clientSelect').select2({
+            $('#clientSelect').select2({
                 placeholder: "",
                 allowClear: true,
                 width: '100%',
                 dropdownParent: $('#dataExistModal')
+            });
+
+            $('#propertySelect2').select2({
+                placeholder: "",
+                allowClear: true,
+                width: '100%',
+                dropdownParent: $('#dataExistModal'),
+                escapeMarkup: function(markup) {
+                    return markup;
+                },
+                templateResult: function(data) {
+                    if (!data.id) return data.text;
+
+                    const match = data.text.match(/^(.*?)\s*\((.*?)\)$/);
+                    if (match) {
+                        return `
+                <span>
+                    <span style="font-weight:500;font-size: 0.95rem;">${match[1]}</span>
+                    <span style="font-size: 0.80em;"> &nbsp;(${match[2]})</span>
+                </span>`;
+                    }
+                    return data.text;
+                },
+                templateSelection: function(data) {
+                    if (!data.id) return data.text;
+
+                    const match = data.text.match(/^(.*?)\s*\((.*?)\)$/);
+                    if (match) {
+                        return `
+                        <span style="font-weight:500;font-size: 0.95rem;">${match[1]}</span>
+                        <span style="font-size: 0.80em;"> &nbsp;(${match[2]})</span>`;
+                    }
+                    return data.text;
+                }
             });
         });
 
