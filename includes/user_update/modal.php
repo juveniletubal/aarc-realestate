@@ -48,16 +48,18 @@
                                 <input class="form-control" type="text" name="address2" id="a_ddress">
                             </div>
                         </div>
-                        <div class="col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label for="fbLink">Facebook Link</label>
-                                <input class="form-control" type="text" name="facebook_link2" id="fbLink">
+                        <?php if ($_SESSION['role'] !== 'client'): ?>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label for="fbLink">Facebook Link</label>
+                                    <input class="form-control" type="text" name="facebook_link2" id="fbLink">
+                                </div>
                             </div>
-                        </div>
+                        <?php endif; ?>
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6 col-sm-12">
+                        <div class="col-md-6 col-sm-12" style="display: none;">
                             <div class="form-group">
                                 <label for="role2">Role</label>
                                 <input class="form-control" type="text" id="role2" disabled>

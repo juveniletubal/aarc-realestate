@@ -71,6 +71,32 @@ include __DIR__ . '/../includes/sidebar.php';
             </div>
         </div>
 
+        <div class="card-box mb-30">
+            <div class="pd-20">
+                <h5>Property Details</h5>
+            </div>
+            <div class="pb-20">
+                <table class="prop-details table stripe hover nowrap">
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Location</th>
+                            <th>Lot Area</th>
+                            <th>Type</th>
+                            <th>Price</th>
+                            <th>Balance</th>
+                            <th>Terms</th>
+                            <th>Monthly</th>
+                            <th>Due Date</th>
+                            <th>Penalty</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
         <div class="card-box">
             <div class="pd-20">
                 <h5>Payment History</h5>
@@ -95,6 +121,86 @@ include __DIR__ . '/../includes/sidebar.php';
 </div>
 
 <?php include __DIR__ . '/../includes/footer.php'; ?>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        $(document).ready(function() {
+            const userId = "<?php echo htmlspecialchars($_SESSION['user_id'] ?? '', ENT_QUOTES, 'UTF-8'); ?>";
+            let dataTable;
+
+            initializeDataTable();
+
+            function initializeDataTable() {
+                dataTable = $(".prop-details").DataTable({
+                    processing: true,
+                    serverSide: true,
+                    ajax: {
+                        url: "payment/property_fetch.php",
+                        type: "POST",
+                        data: function(d) {
+                            d.user_id = userId;
+                        },
+                        error: function(xhr, error, code) {
+                            toastr.error('Failed to load record data. Please refresh the page.', 'Error');
+                        }
+                    },
+                    scrollCollapse: true,
+                    autoWidth: false,
+                    responsive: true,
+                    columnDefs: [{
+                        targets: "datatable-nosort",
+                        orderable: false
+                    }],
+                    order: [
+                        [0, "desc"]
+                    ],
+                    columns: [{
+                            data: "property_title"
+                        },
+                        {
+                            data: "location"
+                        },
+                        {
+                            data: "lot_area"
+                        },
+                        {
+                            data: "property_type"
+                        },
+                        {
+                            data: "price"
+                        },
+                        {
+                            data: "balance"
+                        },
+                        {
+                            data: "payment_terms"
+                        },
+                        {
+                            data: "monthly_payment"
+                        },
+                        {
+                            data: "first_payment_date"
+                        },
+                        {
+                            data: "id"
+                        },
+                        {
+                            data: "payment_status"
+                        }
+                    ],
+                    language: {
+                        info: "_START_-_END_ of _TOTAL_ entries",
+                        searchPlaceholder: "Search here",
+                        paginate: {
+                            next: '<i class="fa fa-angle-right"></i>',
+                            previous: '<i class="fa fa-angle-left"></i>'
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -161,18 +267,17 @@ include __DIR__ . '/../includes/sidebar.php';
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         $(document).ready(function() {
+            const userId = "<?php echo htmlspecialchars($_SESSION['user_id'] ?? '', ENT_QUOTES, 'UTF-8'); ?>";
+
             $.ajax({
                 url: 'dashboard/fetch_dashboard_stats.php',
                 type: 'GET',
+                data: {
+                    user_id: userId
+                },
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
-                        // Users
-                        // $('#totalUsers').text(response.users.total_users ?? 0);
-                        // $('#totalStaff').text(response.users.total_staff ?? 0);
-                        // $('#totalAgent').text(response.users.total_agent ?? 0);
-                        // $('#totalClient').text(response.users.total_client ?? 0);
-
                         $('#totalPropertiesPrice').text(
                             '₱' + Number(response.totals.total_properties_price ?? 0).toLocaleString('en-PH', {
                                 minimumFractionDigits: 2,
@@ -180,7 +285,15 @@ include __DIR__ . '/../includes/sidebar.php';
                             })
                         );
 
-                        $('#totalPaid').text(response.totals.total_paid ?? 0);
+                        $('#totalPaid').text(
+                            '₱' + Number(response.payments.total_payment_paid ?? 0).toLocaleString('en-PH', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            })
+                        );
+
+
+                        // $('#totalPaid').text(response.totals.total_paid ?? 0);
                         $('#totalPenalty').text(response.totals.total_penalty ?? 0);
                     } else {
                         console.error(response.message);

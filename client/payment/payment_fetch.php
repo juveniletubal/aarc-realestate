@@ -67,7 +67,7 @@ try {
             p.updated_at,
             c.first_payment_date,
             CONCAT(staff.firstname, ' ', staff.lastname) AS staff_name,
-            CONCAT('Lot ', prop.lot, ' / Block ', prop.block, ' (', prop.location, ')') AS property_title
+            CONCAT('Lot #', prop.lot, ' , Block ', prop.block, ' (', prop.location, ')') AS property_title
         $baseQuery
         $searchQuery
         ORDER BY $columnName $columnSortOrder

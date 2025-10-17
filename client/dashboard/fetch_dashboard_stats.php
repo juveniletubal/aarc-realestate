@@ -3,6 +3,8 @@ require_once '../../classes/Database.php';
 
 header('Content-Type: application/json');
 
+$userId = $_POST['user_id'] ?? $_GET['user_id'] ?? '';
+
 try {
     // Users
     // $stmtUsers = $pdo->prepare("
@@ -17,21 +19,29 @@ try {
     // $stmtUsers->execute();
     // $users = $stmtUsers->fetch(PDO::FETCH_ASSOC);
 
+    // Payment
+    $stmtTotalPayment = $pdo->prepare("
+        SELECT SUM(p.amount_paid) AS total_payment_paid
+        FROM payments p
+        JOIN clients c ON p.client_id = c.id
+        WHERE p.is_deleted = 0 AND c.user_id = ?
+    ");
+    $stmtTotalPayment->execute([$userId]);
+    $payments = $stmtTotalPayment->fetch(PDO::FETCH_ASSOC);
+
     // Properties
     $stmtTotal = $pdo->prepare("
-         SELECT 
-            COUNT(DISTINCT user_id) AS total_clients,
-            COUNT(*) AS total_client_records,
-            SUM(balance) AS total_properties_price
+        SELECT 
+            SUM(total_price) AS total_properties_price
         FROM clients
-    WHERE is_deleted = 0
+        WHERE is_deleted = 0 AND user_id = ?
     ");
-    $stmtTotal->execute();
+    $stmtTotal->execute([$userId]);
     $totals = $stmtTotal->fetch(PDO::FETCH_ASSOC);
 
     echo json_encode([
         'success' => true,
-        // 'users' => $users,
+        'payments' => $payments,
         'totals' => $totals
     ]);
 } catch (Exception $e) {

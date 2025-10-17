@@ -125,7 +125,7 @@
                         </a>
                     </li>
 
-                    <li>
+                    <!-- <li>
                         <a href="payments" class="<?= $page->isActive('payments') ?> dropdown-toggle no-arrow">
                             <span class="micon fa fa-money"></span><span class="mtext">Payments</span>
                         </a>
@@ -141,7 +141,7 @@
                         <a href="penalties" class="<?= $page->isActive('penalties') ?> dropdown-toggle no-arrow">
                             <span class="micon fa fa-exclamation-circle"></span><span class="mtext">Penalties</span>
                         </a>
-                    </li>
+                    </li> -->
 
 
                 <?php endif; ?>

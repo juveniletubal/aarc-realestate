@@ -2,26 +2,43 @@
 require_once "../classes/Database.php";
 require_once "session.php";
 
+$env = parse_ini_file(__DIR__ . '/.env');
+$secretKey = $env['RECAPTCHA_SECRET_KEY'];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
 
+    if ($_SESSION['failed_attempts'] >= 3) {
+        $recaptchaResponse = $_POST['g-recaptcha-response'] ?? '';
+        if (empty($recaptchaResponse)) {
+            $_SESSION['error'] = "Please complete the reCAPTCHA challenge.";
+            header("Location: ../login");
+            exit;
+        }
+
+        $verify = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$recaptchaResponse}");
+        $responseData = json_decode($verify);
+
+        if (!$responseData->success || $responseData->score < 0.5) {
+            $_SESSION['error'] = "Suspicious activity detected. Please try again.";
+            header("Location: ../login");
+            exit;
+        }
+    }
+
     try {
-        // Use prepared statements
         $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username AND is_deleted = 0");
         $stmt->execute(['username' => $username]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Check password
         if ($user && password_verify($password, $user['password'])) {
-            // Regenerate session ID
             session_regenerate_id(true);
 
-            // Store minimal info in session
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['role'] = $user['role'];
             $_SESSION['username'] = $user['username'];
-            $_SESSION['login_time'] = time(); // optional: track session start
+            $_SESSION['login_time'] = time();
 
 
             $stmt = $pdo->prepare("SELECT * FROM users WHERE id = :id");
@@ -29,7 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $person = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($person) {
-                // Mark as active
                 $stmt = $pdo->prepare("UPDATE users SET is_active = 1 WHERE id = :id");
                 $stmt->execute(['id' => $_SESSION['user_id']]);
 
@@ -56,8 +72,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['image'] = "../assets/img/person/person-m-10.webp";
             }
 
-
-            // Redirect based on role
             switch ($user['role']) {
                 case 'admin':
                     header("Location: ../admin/");
@@ -74,7 +88,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             exit;
         } else {
-            // Avoid detailed error messages
             $_SESSION['error'] = "Invalid username or password";
             header("Location: ../login");
             exit;

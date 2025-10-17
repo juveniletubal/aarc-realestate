@@ -1,11 +1,13 @@
 <?php
 require_once "auth/session.php";
 
-// If session exists (user already logged in), redirect
 if (isset($_SESSION['user_id'])) {
 	switch ($_SESSION['role']) {
 		case 'admin':
 			header("Location: admin/");
+			break;
+		case 'staff':
+			header("Location: staff/");
 			break;
 		case 'agent':
 			header("Location: agent/");
@@ -16,6 +18,13 @@ if (isset($_SESSION['user_id'])) {
 	}
 	exit;
 }
+
+if (!isset($_SESSION['failed_attempts'])) {
+	$_SESSION['failed_attempts'] = 0;
+}
+
+$env = parse_ini_file(__DIR__ . '/auth/.env');
+$siteKey = $env['RECAPTCHA_SITE_KEY'];
 ?>
 
 
@@ -26,11 +35,9 @@ if (isset($_SESSION['user_id'])) {
 	<meta charset="utf-8" />
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 	<title>AARC - Login</title>
-
 	<link href="assets/img/favicon.webp" rel="icon" />
-
 	<link rel="stylesheet" href="assets/css/app.min.css">
-
+	<script src="https://www.google.com/recaptcha/api.js?render=<?= $siteKey ?>"></script>
 </head>
 
 <style>
@@ -54,7 +61,7 @@ if (isset($_SESSION['user_id'])) {
 				</div>
 				<div class="col-md-6 col-lg-5">
 					<div class="login-box bg-white box-shadow border-radius-10">
-						<div class="login-title text-center">
+						<div class="login-title text-center mb-4">
 							<h4 class="text-success">Ammazeng Angels</h4>
 							<p class="text-muted" style="font-size: 17px;">Realty Corporation</p>
 						</div>
@@ -62,10 +69,10 @@ if (isset($_SESSION['user_id'])) {
 							<div class="input-group custom">
 								<input type="text" name="username" class="form-control form-control-lg" placeholder="Username" required />
 							</div>
-							<div class="input-group custom">
+							<div class="input-group custom mb-3">
 								<input type="password" name="password" class="form-control form-control-lg" placeholder="•••••••••" required />
 							</div>
-							<div class="row pb-30">
+							<div class="row pb-3">
 								<div class="col-6">
 								</div>
 								<div class="col-6">
@@ -74,6 +81,11 @@ if (isset($_SESSION['user_id'])) {
 									</div>
 								</div>
 							</div>
+
+							<?php if ($_SESSION['failed_attempts'] >= 3): ?>
+								<input type="hidden" name="g-recaptcha-response" id="recaptchaResponse">
+							<?php endif; ?>
+
 							<div class="row">
 								<div class="col-sm-12">
 									<div class="input-group mb-0">
@@ -97,6 +109,23 @@ if (isset($_SESSION['user_id'])) {
 	</div>
 
 	<script src="assets/js/app.min.js"></script>
+
+	<?php if ($_SESSION['failed_attempts'] >= 3): ?>
+		<script>
+			grecaptcha.ready(function() {
+				document.getElementById("loginForm").addEventListener("submit", function(event) {
+					event.preventDefault();
+
+					grecaptcha.execute("<?= $siteKey ?>", {
+						action: "login"
+					}).then(function(token) {
+						document.getElementById("recaptchaResponse").value = token;
+						event.target.submit();
+					});
+				});
+			});
+		</script>
+	<?php endif; ?>
 
 	<?php include "config/custom_script/page_load_time.php" ?>
 
