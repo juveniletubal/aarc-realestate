@@ -1,6 +1,13 @@
 <?php
 require_once "auth/session.php";
 
+if (!isset($_SESSION['failed_attempts'])) {
+	$_SESSION['failed_attempts'] = 0;
+}
+
+$env = parse_ini_file(__DIR__ . '/auth/.env');
+$siteKey = $env['RECAPTCHA_SITE_KEY'];
+
 if (isset($_SESSION['user_id'])) {
 	switch ($_SESSION['role']) {
 		case 'admin':
@@ -18,13 +25,6 @@ if (isset($_SESSION['user_id'])) {
 	}
 	exit;
 }
-
-if (!isset($_SESSION['failed_attempts'])) {
-	$_SESSION['failed_attempts'] = 0;
-}
-
-$env = parse_ini_file(__DIR__ . '/auth/.env');
-$siteKey = $env['RECAPTCHA_SITE_KEY'];
 ?>
 
 
@@ -109,6 +109,11 @@ $siteKey = $env['RECAPTCHA_SITE_KEY'];
 	</div>
 
 	<script src="assets/js/app.min.js"></script>
+
+	<script>
+		console.log("<?= htmlspecialchars($_SESSION['failed_attempts'], ENT_QUOTES, 'UTF-8') ?>");
+		console.log("<?= htmlspecialchars($siteKey, ENT_QUOTES, 'UTF-8') ?>");
+	</script>
 
 	<?php if ($_SESSION['failed_attempts'] >= 3): ?>
 		<script>

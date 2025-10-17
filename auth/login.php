@@ -10,6 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
 
     if ($_SESSION['failed_attempts'] >= 3) {
+        file_put_contents(__DIR__ . '/recaptcha_log.txt', "CAPTCHA Triggered\n", FILE_APPEND);
+
         $recaptchaResponse = $_POST['g-recaptcha-response'] ?? '';
         if (empty($recaptchaResponse)) {
             $_SESSION['error'] = "Please complete the reCAPTCHA challenge.";
@@ -19,6 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $verify = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$recaptchaResponse}");
         $responseData = json_decode($verify);
+
+        file_put_contents(
+            __DIR__ . '/recaptcha_log.txt',
+            date('Y-m-d H:i:s') . "\n" .
+                "Response raw: " . $verify . "\n" .
+                "Decoded: " . print_r($responseData, true) . "\n" .
+                "Score: " . ($responseData->score ?? 'N/A') . "\n\n",
+            FILE_APPEND
+        );
 
         if (!$responseData->success || $responseData->score < 0.5) {
             $_SESSION['error'] = "Suspicious activity detected. Please try again.";
