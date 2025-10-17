@@ -1,5 +1,5 @@
 <?php
-define('BASE_URL', 'http://localhost/aarc-realestate/'); //online: https://aarc-realestate.kesug.com/       local: http://localhost/aarc-realestate/
+define('BASE_URL', 'https://aarc-realestate.kesug.com/'); //online: https://aarc-realestate.kesug.com/       local: http://localhost/aarc-realestate/
 define('ASSETS_URL', BASE_URL . 'assets');
 define('ASSETS_PATH', rtrim($_SERVER['DOCUMENT_ROOT'], '/') . parse_url(BASE_URL, PHP_URL_PATH) . 'assets');
 
