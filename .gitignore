@@ -1,3 +1,7 @@
 # Ignore local Google OAuth config
 config/del_google.php
 auth/.env
+
+# Remove this when theres changes
+.htaccess
+classes/Database.php

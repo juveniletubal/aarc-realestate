@@ -42,13 +42,13 @@
 # Custom error handling
 # ErrorDocument 400 /aarc-realestate/error/400.php
 # ErrorDocument 403 /aarc-realestate/error/403.php
-# ErrorDocument 404 /aarc-realestate/error/404.php
+ErrorDocument 404 /aarc-realestate/error/404.php
 # ErrorDocument 500 /aarc-realestate/error/500.php
 # ErrorDocument 503 /aarc-realestate/error/503.php
 
 # Use this when uploaded online
 # ErrorDocument 400 /error/400.php
 # ErrorDocument 403 /error/403.php
-ErrorDocument 404 /error/404.php
-ErrorDocument 500 /error/500.php
+# ErrorDocument 404 /error/404.php
+# ErrorDocument 500 /error/500.php
 # ErrorDocument 503 /error/503.php
