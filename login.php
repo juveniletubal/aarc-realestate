@@ -83,7 +83,7 @@ if (isset($_SESSION['user_id'])) {
 							</div>
 
 							<?php if ($_SESSION['failed_attempts'] >= 3): ?>
-								<input type="hidden" name="g-recaptcha-response" id="recaptchaResponse">
+								<input type="text" name="g-recaptcha-response" id="recaptchaResponse">
 							<?php endif; ?>
 
 							<div class="row">
