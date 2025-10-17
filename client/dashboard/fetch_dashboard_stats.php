@@ -34,7 +34,7 @@ try {
         SELECT 
             SUM(total_price) AS total_properties_price
         FROM clients
-        WHERE is_deleted = 0 AND user_id = ?
+        WHERE first_payment_date != NULL AND is_deleted = 0 AND user_id = ?
     ");
     $stmtTotal->execute([$userId]);
     $totals = $stmtTotal->fetch(PDO::FETCH_ASSOC);
